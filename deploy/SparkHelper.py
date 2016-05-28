@@ -220,7 +220,7 @@ class SparkHelper:
 
         self.send_command(["kill", "-9", "`pidof python2.7`"])
         time.sleep(3)
-        self.send_command(["mkdir", "-p", "/root/ipython"])
+        self.send_command(["mkdir", "-p", "/root/ipython/examples"])
         self.send_file('./remote/examples/FilesIO.ipynb',
                        '/root/ipython/examples')
         self.send_command(["/root/spark/sbin/stop-all.sh"])
@@ -253,11 +253,10 @@ class SparkHelper:
             argv.append("--resume")
         argv.append(name)
         self.timer = time.time()
-        #pool = Pool(processes=1)
-        #pool.apply_async(call_spark_ec2, args=[argv],
-        #                 callback=self.setup_spark)
-        #pool.close()
-        self.setup_spark(True)
+        pool = Pool(processes=1)
+        pool.apply_async(call_spark_ec2, args=[argv],
+                         callback=self.setup_spark)
+        pool.close()
 
     def setup_spark(self, is_finished):
         def install_packages():
