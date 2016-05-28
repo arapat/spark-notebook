@@ -1,0 +1,10 @@
+ec2:
+    region: us-east-1
+    zone: us-east-1b
+    instance-type: r3.2xlarge
+    spot-price: 0.5
+
+launch:
+    name: demo-cluster
+    num-slaves: 2
+    password: change-me-321

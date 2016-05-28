@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="masthead">
+    <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
+</div>
+
+<hr>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h1>{{data["account_name"]}}</h1>
+        <hr>
+        <h2>Running Clusters</h2>
+
+        {% if data["clusters"] %}
+        <ul>
+          {% for cluster in data["clusters"] %}
+          <li>
+            {% if data["launching"] and not data["ready"] and cluster == data["pname"] %}
+            {{cluster}} (launching)
+            {% else %}
+            <a href="/cluster/{{data['account']}}/{{cluster}}">
+              {{cluster}}
+            </a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No cluster is running.</p>
+        {% endif %}
+
+        <hr>
+
+        {% if data["launching"] %}
+        <div>
+            <h2>Initializing a new cluster</h2>
+
+            <label>Cluster name:</label>
+            <p>{{data["pname"]}} (launched {{data["timer"]}} ago)</p>
+
+            {% if data['ready'] %}
+            <label>Status</label> <p>Ready.</p>
+            <form class="form-signin" action="/reset/{{data['account']}}" method="POST">
+                <button class="btn btn-primary" type="submit">Launch a new one</button>
+            </form>
+
+            {% elif data['dead'] %}
+            <label>Status</label> <p>Failed. Please check the terminal for error messages.</p>
+            <form class="form-signin" action="/reset/{{data['account']}}" method="POST">
+                <button class="btn btn-primary" type="submit">Launch a new one</button>
+            </form>
+
+            {% else %}
+            <label>Status</label> <p>Not ready. Try refresh again later
+            (may take up to 30 minutes).</p>
+
+            {% endif %}
+        </div>
+
+        {% else %}
+        <form class="form-signin" action="" method="POST">
+            <h2 class="form-signin-heading">Create a new cluster</h2>
+            <label>Cluster name</label>
+            <input id="name" name="name" class="form-control"
+                   placeholder="{{"Default: " + data["cluster_name"]}}" autofocus>
+            <label>Password</label>
+            <input id="password" class="form-control" name="password"
+                   placeholder="{{"Default: " + data["password"]}}">
+            <label>Number of worker nodes</label>
+            <input id="num_of_workers" class="form-control" name="workers"
+                   placeholder="{{"Default: " + data["num_of_workers"]}}">
+            <button class="btn btn-primary btn-block" type="submit">Create</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

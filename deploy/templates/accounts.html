@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="masthead">
+    <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
+</div>
+
+<hr>
+
+<div class="row-fluid">
+    <div class="span12">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle"
+                    type="button" id="select-account" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+              Please select an AWS account to create cluster
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="select-account">
+              {% for cluster in clusters["ec2"] %}
+              <li><a href="/account/{{cluster}}">{{cluster}}</a></li>
+              {% endfor %}
+            </ul>
+        </div>
+
+        <hr/>
+
+        <form class="form-add-account" action="" method="POST">
+            <h3 class="form-add-account-heading">Add a new AWS credential</h3>
+
+            <label>Display name</label>
+            <input id="name" name="name" class="form-control"
+                   placeholder="A name that will show in the dropdown menu above"
+                   required autofocus>
+
+            <label>AWS Access Key ID</label>
+            <input id="aws-access-key-id" class="form-control"
+                   name="aws-access-key-id" required>
+
+            <label>Aws Secret Access Key</label>
+            <input id="aws-secret-access-key" class="form-control"
+                   name="aws-secret-access-key" required>
+
+            <label>Key Name</label>
+            <input id="key-name" class="form-control" name="key-name" required>
+
+            <label>Key Identity File Path</label>
+            <input id="identity-file" class="form-control"
+                   name="identity-file" required>
+
+            <button class="btn btn-primary btn-block" type="submit">Add</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

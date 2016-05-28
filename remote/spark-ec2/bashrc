@@ -1,0 +1,13 @@
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+export SPARK_HOME=/root/spark
+export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
+export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.9-src.zip:$PYTHONPATH
+export PYSPARK_PYTHON=python2.7
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi

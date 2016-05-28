@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="masthead">
+    <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
+</div>
+
+<hr>
+
+<div class="row-fluid marketing">
+    <div class="span12">
+        <h1>
+            <a href="/account/{{data['account']}}">{{data["account_name"]}}</a>
+        </h1>
+
+        <hr>
+
+        <h2>Cluster name: {{data["cluster_name"]}}</h2>
+
+        <p><b>Jupyter notebook:</b>
+            {% if data["notebook-ready"] %}
+            <a href="http://{{data['master_url']}}:8888">http://{{data['master_url']}}:8888</a>
+            (If cannot open, try refresh this page.)</p>
+            {% else %}
+            Launching. Please refresh again later.</p>
+            {% endif %}
+        <p><b>Spark UI:</b>
+            <a href="http://{{data['master_url']}}:8080">http://{{data['master_url']}}:8080</a></p>
+        <p><b>SSH access:</b>
+            <pre>{{data["aws_access"]}}</pre></p>
+
+        <hr>
+
+        <form class="form-signin" action="" method="POST">
+            <h4 class="form-signin-heading">List files</h4>
+            <input type="hidden" name="type" value="list"/>
+            <label>Remote path</label>
+                <div class="input-group">
+                    <input type="text" id="path" name="list-path" class="form-control"
+                           placeholder="Default: /root/ipython" autofocus>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">List</button>
+                    </span>
+                </div>
+            {% if "files" in data %}
+            <pre>
+{{data["files"].strip()}}
+            </pre>
+            {% endif %}
+        </form>
+
+        <hr>
+
+        <form class="form-signin" action="" method="POST">
+            <h4 class="form-signin-heading">Upload files</h4>
+            <input type="hidden" name="type" value="upload"/>
+            <label>Local path</label>
+            <input type="text" name="local-path" class="form-control"
+                   placeholder="" required>
+            <label>Remote path</label>
+            <input type="text" name="remote-path" class="form-control"
+                   placeholder="" required>
+            <button class="btn btn-primary btn-block" type="submit">Upload</button>
+            {% if "upload-log" in data%}
+                {% if data["upload-log"] is none %}
+                    <div class="alert alert-success" role="alert">Succeed!</div>
+                {% else %}
+                    <div class="alert alert-danger" role="alert">
+                        <pre>
+{{data["upload-log"].strip()}}
+                        </pre>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </form>
+
+        <hr>
+
+        <form class="form-signin" action="" method="POST">
+            <h4 class="form-signin-heading">Download files</h4>
+            <input type="hidden" name="type" value="download"/>
+            <label>Remote path</label>
+            <input type="text" name="remote-path" class="form-control"
+                   placeholder="" required>
+            <label>Local path</label>
+            <input type="text" name="local-path" class="form-control"
+                   placeholder="" required>
+
+            <button class="btn btn-primary btn-block" type="submit">Download</button>
+
+
+            {% if "download-log" in data %}
+                {% if data["download-log"] is none %}
+                <div class="alert alert-success" role="alert">Succeed!</div>
+                {% else %}
+                <div class="alert alert-danger" role="alert">
+                    <pre>
+{{data["download-log"].strip()}}
+                    </pre>
+                </div>
+                {% endif %}
+            {% endif %}
+        </form>
+
+        <hr>
+
+        <!-- Button trigger destroy modal -->
+        <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#myModal">
+            Destroy this cluster
+        </button>
+
+        <!-- Destroy modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p><b>ALL DATA ON ALL NODES WILL BE LOST!!</b></p>
+                        <p>Are you sure you want to destroy the cluster {{data["cluster_name"]}}?</p>
+                    </div>
+
+                    <form class="form-destroy" action="/destroy/{{data['account']}}/{{data['cluster_name']}}" method="POST">
+                        <button type="submit" class="btn btn-danger">Destroy it</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
