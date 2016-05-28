@@ -51,6 +51,39 @@ class SparkHelper:
         self.ready = None
         self.dead = False
 
+    def send_command(self, command,
+                     stdout_call_back=(lambda l: False),
+                     stderr_call_back=(lambda l: False)):
+
+        def data_waiting(source):
+            return select.select([source], [], [], 0) == ([source], [], [])
+
+        print 'Sending command:', ' '.join(command)
+        p = subprocess.Popen(self.ssh + command, shell=False,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        out, err = '', ''
+        while True:
+            if data_waiting(p.stderr):
+                _stderr = p.stderr.readline()
+                err = err + _stderr
+                stderr_call_back(_stderr)
+            if data_waiting(p.stdout):
+                _stdout = p.stdout.readline()
+                out = out + _stdout
+                stdout_call_back(_stdout)
+                if not _stdout:
+                    break
+            time.sleep(0.1)
+        return out, err
+
+    def get_cluster_names(self):
+        names = []
+        for instance in self.conn.get_only_instances():
+            if instance.groups and instance.groups[0].name.endswith("-master"):
+                names.append(instance.groups[0].name[:-7])
+        return names
+
     def init_account(self, account):
         cred = credentials.load()
         self.AWS_ACCESS_KEY_ID, self.AWS_SECRET_ACCESS_KEY = (
@@ -84,39 +117,6 @@ class SparkHelper:
         self.ssh = ["ssh"] + options
         self.scp = ["scp", "-r"] + options
         self.check_security_groups()
-
-    def send_command(self, command,
-                     stdout_call_back=(lambda l: False),
-                     stderr_call_back=(lambda l: False)):
-
-        def data_waiting(source):
-            return select.select([source], [], [], 0) == ([source], [], [])
-
-        print 'Sending command:', ' '.join(command)
-        p = subprocess.Popen(self.ssh + command, shell=False,
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-        out, err = '', ''
-        while True:
-            if data_waiting(p.stderr):
-                _stderr = p.stderr.readline()
-                err = err + _stderr
-                stderr_call_back(_stderr)
-            if data_waiting(p.stdout):
-                _stdout = p.stdout.readline()
-                out = out + _stdout
-                stdout_call_back(_stdout)
-                if not _stdout:
-                    break
-            time.sleep(0.1)
-        return out, err
-
-    def get_cluster_names(self):
-        names = []
-        for instance in self.conn.get_only_instances():
-            if instance.groups and instance.groups[0].name.endswith("-master"):
-                names.append(instance.groups[0].name[:-7])
-        return names
 
     def send_file(self, src, tgt):
         command = (' '.join(self.scp[:-1]) + ' ' +
@@ -280,9 +280,9 @@ class SparkHelper:
             # Install requests
             self.send_command(["pip", "install", "--upgrade", "requests"])
             # Jupyter helper functions
-            self.send_file("./server/init_sc.py", "~")
-            self.send_file("./server/init_s3.py", "~")
-            self.send_file("./server/s3helper.py", "~")
+            self.send_file("./remote/init_sc.py", "~")
+            self.send_file("./remote/init_s3.py", "~")
+            self.send_file("./remote/s3helper.py", "~")
             # Sync Python2.7 libraries
             self.send_command(["/root/spark-ec2/copy-dir",
                                "/usr/local/lib64/python2.7/site-packages/"])

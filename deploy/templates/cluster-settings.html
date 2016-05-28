@@ -9,12 +9,12 @@
 <div class="row-fluid marketing">
     <div class="span12">
         <h1>
-            <a href="/account/{{data['account']}}">{{data["account_name"]}}</a>
+            account: <a href="/account/{{data['account']}}">{{data["account_name"]}}</a>
+            <br/>
+            cluster: {{data["cluster_name"]}}
         </h1>
 
         <hr>
-
-        <h2>Cluster name: {{data["cluster_name"]}}</h2>
 
         <p><b>Jupyter notebook:</b>
             {% if data["notebook-ready"] %}
