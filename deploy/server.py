@@ -2,8 +2,7 @@ import os
 import time
 from operator import itemgetter
 
-import credentials
-from config import config
+from config import Config
 from SparkHelper import SparkHelper
 
 from flask import Flask
@@ -13,7 +12,8 @@ from flask import render_template
 from flask import url_for
 
 app = Flask(__name__)
-sh = SparkHelper()
+config = Config()
+sh = SparkHelper(config)
 
 process_nb = None
 
@@ -21,12 +21,19 @@ process_nb = None
 @app.route('/', methods=['GET', 'POST'])
 def select_aws():
     if request.method == "POST":
-        data = {key: str(request.form[key]) for key in credentials.ec2_keys}
-        data['name'] = str(request.form['name'])
-        data['identity-file'] = os.path.expanduser(data['identity-file'])
-        credentials.save(data, 'ec2')
+        if request.form["type"] == "set-path":
+            config.credentials.set_file_path(str(request.form["path"]))
+        elif request.form["type"] == "add-account":
+            data = {key: str(request.form[key])
+                    for key in config.credentials.ec2_keys}
+            data['name'] = str(request.form['name'])
+            data['identity-file'] = os.path.expanduser(data['identity-file'])
+            config.credentials.add(data, 'ec2')
+        else:
+            print "Unrecognized parameter, ignored."
     return render_template('accounts.html',
-                           clusters=credentials.load())
+                           clusters=config.credentials.credentials,
+                           cred_path=config.credentials.file_path)
 
 
 @app.route('/account/<account>', methods=['GET', 'POST'])
@@ -36,18 +43,18 @@ def open_account(account):
     data = {
         'account': account,
         'account_name': account,
-        'cluster_name': config['launch']['name'],
-        'num_of_workers': str(config['launch']['num-slaves']),
-        'password': config['launch']['password']
+        'cluster_name': config.config['launch']['name'],
+        'num_of_workers': str(config.config['launch']['num-slaves']),
+        'password': config.config['launch']['password']
     }
 
     if request.method == "POST":
         if sh.ready is not None:
             return ("Error: There is already one cluster in "
                     "the launching process.")
-        name, password, workers = (config['launch']['name'],
-                                   config['launch']['password'],
-                                   config['launch']['num-slaves'])
+        name, password, workers = (config.config['launch']['name'],
+                                   config.config['launch']['password'],
+                                   config.config['launch']['num-slaves'])
         if request.form["name"]:
             name = request.form["name"]
         if len(name.strip().split()) > 1:
@@ -96,7 +103,7 @@ def open_cluster(account, cluster):
 
     data = {
         'account': account,
-        'credentials': credentials.load(),
+        'credentials': config.credentials.credentials,
         'account_name': account,
         'cluster_name': cluster,
         'master_url': sh.master_url,
@@ -143,7 +150,7 @@ def destroy_cluster(account, cluster):
 
 @app.route("/addcred/<account>/<cluster>", methods=["POST"])
 def add_s3_cred(account, cluster):
-    data = {key: str(request.form[key]) for key in credentials.s3_keys}
+    data = {key: str(request.form[key]) for key in config.credentials.s3_keys}
     data['name'] = str(request.form['name'])
-    credentials.save(data, 's3')
+    config.credentials.add(data, 's3')
     return redirect(url_for('open_cluster', account=account, cluster=cluster))

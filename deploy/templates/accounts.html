@@ -8,6 +8,22 @@
 
 <div class="row-fluid">
     <div class="span12">
+        <h4>Change AWS credential file location</h4>
+        <form class="form-credential-path" action="" method="POST">
+            <p>Make sure <b>NOT</b> to upload this file to any public GitHub repository for
+                the security of your accounts.</p>
+            <input type="hidden" name="type" value="set-path"/>
+            <input name="path" class="form-control"
+                   placeholder="{{"Current path: " + cred_path}}"
+                   required>
+            <button type="submit" class="btn btn-primary btn-form">
+                Set file path
+            </button>
+        </form>
+
+        <hr>
+
+        <h4>Open an AWS account</h4>
         <div class="dropdown">
             <button class="btn btn-default dropdown-toggle"
                     type="button" id="select-account" data-toggle="dropdown"
@@ -24,13 +40,13 @@
 
         <hr/>
 
+        <h4>Add a new AWS account</h4>
         <form class="form-add-account" action="" method="POST">
-            <h3 class="form-add-account-heading">Add a new AWS account</h3>
-
+            <input type="hidden" name="type" value="add-account"/>
             <label>Display name</label>
             <input id="name" name="name" class="form-control"
                    placeholder="A name that will show in the dropdown menu above"
-                   required autofocus>
+                   required>
 
             <label>AWS Access Key ID</label>
             <input id="aws-access-key-id" class="form-control"

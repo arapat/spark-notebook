@@ -16,9 +16,6 @@ from os.path import expanduser
 from urllib2 import urlopen
 from IPython.lib import passwd
 
-import credentials
-from config import config
-
 SPARK_PATH = os.getenv("SPARK_PATH", os.getenv("SPARK_HOME", ''))
 if not SPARK_PATH:
     sys.exit("SPARK_PATH is not set.")
@@ -38,11 +35,11 @@ def call_spark_ec2(argv):
 
 def set_password(password, file_path):
     with open(file_path) as f:
-        config = f.read()
-    config += '\nc.NotebookApp.password = u"%s"' % passwd(password)
+        r = f.read()
+    r += '\nc.NotebookApp.password = u"%s"' % passwd(password)
     tempfile = file_path + ".temp"
     with open(tempfile, "w") as f:
-        f.write(config)
+        f.write(r)
     return tempfile
 
 
@@ -55,7 +52,8 @@ def set_s3(aws_access_key_id, aws_secret_access_key):
 
 
 class SparkHelper:
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         self.ready = None
         self.dead = False
 
@@ -93,7 +91,7 @@ class SparkHelper:
         return names
 
     def init_account(self, account):
-        cred = credentials.load()
+        cred = self.config.credentials.credentials
         self.AWS_ACCESS_KEY_ID, self.AWS_SECRET_ACCESS_KEY = (
             cred["ec2"][account]["aws-access-key-id"],
             cred["ec2"][account]["aws-secret-access-key"]
@@ -103,7 +101,7 @@ class SparkHelper:
             cred["ec2"][account]["identity-file"]
         )
         self.conn = boto.ec2.connect_to_region(
-            config['ec2']['region'],
+            self.config['ec2']['region'],
             aws_access_key_id=self.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY)
         os.environ["AWS_ACCESS_KEY_ID"] = self.AWS_ACCESS_KEY_ID
@@ -168,7 +166,7 @@ class SparkHelper:
 
     def destroy(self):
         command = ("%s/ec2/spark-ec2 --region=%s destroy %s" %
-                   (SPARK_PATH, config['ec2']['region'], self.name))
+                   (SPARK_PATH, self.config['ec2']['region'], self.name))
         print command
         p = subprocess.Popen(command.split(), shell=False,
                              stdin=subprocess.PIPE,
@@ -241,20 +239,18 @@ class SparkHelper:
         os.system(command)
         print "Jupyter notebook launched."
 
-    def launch_spark(self, name,
-                     num_of_workers=config['launch']['num-slaves'],
-                     passwd=config['launch']['password'], resume=False):
+    def launch_spark(self, name, num_of_workers, passwd, resume=False):
         self.name, self.workers, self.passwd = name, num_of_workers, passwd
         self.ready = self.dead = False
         # Launch a Spark cluster
         argv = [SPARK_PATH + "/ec2/spark-ec2",
                 "--key-pair=" + self.KEY_PAIR,
                 "--identity-file=" + self.KEY_IDENT_FILE,
-                "--region=" + config['ec2']['region'],
-                "--zone=" + config['ec2']['zone'],
+                "--region=" + self.config['ec2']['region'],
+                "--zone=" + self.config['ec2']['zone'],
                 "--slaves=%d" % int(num_of_workers),
-                "--instance-type=" + config['ec2']['instance-type'],
-                "--spot-price=" + str(config['ec2']['spot-price']),
+                "--instance-type=" + self.config['ec2']['instance-type'],
+                "--spot-price=" + str(self.config['ec2']['spot-price']),
                 "--hadoop-major-version=yarn", "--use-existing-master",
                 "launch"]
         if resume:
