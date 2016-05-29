@@ -15,7 +15,7 @@ button {
   text-align: center;
 }
 
-.form-destroy {
+.form-destroy, .form-add-account {
     margin: auto auto 10px 10px;
 }
 
@@ -23,7 +23,7 @@ pre {
   margin-top: 10px;
 }
 
-.btn-block {
+.btn-block, .btn-form {
     margin-top: 10px;
 }
 

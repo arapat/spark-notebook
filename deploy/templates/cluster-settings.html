@@ -21,12 +21,83 @@
             <a href="http://{{data['master_url']}}:8888">http://{{data['master_url']}}:8888</a>
             (If cannot open, try refresh this page.)</p>
             {% else %}
-            Launching. Please refresh again later.</p>
+            Launching. Please refresh again later.
+            <button class="btn btn-default" onclick="window.location.href=window.location.href;">
+                refresh
+            </button>
+            </p>
             {% endif %}
         <p><b>Spark UI:</b>
             <a href="http://{{data['master_url']}}:8080">http://{{data['master_url']}}:8080</a></p>
         <p><b>SSH access:</b>
             <pre>{{data["aws_access"]}}</pre></p>
+
+        <hr>
+
+        <h4>Set up S3</h4>
+            <p>Specify a set of AWS credential to initialize the <code>s3helper</code>
+                variable in the Jupyter notebook on the cluster.
+               All running notebooks will be closed to take effect.</p>
+            <div class="list-group">
+                {% for cred in data["credentials"]["s3"] %}
+                <form class="form-setup-s3" action="" method="POST">
+                    <input type="hidden" name="type" value="s3"/>
+                    <input type="hidden" name="usage" value="s3"/>
+                    <input type="hidden" name="name" value="{{cred}}"/>
+                    <button type="submit" class="list-group-item">
+                        s3:{{ cred }}
+                    </button>
+                </form>
+                {% endfor %}
+                {% for cred in data["credentials"]["ec2"] %}
+                <form class="form-setup-s3" action="" method="POST">
+                    <input type="hidden" name="type" value="s3"/>
+                    <input type="hidden" name="usage" value="ec2"/>
+                    <input type="hidden" name="name" value="{{cred}}"/>
+                    <button type="submit" class="list-group-item">
+                        ec2:{{ cred }}
+                    </button>
+                </form>
+                {% endfor %}
+            </div>
+
+        {% if "setup-s3" in data %}
+        <div class="alert alert-success" role="alert">Succeed!</div>
+        {% endif %}
+
+        <!-- Button trigger add new account modal -->
+        <button type="button" class="btn btn-default"
+                data-toggle="modal" data-target="#addAccountModal">
+            Add a new credential
+        </button>
+
+        <!-- New account modal -->
+        <div class="modal fade" id="addAccountModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form class="form-add-account" action="/addcred/{{data['account']}}/{{data['cluster_name']}}" method="POST">
+                            <h5 class="form-add-account-heading">Add a new AWS account</h3>
+                                <label>Display name</label>
+                                <input id="name" name="name" class="form-control"
+                                       placeholder="Give a name to this set of credential"
+                                       required>
+
+                                <label>AWS Access Key ID</label>
+                                <input id="aws-access-key-id" class="form-control"
+                                       name="aws-access-key-id" required>
+
+                                <label>AWS Secret Access Key</label>
+                                <input id="aws-secret-access-key" class="form-control"
+                                       name="aws-secret-access-key" required>
+
+                            <button type="submit" class="btn btn-primary btn-form">Add</button>
+                            <button type="button" class="btn btn-default btn-form" data-dismiss="modal">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <hr>
 
@@ -36,7 +107,7 @@
             <label>Remote path</label>
                 <div class="input-group">
                     <input type="text" id="path" name="list-path" class="form-control"
-                           placeholder="Default: /root/ipython" autofocus>
+                           placeholder="Default: /root/ipython">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="submit">List</button>
                     </span>
@@ -104,12 +175,12 @@
         <hr>
 
         <!-- Button trigger destroy modal -->
-        <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#myModal">
+        <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#destroyModal">
             Destroy this cluster
         </button>
 
         <!-- Destroy modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="destroyModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">

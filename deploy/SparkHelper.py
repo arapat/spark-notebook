@@ -46,6 +46,14 @@ def set_password(password, file_path):
     return tempfile
 
 
+def set_s3(aws_access_key_id, aws_secret_access_key):
+    tempfile = "./remote/init_s3.py.temp"
+    with open("./remote/init_s3.py.temp", "w") as f:
+        f.write("s3helper.set_credential('%s', '%s')" %
+                (aws_access_key_id, aws_secret_access_key))
+    return tempfile
+
+
 class SparkHelper:
     def __init__(self):
         self.ready = None
@@ -314,12 +322,20 @@ class SparkHelper:
         self.duration = int(time.time() - self.timer)
         print "The cluster is up! Total: %d seconds." % self.duration
 
-    def check_notebook(self):
-        try:
-            requests.get("http://%s:8888" % self.master_url)
-            print "Notebook ready."
-            return None
-        except:
-            p = Process(target=self.launch_notebook)
-            p.start()
-            return p
+    def check_notebook(self, force=False):
+        if not force:
+            try:
+                requests.get("http://%s:8888" % self.master_url)
+                print "Notebook ready."
+                return None
+            except:
+                pass
+        p = Process(target=self.launch_notebook)
+        p.start()
+        return p
+
+    def setup_s3(self, cred):
+        s3_config = set_s3(
+            cred["aws-access-key-id"], cred["aws-secret-access-key"])
+        self.send_file(s3_config, "~/init_s3.py")
+        os.remove(s3_config)

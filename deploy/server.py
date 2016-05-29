@@ -1,3 +1,4 @@
+import os
 import time
 from operator import itemgetter
 
@@ -95,6 +96,7 @@ def open_cluster(account, cluster):
 
     data = {
         'account': account,
+        'credentials': credentials.load(),
         'account_name': account,
         'cluster_name': cluster,
         'master_url': sh.master_url,
@@ -114,11 +116,19 @@ def open_cluster(account, cluster):
             data['download-log'] = sh.download(
                 request.form['remote-path'], local)
             print 'log:', data['download-log']
-        else:
+        elif action == 'list':
             path = request.form['list-path']
             if path.strip() == '':
                 path = '/root/ipython'
             data['files'] = sh.list_files(path)
+        elif action == 's3':
+            usage, name = request.form["usage"], request.form["name"]
+            sh.setup_s3(data["credentials"][usage][name])
+            process_nb = sh.check_notebook(force=True)
+            data["notebook-ready"] = False
+            data["setup-s3"] = True
+        else:
+            print "Unrecognized parameter, ignored."
 
     return render_template("cluster-settings.html", data=data)
 
@@ -129,3 +139,11 @@ def destroy_cluster(account, cluster):
     sh.init_cluster(cluster)
     sh.destroy()
     return redirect(url_for('open_account', account=account))
+
+
+@app.route("/addcred/<account>/<cluster>", methods=["POST"])
+def add_s3_cred(account, cluster):
+    data = {key: str(request.form[key]) for key in credentials.s3_keys}
+    data['name'] = str(request.form['name'])
+    credentials.save(data, 's3')
+    return redirect(url_for('open_cluster', account=account, cluster=cluster))
