@@ -27,6 +27,9 @@ class Config:
         self.file_path = "./config.yaml"
         self.load()
 
+    def __getitem__(self, args):
+        return self.config[args]
+
     def set_file_path(self, file_path):
         self.file_path = file_path
         self.load()

@@ -43,18 +43,18 @@ def open_account(account):
     data = {
         'account': account,
         'account_name': account,
-        'cluster_name': config.config['launch']['name'],
-        'num_of_workers': str(config.config['launch']['num-slaves']),
-        'password': config.config['launch']['password']
+        'cluster_name': config['launch']['name'],
+        'num_of_workers': str(config['launch']['num-slaves']),
+        'password': config['launch']['password']
     }
 
     if request.method == "POST":
         if sh.ready is not None:
             return ("Error: There is already one cluster in "
                     "the launching process.")
-        name, password, workers = (config.config['launch']['name'],
-                                   config.config['launch']['password'],
-                                   config.config['launch']['num-slaves'])
+        name, password, workers = (config['launch']['name'],
+                                   config['launch']['password'],
+                                   config['launch']['num-slaves'])
         if request.form["name"]:
             name = request.form["name"]
         if len(name.strip().split()) > 1:

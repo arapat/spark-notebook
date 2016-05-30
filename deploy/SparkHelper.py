@@ -91,7 +91,7 @@ class SparkHelper:
         return names
 
     def init_account(self, account):
-        cred = self.config.credentials.credentials
+        cred = self.config.credentials
         self.AWS_ACCESS_KEY_ID, self.AWS_SECRET_ACCESS_KEY = (
             cred["ec2"][account]["aws-access-key-id"],
             cred["ec2"][account]["aws-secret-access-key"]

@@ -1,5 +1,5 @@
 credentials:
-    path: ./credential.yaml
+    path: ./credentials.yaml
 
 ec2:
     region: us-east-1

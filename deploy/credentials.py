@@ -11,6 +11,9 @@ class Credentials:
     def __init__(self, file_path):
         self.set_file_path(file_path)
 
+    def __getitem__(self, args):
+        return self.credentials[args]
+
     def set_file_path(self, file_path):
         self.file_path = file_path
         self.load()
