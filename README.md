@@ -26,7 +26,7 @@ the Spark root directory.
 [spark-ec2](https://github.com/amplab/spark-ec2) script. The Spark launch script
 may be replaced by [Flintrock](https://github.com/nchammas/flintrock) later when
 `Flintrock` makes 1.0 release.
-2. `PYSPARK_PYTHON` will be set to `python2.7` on the cluster.
+2. `PYSPARK_PYTHON` is set to `python2.7` on the cluster.
 3. `numpy` and `matplotlib` are installed by default on the cluster.
 
 
