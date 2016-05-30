@@ -160,6 +160,9 @@ class SparkHelper:
     def upload(self, local, remote):
         if os.path.exists(local):
             r = self.send_file(local, remote)
+            out, err = self.send_command(["/root/spark-ec2/copy-dir", remote])
+            if r is None and err:
+                r = err
         else:
             r = "%s doesn't exist." % local
         return r
