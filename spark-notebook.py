@@ -1,8 +1,5 @@
-import os
-import sys
 import threading
 import webbrowser
-from flask import Flask
 
 from deploy.server import app
 

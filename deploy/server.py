@@ -1,6 +1,5 @@
 import os
 import time
-from operator import itemgetter
 
 from config import Config
 from SparkHelper import SparkHelper
