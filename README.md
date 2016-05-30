@@ -1,8 +1,7 @@
 # Spark Notebook (Launcher)
 
-The Spark Notebook (Launcher) is a web-based interface to launch a cluster on
-Amazon Web Services, then install and start Apache Spark and Jupyter notebook
-on it.
+The Spark Notebook (Launcher) is a web-based interface to install and start
+Apache Spark and Jupyter Notebook on Amazon Web Services.
 
 Requires Python 2.7 and Apache Spark.
 
