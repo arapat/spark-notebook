@@ -4,7 +4,7 @@ import yaml
 from credentials import Credentials
 
 default_config = {
-    "credential": {
+    "credentials": {
         "path": "./credential.yaml"
     },
     "ec2": {
@@ -33,6 +33,11 @@ class Config:
     def set_file_path(self, file_path):
         self.file_path = file_path
         self.load()
+
+    def set_credentials_file_path(self, file_path):
+        self.credentials.set_file_path(file_path)
+        self.config["credentials"]["path"] = file_path
+        self.save()
 
     def load(self):
         def merge_dict(tgt, src):

@@ -22,7 +22,7 @@ process_nb = None
 def select_aws():
     if request.method == "POST":
         if request.form["type"] == "set-path":
-            config.credentials.set_file_path(str(request.form["path"]))
+            config.set_credentials_file_path(str(request.form["path"]))
         elif request.form["type"] == "add-account":
             data = {key: str(request.form[key])
                     for key in config.credentials.ec2_keys}
