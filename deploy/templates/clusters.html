@@ -70,9 +70,32 @@
             <label>Number of worker nodes</label>
             <input id="num_of_workers" class="form-control" name="workers"
                    placeholder="{{"Default: " + data["num_of_workers"]}}">
+            <label>Instances type</label>
+            <input id="instances_type" class="form-control" name="instances"
+                   placeholder="{{"Default: " + data["instances_type"]}}">
+
+            <input type="checkbox" name="spot" id="use-spot" value="yes" checked/>
+            <label style="margin-top: 10px;">
+                Use spot instances (uncheck for on-demand instances)
+            </label>
+            <div id="spot-price">
+                <label>Maximum price per hour</label>
+                <input class="form-control" name="spot-price"
+                       placeholder="{{"Default: $" + data["spot_price"]}}">
+            </div>
             <button class="btn btn-primary btn-block" type="submit">Create</button>
         </form>
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('#use-spot').change(function() {
+        $('#spot-price').toggle();
+    });
+});
+</script>
 {% endblock %}

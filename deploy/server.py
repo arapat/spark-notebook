@@ -44,6 +44,8 @@ def open_account(account):
         'account_name': account,
         'cluster_name': config['launch']['name'],
         'num_of_workers': str(config['launch']['num-slaves']),
+        'spot_price': "%.2f" % config['ec2']['spot-price'],
+        'instances_type': config['ec2']['instance-type'],
         'password': config['launch']['password']
     }
 
@@ -51,9 +53,10 @@ def open_account(account):
         if sh.ready is not None:
             return ("Error: There is already one cluster in "
                     "the launching process.")
-        name, password, workers = (config['launch']['name'],
-                                   config['launch']['password'],
-                                   config['launch']['num-slaves'])
+        name, password, workers, instance, spot_price = (
+            config['launch']['name'], config['launch']['password'],
+            config['launch']['num-slaves'], config['ec2']['instance-type'],
+            config['ec2']['spot-price'])
         if request.form["name"]:
             name = request.form["name"]
         if len(name.strip().split()) > 1:
@@ -65,8 +68,17 @@ def open_account(account):
                 workers = int(request.form["workers"])
             except ValueError:
                 return "Error: Number of workers must be a numeric value."
-        sh.launch_spark(name, num_of_workers=workers,
-                        passwd=password)
+        if request.form["instances"]:
+            instance = request.form["instances"]
+        if "spot" not in request.form or request.form["spot"] != "yes":
+            spot_price = None
+        elif request.form["spot-price"]:
+            try:
+                spot_price = float(request.form["spot-price"])
+            except ValueError:
+                return "Error: Spot price must be a numeric value."
+        sh.launch_spark(name, num_of_workers=workers, instance=instance,
+                        spot_price=spot_price, passwd=password)
         return redirect(url_for('open_account', account=account))
 
     data['clusters'] = sh.get_cluster_names()

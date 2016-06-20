@@ -242,7 +242,8 @@ class SparkHelper:
         os.system(command)
         print "Jupyter notebook launched."
 
-    def launch_spark(self, name, num_of_workers, passwd, resume=False):
+    def launch_spark(self, name, num_of_workers, instance,
+                     spot_price, passwd, resume=False):
         self.name, self.workers, self.passwd = name, num_of_workers, passwd
         self.ready = self.dead = False
         # Launch a Spark cluster
@@ -252,10 +253,11 @@ class SparkHelper:
                 "--region=" + self.config['ec2']['region'],
                 "--zone=" + self.config['ec2']['zone'],
                 "--slaves=%d" % int(num_of_workers),
-                "--instance-type=" + self.config['ec2']['instance-type'],
-                "--spot-price=" + str(self.config['ec2']['spot-price']),
-                "--hadoop-major-version=yarn", "--use-existing-master",
-                "launch"]
+                "--instance-type=" + instance,
+                "--hadoop-major-version=yarn", "--use-existing-master"]
+        if spot_price:
+            argv.append("--spot-price=%.2f" % self.config['ec2']['spot-price'])
+        argv.append("launch")
         if resume:
             argv.append("--resume")
         argv.append(name)
