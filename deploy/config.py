@@ -30,6 +30,11 @@ class Config:
     def __getitem__(self, args):
         return self.config[args]
 
+    def get(self, args, default):
+        if args not in self.config:
+            return default
+        return self.config[args]
+
     def set_file_path(self, file_path):
         self.file_path = file_path
         self.load()

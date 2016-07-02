@@ -3,8 +3,12 @@ import webbrowser
 
 from deploy.server import app
 
-if __name__ == '__main__':
-    threading.Timer(
-        1, lambda: webbrowser.open("http://localhost:5000/")).start()
+debug = False
 
-    app.run(port=5000)
+if __name__ == '__main__':
+    if debug:
+        app.run(port=5000, debug=True)
+    else:
+        threading.Timer(
+            1, lambda: webbrowser.open("http://localhost:5000/")).start()
+        app.run(port=5000)

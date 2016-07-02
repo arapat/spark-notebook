@@ -1,3 +1,5 @@
+spark_path: ./tests/mock/
+
 credentials:
     path: ./credentials.yaml
 
