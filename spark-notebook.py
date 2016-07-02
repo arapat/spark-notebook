@@ -3,7 +3,7 @@ import webbrowser
 
 from deploy.server import app
 
-debug = False
+debug = True
 
 if __name__ == '__main__':
     if debug:

@@ -54,9 +54,6 @@ class ThreadWrapper():
 
 
 class ThreadIO():
-    enter = __enter__
-    exit = __exit__
-
     def __init__(self, stdin=None):
         self.input_q = None
         if stdin:
@@ -78,11 +75,15 @@ class ThreadIO():
         self._stderr = sys.stderr
         sys.stdout = sys.stderr = self
 
+    enter = __enter__
+
     def __exit__(self, *argv):
         if self._stdin is not None:
             self.stdin = self._stdin
         sys.stdout = self._stdout
         sys.stderr = self._stderr
+
+    exit = __exit__
 
     def readline(self):
         return self.input_q.get()
