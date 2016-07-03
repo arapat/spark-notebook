@@ -1,13 +1,11 @@
 import sys
+from time import sleep
 
 
-def good_main():
-    print "Mock succeed."
-    return True
-
-
-def bad_main():
-    print "will fail"
+def main():
+    for k in range(3):
+        print k
+        sleep(1)
+    print sys.argv
+    print "Failed!"
     sys.exit(1)
-
-main = bad_main

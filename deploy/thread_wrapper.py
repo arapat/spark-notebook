@@ -13,7 +13,7 @@ class ThreadWrapper():
 
     def _run_func(self):
         try:
-            self._result = func()
+            self._result = self.func()
         except SystemExit as e:
             if e.code:
                 self.failed = True
@@ -33,7 +33,7 @@ class ThreadWrapper():
             self.io.enter()
 
         self._start_time = time.time()
-        thread = Thread(target=self.run_func)
+        thread = Thread(target=self._run_func)
         thread.start()
         return True
 

@@ -108,8 +108,9 @@ class SparkHelper:
                 "--slaves=%d" % int(self.workers),
                 "--instance-type=" + self.instance,
                 "--hadoop-major-version=yarn",
-                "--use-existing-master",
-                "--spot-price=%.2f" % self.config['ec2']['spot-price']]
+                "--use-existing-master"]
+        if self.spot_price:
+            argv.append("--spot-price=%.2f" % float(self.spot_price))
         argv.append("launch")
         if self.resume:
             argv.append("--resume")
@@ -329,11 +330,11 @@ class SparkHelper:
     def get_setup_duration(self):
         return self._thread_setup.duration()
 
-    def reset_spark_setup(self):
-        self._setup_status = None
-
     def get_setup_log(self):
         return self._io_setup.get_messages()
+
+    def reset_spark_setup(self):
+        self._setup_status = None
 
     def check_notebook(self, force=False):
         if self._thread_notebook and self._thread_notebook.is_running():
