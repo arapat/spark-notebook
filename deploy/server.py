@@ -103,7 +103,10 @@ def open_account(account):
         'instances_type': config['ec2']['instance-type'],
         'password': config['launch']['password']
     }
-    data['clusters'] = spark.get_cluster_names()
+    try:
+        data['clusters'] = spark.get_cluster_names()
+    except Exception as e:
+        return e.message
     data['launching'] = False
     status = spark.get_setup_status()
     if status is not None:
