@@ -23,11 +23,16 @@ default_config = {
 
 
 class Config:
-    def __init__(self):
-        self.file_path = "./config.yaml"
+    def __init__(self, file_path="./config.yaml"):
+        self.file_path = file_path
         self.load()
 
     def __getitem__(self, args):
+        return self.config[args]
+
+    def get(self, args, default):
+        if args not in self.config:
+            return default
         return self.config[args]
 
     def set_file_path(self, file_path):

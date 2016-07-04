@@ -40,13 +40,23 @@
             <p>{{data["pname"]}} (launched {{data["timer"]}} ago)</p>
 
             {% if data['ready'] %}
-            <label>Status</label> <p>Ready.</p>
+            <label>Status</label>
+            <div class="alert alert-success" role="alert">
+                <p>Ready.</p>
+            </div>
+            <label>Log</label>
+            <pre>{{data['launch-log']}}</pre>
             <form class="form-signin" action="/reset/{{data['account']}}" method="POST">
                 <button class="btn btn-primary" type="submit">Launch a new one</button>
             </form>
 
             {% elif data['dead'] %}
-            <label>Status</label> <p>Failed. Please check the terminal for error messages.</p>
+            <label>Status</label>
+            <div class="alert alert-danger">
+                <p>Failed. Please check the following logs and the log file "deploy.log" for more information.</p>
+            </div>
+            <label>Log</label>
+            <pre>{{data['launch-log']}}</pre>
             <form class="form-signin" action="/reset/{{data['account']}}" method="POST">
                 <button class="btn btn-primary" type="submit">Launch a new one</button>
             </form>
@@ -54,7 +64,11 @@
             {% else %}
             <label>Status</label> <p>Not ready. Try refresh again later
             (may take up to 30 minutes).</p>
-
+            <label>Log</label>
+            <pre>{{data['launch-log']}}</pre>
+            <button class="btn btn-default" onclick="window.location.href=window.location.href;">
+                refresh
+            </button>
             {% endif %}
         </div>
 

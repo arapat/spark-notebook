@@ -113,9 +113,7 @@
                     </span>
                 </div>
             {% if "files" in data %}
-            <pre>
-{{data["files"].strip()}}
-            </pre>
+            <pre>{{data["files"].strip()}}</pre>
             {% endif %}
         </form>
 
@@ -136,9 +134,7 @@
                     <div class="alert alert-success" role="alert">Succeed!</div>
                 {% else %}
                     <div class="alert alert-danger" role="alert">
-                        <pre>
-{{data["upload-log"].strip()}}
-                        </pre>
+                        <pre>{{data["upload-log"].strip()}}</pre>
                     </div>
                 {% endif %}
             {% endif %}
@@ -164,9 +160,7 @@
                 <div class="alert alert-success" role="alert">Succeed!</div>
                 {% else %}
                 <div class="alert alert-danger" role="alert">
-                    <pre>
-{{data["download-log"].strip()}}
-                    </pre>
+                    <pre>{{data["download-log"].strip()}}</pre>
                 </div>
                 {% endif %}
             {% endif %}
