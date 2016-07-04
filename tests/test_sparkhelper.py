@@ -78,6 +78,7 @@ def test_failed_setup_cluster():
             " '--hadoop-major-version=yarn', '--use-existing-master', "
             "'--spot-price=0.20', 'launch', 'test-cluster']\n"
             "Failed!\n")
+    assert not spark._thread_setup.is_running()
     assert type(spark.get_setup_duration()) is int
 
     spark.reset_spark_setup()
@@ -103,7 +104,9 @@ def test_failed_setup_cluster_on_demand():
             "'--zone=us-east-1b', '--slaves=10', '--instance-type=r3.xlarge',"
             " '--hadoop-major-version=yarn', '--use-existing-master', "
             "'launch', 'test-cluster']\nFailed!\n")
+    assert not spark._thread_setup.is_running()
     assert type(spark.get_setup_duration()) is int
+    print spark.get_setup_duration()
 
     spark.reset_spark_setup()
     assert spark._setup_status is None

@@ -18,8 +18,8 @@ class ThreadWrapper():
             if e.code:
                 self.failed = True
         except Exception as e:
-            print e
             self.failed = True
+            raise
         finally:
             self._duration = int(time.time() - self._start_time)
             if self.io is not None:
@@ -33,8 +33,8 @@ class ThreadWrapper():
             self.io.enter()
 
         self._start_time = time.time()
-        thread = Thread(target=self._run_func)
-        thread.start()
+        self.thread = Thread(target=self._run_func)
+        self.thread.start()
         return True
 
     def is_running(self):
@@ -64,7 +64,7 @@ class ThreadIO():
         self.output_q = Queue()
         self.output = ''
 
-    def __enter__(self):
+    def enter(self):
         # Overwrite input
         self._stdin = None
         if self.input_q is not None:
@@ -75,15 +75,11 @@ class ThreadIO():
         self._stderr = sys.stderr
         sys.stdout = sys.stderr = self
 
-    enter = __enter__
-
-    def __exit__(self, *argv):
+    def exit(self, *argv):
         if self._stdin is not None:
             self.stdin = self._stdin
         sys.stdout = self._stdout
         sys.stderr = self._stderr
-
-    exit = __exit__
 
     def readline(self):
         return self.input_q.get()
@@ -95,3 +91,6 @@ class ThreadIO():
         while not self.output_q.empty():
             self.output += self.output_q.get()
         return self.output
+
+    def flush(self, *args):
+        pass

@@ -74,20 +74,18 @@ class SparkHelper:
         return out, err
 
     def _send_command(self, command):
-        logger.info('Sending command:', ' '.join(command))
+        logger.info('Sending command:' + ' '.join(command))
         return self._run_command(self.ssh + command)
 
     def _send_file(self, src, tgt):
         command = (' '.join(self.scp[:-1]) + ' ' +
                    src + ' ' + self.scp[-1] + ':' + tgt)
-        out, err = self._run_command(command.split())
-        return err
+        self._run_command(command.split())
 
     def _get_file(self, src, tgt):
         command = (' '.join(self.scp[:-1]) + ' ' +
                    self.scp[-1] + ':' + src + ' ' + tgt)
-        out, err = self._run_command(command.split())
-        return err
+        self._run_command(command.split())
 
     def _launch_spark(self):
         def set_password(password, file_path):
@@ -98,6 +96,8 @@ class SparkHelper:
             with open(tempfile, "w") as f:
                 f.write(r)
             return tempfile
+
+        logger.info("Starting a new cluster: %s" % self.name)
 
         # Launch a Spark cluster
         argv = ["just-a-placeholder",
@@ -121,17 +121,23 @@ class SparkHelper:
         # If return code is not 0, launching was failed.
         if ret_code:
             self._setup_status = self.FAILED
+            print >> sys.stderr, "Launching Spark failed."
             logger.error("Launching Spark failed.")
             return
 
+        print >> sys.stderr, "Setting up cluster."
         logger.info("Setting up cluster.")
 
         self.init_cluster(self.name)
 
         # Write .bashrc
+        print >> sys.stderr, "Writing .bashrc."
+        logger.info("Writing .bashrc.")
         self._send_file("remote/spark-ec2/bashrc", "/root/.bashrc")
 
         # Set up IPython Notebook
+        print >> sys.stderr, "Setting up IPython Notebook."
+        logger.info("Setting up IPython Notebook.")
         with open("remote/spark-ec2/config.yaml", 'r') as stream:
             file_path = yaml.load(stream)
         # IPython config
@@ -146,11 +152,15 @@ class SparkHelper:
 
         # Send Jupyter helper function files for setting up Spark and S3
         # when a new notebook is opened
+        print >> sys.stderr, "Uploading helper functions."
+        logger.info("Uploading helper functions.")
         self._send_file("./remote/init_sc.py", "~")
         self._send_file("./remote/init_s3.py", "~")
         self._send_file("./remote/s3helper.py", "~")
 
         # Install all necessary Python packages
+        print >> sys.stderr, "Installing python packages."
+        logger.info("Installing python packages.")
 
         # Install python dev
         self._send_command(["yum", "install", "-y", "python27-devel"])
@@ -176,6 +186,7 @@ class SparkHelper:
                            "/usr/local/lib64/python2.7/site-packages/"])
 
         self._setup_status = self.SUCCEED
+        print >> sys.stderr, "The cluster is up!"
         logger.info("The cluster is up!")
 
     # TODO: Add exception handling for notebook launching
@@ -354,11 +365,14 @@ class SparkHelper:
     def destroy(self):
         argv = ["just-a-placeholder",
                 "--region=" + self.config['ec2']['region'],
-                self.name]
+                "destroy", self.name]
         logger.info("Destroying the cluster: %s." % self.name)
-        with ThreadIO(["y\n"]) as io:
-            ret_code = call_spark_ec2(argv)
+        io = ThreadIO(["y\n"])
+        io.enter()
+        ret_code = call_spark_ec2(argv)
+        io.exit()
         if ret_code:
             logger.error("Destroying the cluster %s failed." % self.name)
+            logger.error(io.get_messages())
         else:
             logger.info("The cluster %s is destroyed." % self.name)

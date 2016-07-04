@@ -112,6 +112,7 @@ def open_account(account):
         data['timer'] = "%d seconds" % spark.get_setup_duration()
         data['ready'] = (status == spark.SUCCEED)
         data['dead'] = (status == spark.FAILED)
+        data['launch-log'] = spark.get_setup_log()
     return render_template('clusters.html', data=data)
 
 
