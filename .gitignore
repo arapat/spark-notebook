@@ -1,0 +1,7 @@
+credentials.yaml
+*.pyc
+*.log
+.DS_Store
+.env/
+.cache/
+thirdparty/spark/ec2/lib
