@@ -2,15 +2,13 @@ import sys
 import unittest
 from time import sleep
 
-sys.path.append('../deploy')
-
-from config import Config
-from spark_helper import SparkHelper
+from deploy.config import Config
+from deploy.spark_helper import SparkHelper
 
 
 def setup():
-    config = Config("../config.yaml")
-    config.config["spark_path"] = "./mock/spark"
+    config = Config("./config.yaml")
+    config.config["spark_path"] = "./tests/mock/spark"
     return SparkHelper(config)
 
 
@@ -77,7 +75,7 @@ def test_failed_setup_cluster():
             "'--zone=us-east-1b', '--slaves=10', '--instance-type=r3.xlarge',"
             " '--hadoop-major-version=yarn', '--use-existing-master', "
             "'--spot-price=0.20', 'launch', 'test-cluster']\n"
-            "Failed!\n")
+            "Failed!\nLaunching Spark failed.\n")
     assert not spark._thread_setup.is_running()
     assert type(spark.get_setup_duration()) is int
 
@@ -103,7 +101,7 @@ def test_failed_setup_cluster_on_demand():
             "'--identity-file=KEY_IDENT_FILE', '--region=us-east-1', "
             "'--zone=us-east-1b', '--slaves=10', '--instance-type=r3.xlarge',"
             " '--hadoop-major-version=yarn', '--use-existing-master', "
-            "'launch', 'test-cluster']\nFailed!\n")
+            "'launch', 'test-cluster']\nFailed!\nLaunching Spark failed.\n")
     assert not spark._thread_setup.is_running()
     assert type(spark.get_setup_duration()) is int
     print spark.get_setup_duration()
