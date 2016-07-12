@@ -147,9 +147,9 @@ class SparkHelper:
         # Set up Spark
         print >> sys.stderr, "Writing Spark configurations."
         logger.info("Writing spark/conf/spark-defaults.conf")
-        mem_size = 0.9 * self._ec2_config[self.instance]
+        mem_size = int(0.9 * self._ec2_config[self.instance])
         self._send_command(
-            ["echo", '"\nspark.driver.memory\t%.2fg\n"' % mem_size,
+            ["echo", '"\nspark.driver.memory\t%dg\n"' % mem_size,
              ">>", file_path["spark"]["conf-file"]])
 
         # Set up IPython Notebook

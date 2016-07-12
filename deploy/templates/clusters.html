@@ -42,7 +42,7 @@
             {% if data['ready'] %}
             <label>Status</label>
             <div class="alert alert-success" role="alert">
-                <p>Ready.</p>
+                <p>Ready. You can safely disconnect from Internet or kill the Spark-notebook script now.</p>
             </div>
             <label>Log</label>
             <pre>{{data['launch-log']}}</pre>
@@ -64,6 +64,10 @@
             {% else %}
             <label>Status</label> <p>Not ready. Try refresh again later
             (may take up to 30 minutes).</p>
+            <div class="alert alert-danger">
+                <p>Setup in process. <br/>
+                   Please keep the Spark-notebook script running! Please do not disconnect from Internet!</p>
+            </div>
             <label>Log</label>
             <pre>{{data['launch-log']}}</pre>
             <button class="btn btn-default" onclick="window.location.href=window.location.href;">
