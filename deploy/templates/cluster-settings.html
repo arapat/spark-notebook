@@ -29,6 +29,8 @@
             {% endif %}
         <p><b>Spark UI:</b>
             <a href="http://{{data['master_url']}}:8080">http://{{data['master_url']}}:8080</a></p>
+        <p><b>Ganglia:</b>
+            <a href="http://{{data['master_url']}}:5080/ganglia">http://{{data['master_url']}}:5080/ganglia</a></p>
         <p><b>SSH access:</b>
             <pre>{{data["aws_access"]}}</pre></p>
 

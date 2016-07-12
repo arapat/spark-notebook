@@ -11,6 +11,14 @@ def _download_s3(files, tgt, aws_access_key, aws_secret_access_key):
               % (aws_access_key, aws_secret_access_key, files, tgt))
 
 
+def _local_to_hdfs(src, tgt):
+    if tgt[0] != '/':
+        tgt = '/' + tgt
+    os.system("/root/ephemeral-hdfs/bin/hdfs dfs -mkdir -p " + tgt)
+    os.system(("/root/ephemeral-hdfs/bin/hdfs dfs -cp %s %s"
+              % ("file://" + os.path.join(src, '*'), tgt)))
+
+
 class S3Helper:
     """A helper function to access S3 files"""
     def __init__(self):
@@ -158,5 +166,19 @@ class S3Helper:
         if not k:
             raise Exception("File %s doesn't exist." % key_name)
         k.get_contents_to_filename(key.rsplit('/', 1)[-1])
+
+    def copy_dir_to_hdfs(self, src, tgt):
+        """Upload local directory to HDFS.
+
+           Args:
+               src - path to the local directory,
+               tgt - path to the HDFS directory
+           Returns:
+               None
+        """
+        if src[0] != '/' or tgt[0] != '/':
+            raise Exception("The directory path cannot be an relative path.")
+        _local_to_hdfs(src, tgt)
+
 
 s3helper = S3Helper()

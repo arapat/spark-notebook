@@ -42,11 +42,14 @@ def launch_new_cluster():
         except ValueError:
             return "Error: Number of workers must be a numeric value."
 
-    # Instance type: spot or on-demand
+    # Instance type
     if request.form["instances"]:
         instance = request.form["instances"]
+    if not spark.is_valid_ec2_instance(instance):
+        return ('"Error: EC2 Instance type "' + instance + '" ' +
+                "is invalid or not supported.")
 
-    # Spot price
+    # Spot price: spot or on-demand
     if "spot" not in request.form or request.form["spot"] != "yes":
         spot_price = None
     elif request.form["spot-price"]:

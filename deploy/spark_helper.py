@@ -62,6 +62,9 @@ class SparkHelper:
         self._setup_status = None
         logger.info("SparkHelper initialized. Spark path: %s." % SPARK_PATH)
 
+        with open("thirdparty/ec2instances.info/memory.json") as f:
+            self._ec2_config = json.load(f)
+
     def _run_command(self, command):
         if type(command) is str:
             command = command.split()
@@ -130,16 +133,27 @@ class SparkHelper:
 
         self.init_cluster(self.name)
 
+        logger.info("Setting up IPython Notebook.")
+        with open("./remote/spark-ec2/config.yaml", 'r') as stream:
+            file_path = yaml.load(stream)
+
         # Write .bashrc
-        print >> sys.stderr, "Writing .bashrc."
+        print >> sys.stderr, "Writing bash configurations."
         logger.info("Writing .bashrc.")
         self._send_file("remote/spark-ec2/bashrc", "/root/.bashrc")
+        logger.info("Writing .bash_profile.")
+        self._send_file("remote/spark-ec2/bash_profile", "/root/.bash_profile")
+
+        # Set up Spark
+        print >> sys.stderr, "Writing Spark configurations."
+        logger.info("Writing spark/conf/spark-defaults.conf")
+        mem_size = 0.9 * self._ec2_config[self.instance]
+        self._send_command(
+            ["echo", '"\nspark.driver.memory\t%.2fg\n"' % mem_size,
+             ">>", file_path["spark"]["conf-file"]])
 
         # Set up IPython Notebook
         print >> sys.stderr, "Setting up IPython Notebook."
-        logger.info("Setting up IPython Notebook.")
-        with open("remote/spark-ec2/config.yaml", 'r') as stream:
-            file_path = yaml.load(stream)
         # IPython config
         self._send_file("remote/spark-ec2/ipython_config.py",
                         file_path["ipython"]["config-file"])
@@ -208,6 +222,9 @@ class SparkHelper:
         self._run_command(command)
         logger.info("Jupyter notebook launched.")
 
+    def is_valid_ec2_instance(self, instance_name):
+        return instance_name in self._ec2_config
+
     def get_cluster_names(self):
         names = []
         for instance in self.conn.get_only_instances():
@@ -244,10 +261,15 @@ class SparkHelper:
 
         def get_master_url():
             instances = self.conn.get_only_instances(
-                filters={"instance.group-name": "%s-master" % name})
+                filters={"instance.group-name": "%s-master" % name,
+                         "instance-state-name": "running"})
             if not instances:
                 logger.error("No master node exists in %s." % name)
                 return ''
+            dns_name = instances[0].public_dns_name
+            if not dns_name:
+                logger.error("The public DNS name of the %s master node"
+                             " is invalid.")
             return instances[0].public_dns_name
 
         self.name = name
