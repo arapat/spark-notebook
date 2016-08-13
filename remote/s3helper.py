@@ -108,7 +108,7 @@ class S3Helper:
 
         2. Transfer files between S3 and local filesystem (not HDFS)
           a. To download one single S3 file to local filesystem, please call
-                s3helper.s3_to_local(<s3_file_path>)
+                s3helper.s3_to_local(<s3_file_path>, <local_file_path>)
           b. To upload a file on local filesystem to S3, please call
                 s3helper.local_to_s3(<local_file_path>, <s3_directory_path>)
 
