@@ -1,3 +1,4 @@
+import os
 import sys
 import yaml
 
@@ -40,9 +41,19 @@ class Config:
         self.load()
 
     def set_credentials_file_path(self, file_path):
-        self.credentials.set_file_path(file_path)
-        self.config["credentials"]["path"] = file_path
-        self.save()
+        if os.path.exists(os.path.dirname(file_path)):
+            self.credentials.set_file_path(file_path)
+            self.config["credentials"]["path"] = file_path
+            self.save()
+            return [{
+                "alert-type": "alert-success",
+                "message": "Path saved"
+            }]
+        else:
+            return [{
+                "alert-type": "alert-danger",
+                "message": "Path not found"
+            }]
 
     def load(self):
         def merge_dict(tgt, src):
