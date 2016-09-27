@@ -25,7 +25,7 @@
                    placeholder="{{"Current path: " + cred_path}}"
                    required>
             <button type="submit" class="btn btn-primary btn-form">
-                Set file path
+                Set path
             </button>
         </form>
 
@@ -51,9 +51,14 @@
         <h4>Add a new AWS account</h4>
         <form class="form-add-account" action="" method="POST">
             <input type="hidden" name="type" value="add-account"/>
-            <label>Display name</label>
+            <label>Display Name</label>
             <input id="name" name="name" class="form-control"
                    placeholder="A name that will show in the dropdown menu above"
+                   required>
+
+            <label>Your Email Address</label>
+            <input id="name" name="email-address" class="form-control"
+                   placeholder="Enter your @eng.ucsd.edu email address"
                    required>
 
             <label>AWS Access Key ID</label>
@@ -64,15 +69,49 @@
             <input id="aws-secret-access-key" class="form-control"
                    name="aws-secret-access-key" required>
 
-            <label>Key Name</label>
-            <input id="key-name" class="form-control" name="key-name" required>
+            <br/>
+            <div id="myButtons" class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input id="ssh-key" type="radio" class="form-control"
+                           name="ssh-key" value="generate" checked> Generate a New SSH Key
+                </label>
+                <label class="btn btn-primary">
+                    <input id="ssh-key" type="radio" class="form-control"
+                           name="ssh-key" value="existing"> Use an Existing SSH Key
+                </label>
+            </div>
 
-            <label>Key Identity File Path</label>
-            <input id="identity-file" class="form-control"
-                   name="identity-file" required>
+            <br/>
+            <div id="existing-key" style="display: none">
+                <br/>
+                <label>Key Name</label>
+                <input id="key-name" class="form-control" name="key-name">
+
+                <label>Key Identity File Path</label>
+                <input id="identity-file" class="form-control"
+                       name="identity-file">
+            </div>
 
             <button class="btn btn-primary btn-block" type="submit">Add</button>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" language="javascript">
+    $("input:radio[name=ssh-key]").change(function() {
+        var value = $(this).val();
+
+        if (value == "existing") {
+            $("#existing-key").css("display", "inline");
+            $("#key-name").attr("required", "true");
+            $("#identity-file").attr("required", "true");
+        } else {
+            $("#existing-key").css("display", "none");
+            $("#key-name").removeAttr("required");
+            $("#identity-file").removeAttr("required");
+        }
+    });
+</script>
 {% endblock %}
