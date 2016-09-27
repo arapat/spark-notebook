@@ -6,6 +6,14 @@
 
 <hr>
 
+{% if credentials_status != None %}
+    {% for status in credentials_status %}
+    <div class="alert {{ status["alert-type"] }}">
+        {{ status["message"] }}
+    </div>
+    {% endfor %}
+{% endif %}
+
 <div class="row-fluid">
     <div class="span12">
         <h4>Change AWS credential file location</h4>

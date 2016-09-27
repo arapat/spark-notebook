@@ -64,25 +64,27 @@ def launch_new_cluster():
 
 @app.route('/', methods=['GET', 'POST'])
 def select_aws():
+    credentials_status = []
     '''Show all available AWS accounts.'''
     if request.method == "POST":
         # Set a new config file path
         if request.form["type"] == "set-path":
-            config.set_credentials_file_path(str(request.form["path"]))
+            credentials_status = config.set_credentials_file_path(str(request.form["path"]))
         # Add a new AWS account
         elif request.form["type"] == "add-account":
             data = {key: str(request.form[key])
                     for key in config.credentials.ec2_keys}
             data['name'] = str(request.form['name'])
             data['identity-file'] = os.path.expanduser(data['identity-file'])
-            config.credentials.add(data, 'ec2')
+            credentials_status = config.credentials.add(data, 'ec2')
         # Invalid parameter
         else:
             pass
 
     return render_template('accounts.html',
                            clusters=config.credentials.credentials,
-                           cred_path=config.credentials.file_path)
+                           cred_path=config.credentials.file_path,
+                           credentials_status=credentials_status)
 
 
 @app.route('/account/<account>', methods=['GET', 'POST'])
