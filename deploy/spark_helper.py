@@ -110,6 +110,8 @@ class SparkHelper:
                 "--zone=" + self.config['ec2']['zone'],
                 "--slaves=%d" % int(self.workers),
                 "--instance-type=" + self.instance,
+                "--additional-tags=cluster:%s,email:%s" %
+                (self.email_address.split("@")[0], self.email_address),
                 "--hadoop-major-version=yarn",
                 "--use-existing-master"]
         if self.spot_price:
@@ -246,6 +248,7 @@ class SparkHelper:
             cred["ec2"][account]["key-name"],
             cred["ec2"][account]["identity-file"]
         )
+        self.email_address = cred["ec2"][account]["email-address"]
         self.conn = boto.ec2.connect_to_region(
             self.config['ec2']['region'],
             aws_access_key_id=self.AWS_ACCESS_KEY_ID,
