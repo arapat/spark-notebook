@@ -52,8 +52,6 @@ class SparkHelper:
         p = subprocess.Popen(command, shell=False,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        if p.poll() == 0:
-            return None
         return out, err
 
     def _send_command(self, command, master_only=False):
@@ -265,7 +263,7 @@ class SparkHelper:
     def list_files(self, path):
         command = self.ssh + ["ls", "-lrt", path]
         out, err = self._run_command(command)
-        return out + '\n' + err
+        return out.decode() + '\n' + err.decode()
 
     def download(self, remote, local):
         self._send_command(["mv", "~/workspace/metastore_db", "~"], True)
