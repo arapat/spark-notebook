@@ -9,7 +9,7 @@ Requires Python 3.4 or newer.
 ## Installation
 
 It is a good idea to create a virtual environment for `spark-notebook`, especially
-if the default `python` on your system is an older version. But it is not an
+if the default `python` on your system is an older version. But it is not a
 requirement. [This article](https://hackercodex.com/guide/python-development-environment-on-mac-osx/)
 is a good reference if you are new to Python development environment.
 
