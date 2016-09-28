@@ -13,16 +13,17 @@ if the default `python` on your system is an older version. But it is not a
 requirement. [This article](https://hackercodex.com/guide/python-development-environment-on-mac-osx/)
 is a good reference if you are new to Python development environment.
 
-1. Make sure you have python 3.4 or newer version installed. If not, install it first.
-2. Create a virtual environment which uses `python3`.
+(1) Make sure you have python 3.4 or newer version installed. If not, install it first.
+
+(2) Create a virtual environment which uses `python3`.
 ```
 virtualenv -p python3 <env_name>
 ```
-3. Activate the virtualenv created in step 2.
+(3) Activate the virtualenv created in step 2.
 ```
 source <env_name>/bin/activate
 ```
-4. Install required packages.
+(4) Install required packages.
 ```
 pip install -r requirements.txt
 ```
@@ -30,12 +31,12 @@ pip install -r requirements.txt
 
 ## Usage
 
-1. (if running in virtualenv) Activate virtualenv
+If the required packages are installed in a virtualenv, activate the virtualenv first.
 ```
 source <env_name>/bin/activate
 ```
-2. Run `python spark-notebook.py`.
-3. A browser window will automatically open the URL `http://localhost:5000`.
+1. Run `python spark-notebook.py`.
+2. A browser window will automatically open the URL `http://localhost:5000`.
 
 
 ## Details
