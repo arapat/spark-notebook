@@ -1,12 +1,15 @@
 import socket
+import sys
 import threading
 import webbrowser
-
-from deploy.server import app
 
 debug = False
 
 if __name__ == '__main__':
+    if sys.version_info < (3, 4):
+        print("Error: Spark-notebook requires Python 3.4 or newer.")
+        sys.exit(1)
+    from deploy.server import app
     if debug:
         app.run(port=5000, debug=True)
     else:

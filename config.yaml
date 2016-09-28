@@ -12,7 +12,6 @@ providers:
     instance-initiated-shutdown-behavior: terminate
     instance-type: m3.medium
     region: us-east-1
-    spot-price: 0.5
     user: ec2-user
 services:
   hdfs:

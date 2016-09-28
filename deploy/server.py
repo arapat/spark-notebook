@@ -145,7 +145,8 @@ def open_cluster(account, cluster):
         'account_name': account,
         'cluster_name': cluster,
         'master_url': spark.master_url,
-        'notebook-ready': status is None
+        'notebook-ready': status is None,
+        'password': config['launch']['password']
     }
     data['aws_access'] = ("ssh -i %s %s@%s" %
                           (spark.KEY_IDENT_FILE, config['providers']['ec2']['user'],

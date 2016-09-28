@@ -95,7 +95,7 @@ class SparkHelper:
         logger.info("Flintrock path: " + prog_path)
         env = os.environ.copy()
         argv = (
-            "python -u %s --config ./config.yaml launch --assume-yes " % prog_path +
+            "python3 -u %s --config ./config.yaml launch --assume-yes " % prog_path +
             "--num-slaves " + str(self.workers) + " --ec2-instance-type %s " % self.instance +
             "--ec2-key-name " + self.KEY_PAIR + " --ec2-identity-file " + self.KEY_IDENT_FILE
         )
@@ -141,7 +141,7 @@ class SparkHelper:
         logger.info("Writing spark/conf/spark-defaults.conf")
         mem_size = int(0.9 * self._ec2_config[self.instance])
         self._send_command(
-            ('echo "\\nspark.driver.memory\\t%dg\\n" '
+            ('echo "\nspark.driver.memory\t%dg\n" '
              '>> ~/spark/conf/spark-defaults.conf' % mem_size), True)
 
         # Set up IPython Notebook
