@@ -1,8 +1,11 @@
 import os
 import time
 
-from config import Config
-from spark_helper import SparkHelper
+from .config import Config
+from .spark_helper import SparkHelper
+from .spark_helper import IN_PROCESS
+from .spark_helper import SUCCEED
+from .spark_helper import FAILED
 
 from flask import Flask
 from flask import redirect
@@ -22,8 +25,8 @@ def launch_new_cluster():
 
     name, password, workers, instance, spot_price = (
         config['launch']['name'], config['launch']['password'],
-        config['launch']['num-slaves'], config['ec2']['instance-type'],
-        config['ec2']['spot-price'])
+        config['launch']['num-slaves'], config['providers']['ec2']['instance-type'],
+        config['providers']['ec2']['spot-price'])
 
     # Cluster name
     if request.form["name"]:
@@ -63,7 +66,7 @@ def launch_new_cluster():
 
 
 @app.route('/', methods=['GET', 'POST'])
-def select_aws():
+def select_account():
     '''Show all available AWS accounts.'''
     if request.method == "POST":
         # Set a new config file path
@@ -102,8 +105,8 @@ def open_account(account):
         'account_name': account,
         'cluster_name': config['launch']['name'],
         'num_of_workers': str(config['launch']['num-slaves']),
-        'spot_price': "%.2f" % config['ec2']['spot-price'],
-        'instances_type': config['ec2']['instance-type'],
+        'spot_price': "%.2f" % config['providers']['ec2']['spot-price'],
+        'instances_type': config['providers']['ec2']['instance-type'],
         'password': config['launch']['password']
     }
     try:
@@ -116,8 +119,8 @@ def open_account(account):
         data['launching'] = True
         data['pname'] = spark.name
         data['timer'] = "%d seconds" % spark.get_setup_duration()
-        data['ready'] = (status == spark.SUCCEED)
-        data['dead'] = (status == spark.FAILED)
+        data['ready'] = (status == SUCCEED)
+        data['dead'] = (status == FAILED)
         data['launch-log'] = spark.get_setup_log()
     return render_template('clusters.html', data=data)
 
@@ -142,10 +145,12 @@ def open_cluster(account, cluster):
         'account_name': account,
         'cluster_name': cluster,
         'master_url': spark.master_url,
-        'notebook-ready': status is None
+        'notebook-ready': status is None,
+        'password': config['launch']['password']
     }
-    data['aws_access'] = ("ssh -i %s root@%s" %
-                          (spark.KEY_IDENT_FILE, spark.master_url))
+    data['aws_access'] = ("ssh -i %s %s@%s" %
+                          (spark.KEY_IDENT_FILE, config['providers']['ec2']['user'],
+                           spark.master_url))
 
     if request.method == "POST":
         action = request.form['type']
@@ -160,11 +165,11 @@ def open_cluster(account, cluster):
             data['download-log'] = spark.download(
                 request.form['remote-path'],
                 os.path.expanduser(request.form['local-path']))
-        # List files in a remote directory, default: /root/ipython
+        # List files in a remote directory, default: ~/workspace
         elif action == 'list':
             path = request.form['list-path'].strip()
             if not path:
-                path = '/root/ipython'
+                path = '~/workspace'
             data['files'] = spark.list_files(path)
         # Set a new S3 credentials to the Jupyter Notebook on AWS
         elif action == 's3':
