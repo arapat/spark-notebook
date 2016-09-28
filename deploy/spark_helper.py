@@ -45,20 +45,27 @@ class SparkHelper:
         with open("thirdparty/ec2instances.info/memory.json") as f:
             self._ec2_config = json.load(f)
 
-    def _run_command(self, command):
-        if type(command) is str:
+    def _run_command(self, command, shell=False):
+        if not shell and type(command) is str:
             command = command.split()
-        logger.info("Running command: " + " ".join(command))
-        p = subprocess.Popen(command, shell=False,
+        str_cmd = command
+        if type(str_cmd) is list:
+            str_cmd = ' '.join(str_cmd)
+        logger.info("Running command: " + str_cmd)
+        p = subprocess.Popen(command, shell=shell,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
         return out, err
 
     def _send_command(self, command, master_only=False):
-        cmd = ["flintrock", "--config", "./config.yaml", "run-command", self.name]
+        cmd = ("flintrock --config ./config.yaml run-command " + self.name +
+               " --ec2-identity-file " + self.KEY_IDENT_FILE)
         if master_only:
-            cmd.append("--master-only")
-        self._run_command(cmd + ["--"] + command)
+            cmd += " --master-only"
+        cmd += " '" + command + "'"
+        out, err = self._run_command(cmd, True)
+        if err:
+            logger.error(err.decode())
 
     def _send_file(self, src, tgt):
         command = (' '.join(self.scp[:-1]) + ' ' +
@@ -85,15 +92,18 @@ class SparkHelper:
         # Launch a Spark cluster
         prog_path = (subprocess.Popen("which flintrock", stdout=subprocess.PIPE, shell=True)
                                .communicate()[0].decode().strip())
+        logger.info("Flintrock path: " + prog_path)
         env = os.environ.copy()
         argv = (
             "python -u %s --config ./config.yaml launch --assume-yes " % prog_path +
-            "--num-slaves " + str(self.workers) + " --ec2-instance-type " + self.instance
+            "--num-slaves " + str(self.workers) + " --ec2-instance-type %s " % self.instance +
+            "--ec2-key-name " + self.KEY_PAIR + " --ec2-identity-file " + self.KEY_IDENT_FILE
         )
         if self.spot_price:
             argv += " --ec2-spot-price " + str(self.spot_price)
         argv += " " + self.name
 
+        logger.info("Running command: " + argv)
         proc = subprocess.Popen(argv.split(), env=env,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT)
@@ -132,12 +142,12 @@ class SparkHelper:
         mem_size = int(0.9 * self._ec2_config[self.instance])
         self._send_command(
             ('echo "\\nspark.driver.memory\\t%dg\\n" '
-             '>> ~/spark/conf/spark-defaults.conf' % mem_size).split(), True)
+             '>> ~/spark/conf/spark-defaults.conf' % mem_size), True)
 
         # Set up IPython Notebook
         print("Setting up IPython Notebook.")
         # IPython config
-        self._send_command("mkdir -p ~/.ipython/profile_default".split(), True)
+        self._send_command("mkdir -p ~/.ipython/profile_default", True)
         self._send_file("remote/spark-ec2/ipython_config.py",
                         "~/.ipython/profile_default/ipython_config.py")
         # IPython Notebook config
@@ -160,14 +170,14 @@ class SparkHelper:
         logger.info("Installing python packages.")
 
         self._send_command(
-            "sudo yum install -y python27-numpy python27-matplotlib".split())
+            "sudo yum install -y python27-numpy python27-matplotlib")
         print("Installed python package: numpy, matplotlib.")
         self._send_command(
-            "sudo yum install -y gcc gcc-c++".split(), True)
+            "sudo yum install -y gcc gcc-c++", True)
         print("Installed gcc.")
         for package in ["jupyter", "boto", "requests"]:
             self._send_command(
-                ("sudo pip install --upgrade " + package).split(), True)
+                ("sudo pip install --upgrade " + package), True)
             print("Installed python package: " + package + ".")
 
         self._setup_status = SUCCEED
@@ -177,16 +187,16 @@ class SparkHelper:
     # TODO: Add exception handling for notebook launching
     def _launch_notebook(self):
         # Kill launched notebooks
-        self._send_command(["kill", "-9", "`pidof python2.7`"], True)
+        self._send_command("kill -9 `pidof python2.7`", True)
         # Upload sample notebooks
-        self._send_command(["mkdir", "-p", "~/workspace/examples"], True)
+        self._send_command("mkdir -p ~/workspace/examples", True)
         self._send_file('./remote/examples/FilesIO.ipynb',
                         '~/workspace/examples')
         # Restart Spark - in case some python process stucked
-        self._send_command(["~/spark/sbin/stop-all.sh"], True)
-        self._send_command(["~/spark/sbin/start-all.sh"], True)
+        self._send_command("~/spark/sbin/stop-all.sh", True)
+        self._send_command("~/spark/sbin/start-all.sh", True)
         # Re-generate Jupyter notebook configs
-        self._send_command(["rm", "-rf", "~/.jupyter"], True)
+        self._send_command("rm -rf ~/.jupyter", True)
         # Launch notebook remotely
         command = self.ssh + ["nohup jupyter notebook > /dev/null "
                               "2> /dev/null < /dev/null &"]
@@ -266,9 +276,9 @@ class SparkHelper:
         return out.decode() + '\n' + err.decode()
 
     def download(self, remote, local):
-        self._send_command(["mv", "~/workspace/metastore_db", "~"], True)
+        self._send_command("mv ~/workspace/metastore_db ~", True)
         r = self._get_file(remote, local)
-        self._send_command(["mv", "~/metastore_db", "~/workspace"], True)
+        self._send_command("mv ~/metastore_db ~/workspace", True)
         return r
 
     # TODO: sync files across the cluster

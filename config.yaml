@@ -9,10 +9,8 @@ providers:
   ec2:
     ami: ami-6869aa05
     availability-zone: us-east-1b
-    identity-file: /home/arapat/vault/cse255.pem
     instance-initiated-shutdown-behavior: terminate
     instance-type: m3.medium
-    key-name: cse255
     region: us-east-1
     spot-price: 0.5
     user: ec2-user
