@@ -1,15 +1,23 @@
-spark_path: ./thirdparty/spark/ec2
-
 credentials:
-    path: ./credentials.yaml
-
-ec2:
-    region: us-east-1
-    zone: us-east-1b
-    instance-type: r3.2xlarge
-    spot-price: 0.5
-
+  path: ./credentials.yaml
 launch:
-    name: demo-cluster
-    num-slaves: 2
-    password: change-me-321
+  install-hdfs: true
+  name: demo-cluster
+  num-slaves: 1
+  password: change-me-321
+providers:
+  ec2:
+    ami: ami-6869aa05
+    availability-zone: us-east-1b
+    identity-file: /home/arapat/vault/cse255.pem
+    instance-initiated-shutdown-behavior: terminate
+    instance-type: m3.medium
+    key-name: cse255
+    region: us-east-1
+    spot-price: 0.5
+    user: ec2-user
+services:
+  hdfs:
+    version: 2.7.2
+  spark:
+    version: 2.0.0

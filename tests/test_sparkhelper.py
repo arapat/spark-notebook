@@ -52,7 +52,7 @@ def test_failed_launch_spark():
             " '--hadoop-major-version=yarn', '--use-existing-master', "
             "'--spot-price=0.20', 'launch', '--resume', 'test-cluster']\n"
             "Failed!\n")
-    assert spark._setup_status == spark.FAILED
+    assert spark._setup_status == FAILED
 
 
 def test_failed_setup_cluster():
@@ -64,11 +64,11 @@ def test_failed_setup_cluster():
     assert spark.get_setup_status() is None
     spark.setup_cluster("test-cluster", "10", "r3.xlarge",
                         "0.2", "passwd123", False)
-    assert spark.get_setup_status() == spark.IN_PROCESS
+    assert spark.get_setup_status() == IN_PROCESS
 
     sleep(5)
 
-    assert spark.get_setup_status() == spark.FAILED
+    assert spark.get_setup_status() == FAILED
     assert (spark.get_setup_log() ==
             "0\n1\n2\n['just-a-placeholder', '--key-pair=KEY_PAIR', "
             "'--identity-file=KEY_IDENT_FILE', '--region=us-east-1', "
@@ -91,11 +91,11 @@ def test_failed_setup_cluster_on_demand():
     assert spark.get_setup_status() is None
     spark.setup_cluster("test-cluster", "10", "r3.xlarge",
                         None, "passwd123", False)
-    assert spark.get_setup_status() == spark.IN_PROCESS
+    assert spark.get_setup_status() == IN_PROCESS
 
     sleep(5)
 
-    assert spark.get_setup_status() == spark.FAILED
+    assert spark.get_setup_status() == FAILED
     assert (spark.get_setup_log() ==
             "0\n1\n2\n['just-a-placeholder', '--key-pair=KEY_PAIR', "
             "'--identity-file=KEY_IDENT_FILE', '--region=us-east-1', "

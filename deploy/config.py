@@ -1,22 +1,34 @@
 import sys
 import yaml
 
-from credentials import Credentials
+from .credentials import Credentials
 
 default_config = {
     "credentials": {
         "path": "./credential.yaml"
     },
-    "ec2": {
-        "user": "root",
-        "region": "us-east-1",
-        "zone": "us-east-1b",
-        "instance-type": "r3.2xlarge",
-        "spot-price": 0.5
+    "providers": {
+        "ec2": {
+            "region": "us-east-1",
+            "availability-zone": "us-east-1b",
+            "instance-type": "r3.2xlarge",
+            "ami": "ami-6869aa05",
+            "user": "ec2-user",
+            "spot-price": 0.5
+        }
+    },
+    "services": {
+        "spark": {
+            "version": "2.0.0"
+        },
+        "hdfs": {
+            "version": "2.7.2"
+        }
     },
     "launch": {
         "name": "demo-cluster",
-        "num-slaves": 2,
+        "num-slaves": 1,
+        "install-hdfs": True,
         "password": "change-me-321"
     }
 }
