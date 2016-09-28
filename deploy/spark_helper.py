@@ -95,7 +95,7 @@ class SparkHelper:
         logger.info("Flintrock path: " + prog_path)
         env = os.environ.copy()
         argv = (
-            "python3 -u %s --config ./config.yaml launch --assume-yes " % prog_path +
+            "python -u %s --config ./config.yaml launch --assume-yes " % prog_path +
             "--num-slaves " + str(self.workers) + " --ec2-instance-type %s " % self.instance +
             "--ec2-key-name " + self.KEY_PAIR + " --ec2-identity-file " + self.KEY_IDENT_FILE
         )
