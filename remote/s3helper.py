@@ -1,6 +1,7 @@
 # coding: utf-8
 from boto.exception import S3ResponseError
 from boto.s3.connection import S3Connection
+from os.path import expanduser
 import os
 import subprocess
 
@@ -19,7 +20,7 @@ def _run_command(command, detail=False):
 
 
 def _list_hdfs(path):
-    command = "/root/ephemeral-hdfs/bin/hdfs dfs -ls " + path
+    command = expanduser("~/hadoop/bin/hdfs dfs -ls ") + path
     out, err = _run_command(command)
     if out:
         print out
@@ -27,12 +28,12 @@ def _list_hdfs(path):
 
 def _s3_to_hdfs(files, tgt, aws_access_key, aws_secret_access_key):
     out, err1 = _run_command(
-        "/root/ephemeral-hdfs/bin/hdfs dfs -mkdir -p " + tgt)
+        expanduser("~/hadoop/bin/hdfs dfs -mkdir -p ") + tgt)
     if err1:
         print err1
         return
     out, err2 = _run_command(
-        "/root/ephemeral-hdfs/bin/hdfs dfs "
+        expanduser("~/hadoop/bin/hdfs dfs ") +
         "-Dfs.s3n.awsAccessKeyId=%s -Dfs.s3n.awsSecretAccessKey=%s "
         "-cp %s %s"
         % (aws_access_key, aws_secret_access_key, files, tgt))
@@ -42,7 +43,7 @@ def _s3_to_hdfs(files, tgt, aws_access_key, aws_secret_access_key):
 
 def _hdfs_to_s3(files, tgt, aws_access_key, aws_secret_access_key):
     out, err = _run_command(
-        "/root/ephemeral-hdfs/bin/hadoop distcp "
+        expanduser("~/hadoop/bin/hadoop distcp ") +
         "-Dfs.s3n.awsAccessKeyId=%s -Dfs.s3n.awsSecretAccessKey=%s "
         "%s %s"
         % (aws_access_key, aws_secret_access_key, files, tgt), True)
@@ -54,12 +55,12 @@ def _local_to_hdfs(src, tgt):
     if tgt[0] != '/':
         tgt = '/' + tgt
     out, err1 = _run_command(
-        "/root/ephemeral-hdfs/bin/hdfs dfs -mkdir -p " + tgt)
+        expanduser("~/hadoop/bin/hdfs dfs -mkdir -p ") + tgt)
     if err1:
         print err1
         return
     out, err2 = _run_command(
-        "/root/ephemeral-hdfs/bin/hdfs dfs -cp %s %s"
+        expanduser("~/hadoop/bin/hdfs dfs -cp %s %s")
         % ("file://" + os.path.join(src, '*'), tgt))
     if err2:
         print err2
