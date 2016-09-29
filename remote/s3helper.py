@@ -32,20 +32,20 @@ def _s3_to_hdfs(files, tgt, aws_access_key, aws_secret_access_key):
     if err1:
         print err1
         return
-    out, err2 = _run_command(
+    out, err2 = _run_command((
         expanduser("~/hadoop/bin/hdfs dfs ") +
         "-Dfs.s3n.awsAccessKeyId=%s -Dfs.s3n.awsSecretAccessKey=%s "
-        "-cp %s %s"
+        "-cp %s %s")
         % (aws_access_key, aws_secret_access_key, files, tgt))
     if err2:
         print err2
 
 
 def _hdfs_to_s3(files, tgt, aws_access_key, aws_secret_access_key):
-    out, err = _run_command(
+    out, err = _run_command((
         expanduser("~/hadoop/bin/hadoop distcp ") +
         "-Dfs.s3n.awsAccessKeyId=%s -Dfs.s3n.awsSecretAccessKey=%s "
-        "%s %s"
+        "%s %s")
         % (aws_access_key, aws_secret_access_key, files, tgt), True)
     if err:
         print err

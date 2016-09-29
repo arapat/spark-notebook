@@ -106,7 +106,7 @@ class SparkHelper:
         logger.info("Running command: " + argv)
         proc = subprocess.Popen(argv.split(), env=env,
                                 stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT)
+                                stderr=subprocess.PIPE)
         while True:
             line = proc.stdout.readline().decode().strip()
             print(line)
@@ -118,6 +118,9 @@ class SparkHelper:
         # If return code is not 0, launching was failed.
         if proc.poll():
             self._setup_status = FAILED
+            error_msg = proc.stderr.read().decode().strip()
+            print(error_msg)
+            logger.error(error_msg)
             print("Launching Spark failed.", file=sys.stderr)
             logger.error("Launching Spark failed.")
             return
@@ -135,6 +138,14 @@ class SparkHelper:
         self._send_file("remote/spark-ec2/bashrc", "~/.bashrc")
         logger.info("Writing .bash_profile.")
         self._send_file("remote/spark-ec2/bash_profile", "~/.bash_profile")
+
+        # Set up HDFS
+        print("Writing HDFS configurations.")
+        logger.info("Writing hadoop/conf/hadoop-env.sh")
+        self._send_command(
+            ('echo "\nexport HADOOP_CLASSPATH=$HADOOP_CLASSPATH:'
+             '$HADOOP_HOME/share/hadoop/tools/lib/*\n" '
+             '>> ~/hadoop/conf/hadoop-env.sh'), True)
 
         # Set up Spark
         print("Writing Spark configurations.")
@@ -173,8 +184,8 @@ class SparkHelper:
             "sudo yum install -y python27-numpy python27-matplotlib")
         print("Installed python package: numpy, matplotlib.")
         self._send_command(
-            "sudo yum install -y gcc gcc-c++", True)
-        print("Installed gcc.")
+            "sudo yum install -y gcc gcc-c++ git", True)
+        print("Installed gcc, git.")
         for package in ["jupyter", "boto", "requests"]:
             self._send_command(
                 ("sudo pip install --upgrade " + package), True)
@@ -187,7 +198,7 @@ class SparkHelper:
     # TODO: Add exception handling for notebook launching
     def _launch_notebook(self):
         # Kill launched notebooks
-        self._send_command("kill -9 `pidof python2.7`", True)
+        self._send_command("kill -9 $(pgrep jupyter)", True)
         # Upload sample notebooks
         self._send_command("mkdir -p ~/workspace/examples", True)
         self._send_file('./remote/examples/FilesIO.ipynb',
