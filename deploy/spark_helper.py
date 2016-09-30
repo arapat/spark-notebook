@@ -103,6 +103,7 @@ class SparkHelper:
             argv += " --ec2-spot-price " + str(self.spot_price)
         argv += " " + self.name
 
+        '''
         logger.info("Running command: " + argv)
         proc = subprocess.Popen(argv.split(), env=env,
                                 stdout=subprocess.PIPE,
@@ -124,6 +125,7 @@ class SparkHelper:
             print("Launching Spark failed.", file=sys.stderr)
             logger.error("Launching Spark failed.")
             return
+        '''
 
         print("Setting up cluster.")
         logger.info("Setting up cluster.")
@@ -143,9 +145,14 @@ class SparkHelper:
         print("Writing HDFS configurations.")
         logger.info("Writing hadoop/conf/hadoop-env.sh")
         self._send_command(
-            ('echo "\nexport HADOOP_CLASSPATH=$HADOOP_CLASSPATH:'
-             '$HADOOP_HOME/share/hadoop/tools/lib/*\n" '
+            ('echo "\nexport HADOOP_CLASSPATH=\$HADOOP_CLASSPATH:'
+             '\$HADOOP_HOME/share/hadoop/tools/lib/*\n" '
              '>> ~/hadoop/conf/hadoop-env.sh'), True)
+        print("Restart Hadoop.")
+        logger.info("Restart Hadoop.")
+        # Restart Hadoop because new jars appended to CLASSPATH
+        self._send_command("~/hadoop/sbin/stop-dfs.sh", True)
+        self._send_command("~/hadoop/sbin/start-dfs.sh", True)
 
         # Set up Spark
         print("Writing Spark configurations.")
