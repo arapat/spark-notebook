@@ -103,7 +103,6 @@ class SparkHelper:
             argv += " --ec2-spot-price " + str(self.spot_price)
         argv += " " + self.name
 
-        '''
         logger.info("Running command: " + argv)
         proc = subprocess.Popen(argv.split(), env=env,
                                 stdout=subprocess.PIPE,
@@ -125,7 +124,6 @@ class SparkHelper:
             print("Launching Spark failed.", file=sys.stderr)
             logger.error("Launching Spark failed.")
             return
-        '''
 
         print("Setting up cluster.")
         logger.info("Setting up cluster.")
