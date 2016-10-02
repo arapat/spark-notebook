@@ -267,7 +267,7 @@ class SparkHelper:
                 filters={"instance.group-name": "flintrock",
                          "instance-state-name": "running"})
             for instance in instances:
-                if 'Name' in instance.tags and instance.tags['Name'].endswith('-master'):
+                if 'Name' in instance.tags and instance.tags['Name'] == name + '-master':
                     break
             if not instance:
                 logger.error("No master node exists in %s." % name)
