@@ -39,18 +39,39 @@ source <env_name>/bin/activate
 2. A browser window will automatically open the URL `http://localhost:5000`.
 
 
-## Details
+## Environment
 
 1. Apache Spark will be installed using [Flintrock](https://github.com/nchammas/flintrock).
 2. `PYSPARK_PYTHON` is set to `python2.7` on the cluster.
 3. `numpy` and `matplotlib` are installed by default on the cluster.
 
 
+## Create SparkContext `sc` in Jupyter Notebook
+
+Here is a sample code to create a SparkContext variable in a Jupyter Notebook.
+```python
+from pyspark import SparkConf
+from pyspark import SparkContext
+
+# Required if you need to access s3n filesystem
+extra_classpath = ("/home/ec2-user/hadoop/share/hadoop/tools/lib/hadoop-aws-2.7.2.jar:"
+                   "/home/ec2-user/hadoop/share/hadoop/tools/lib/aws-java-sdk-1.7.4.jar:"
+                   "/home/ec2-user/hadoop/share/hadoop/tools/lib/guava-11.0.2.jar")
+
+# `master_url` is equal to the Spark master URL, and is created by spark-notebook
+conf = SparkConf().setMaster(master_url) \
+                  .set("spark.driver.extraClassPath", extra_classpath) \
+                  .set("spark.executor.extraClassPath", extra_classpath)
+
+sc = SparkContext(conf=conf)
+```
+
+
 ## Accessing S3
 
 A helper variable `s3helper` is initialized when Jupyter Notebook is launched.
 [remote/examples/FilesIO.ipynb](https://github.com/arapat/spark-notebook/blob/master/remote/examples/FilesIO.ipynb)
-contains examples of using `s3helper`.
+contains examples of using `s3helper`. Alternatively, you can try to call `s3helper.help()`.
 
 ### Set up your S3 credentials
 
