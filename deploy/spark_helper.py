@@ -99,6 +99,7 @@ class SparkHelper:
             "--num-slaves " + str(self.workers) + " --ec2-instance-type %s " % self.instance +
             "--ec2-key-name " + self.KEY_PAIR + " --ec2-identity-file " + self.KEY_IDENT_FILE
         )
+
         if self.spot_price:
             argv += " --ec2-spot-price " + str(self.spot_price)
         argv += " " + self.name
@@ -249,6 +250,7 @@ class SparkHelper:
             cred["ec2"][account]["key-name"],
             cred["ec2"][account]["identity-file"]
         )
+        self.email_address = cred["ec2"][account]["email-address"]
         self.conn = boto.ec2.connect_to_region(
             self.config['providers']['ec2']['region'],
             aws_access_key_id=self.AWS_ACCESS_KEY_ID,
