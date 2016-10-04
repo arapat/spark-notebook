@@ -252,7 +252,7 @@ class S3Helper:
         prefix = "s3n://%s/" % self.bucket_name
         _s3_to_hdfs(' '.join([prefix + t.key for t in files]),
                     tgt, self.aws_access_key, self.aws_secret_access_key)
-        return [tgt + t.key.rsplit('/', 1)[1] for t in files]
+        self.ls_hdfs(tgt)
 
     def hdfs_to_s3(self, src, tgt):
         """Upload a directory `src` on HDFS to a directory `tgt` on S3.
