@@ -53,16 +53,8 @@ Here is a sample code to create a SparkContext variable in a Jupyter Notebook.
 from pyspark import SparkConf
 from pyspark import SparkContext
 
-# Required if you need to access s3n filesystem
-extra_classpath = ("/home/ec2-user/hadoop/share/hadoop/tools/lib/hadoop-aws-2.7.2.jar:"
-                   "/home/ec2-user/hadoop/share/hadoop/tools/lib/aws-java-sdk-1.7.4.jar:"
-                   "/home/ec2-user/hadoop/share/hadoop/tools/lib/guava-11.0.2.jar")
-
 # `master_url` is equal to the Spark master URL, and is created by spark-notebook
-conf = SparkConf().setMaster(master_url) \
-                  .set("spark.driver.extraClassPath", extra_classpath) \
-                  .set("spark.executor.extraClassPath", extra_classpath)
-
+conf = SparkConf().setMaster(master_url)
 sc = SparkContext(conf=conf)
 ```
 
