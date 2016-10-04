@@ -126,6 +126,11 @@ class SparkHelper:
             logger.error("Launching Spark failed.")
             return
 
+        print("Tagging cluster.")
+        logger.info("Tagging cluster.")
+
+        self.tag_cluster(self.name)
+
         print("Setting up cluster.")
         logger.info("Setting up cluster.")
 
@@ -257,6 +262,21 @@ class SparkHelper:
             aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY)
         os.environ["AWS_ACCESS_KEY_ID"] = self.AWS_ACCESS_KEY_ID
         os.environ["AWS_SECRET_ACCESS_KEY"] = self.AWS_SECRET_ACCESS_KEY
+
+    def tag_cluster(self, name):
+        instances = self.conn.get_only_instances(
+            filters={"instance.group-name": "flintrock",
+                     "instance-state-name": "running"})
+        for instance in instances:
+            # Find the instances that have the cluster name set by the user
+            if 'Name' in instance.tags and (instance.tags['Name'] == name + '-master' or
+                                            instance.tags['Name'] == name + '-slave'):
+                # Only add the cluster and email tags if they are not present, don't overwrite
+                # existing tags
+                if 'cluster' not in instance.tags:
+                    instance.add_tag("cluster", self.email_address.split("@")[0])
+                if 'email' not in instance.tags:
+                    instance.add_tag("email", self.email_address)
 
     def init_cluster(self, name):
         '''
