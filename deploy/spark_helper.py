@@ -30,6 +30,7 @@ SUCCEED = "SUCCEED"
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler('deploy.log'))
 logger.setLevel(logging.INFO)
+logger.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 
 
 class SparkHelper:
@@ -288,10 +289,12 @@ class SparkHelper:
             instances = self.conn.get_only_instances(
                 filters={"instance.group-name": "flintrock",
                          "instance-state-name": "running"})
+            found_instance = False
             for instance in instances:
                 if 'Name' in instance.tags and instance.tags['Name'] == name + '-master':
+                    found_instance = True
                     break
-            if not instance:
+            if not found_instance:
                 logger.error("No master node exists in %s." % name)
                 return ''
             dns_name = instance.public_dns_name
@@ -376,6 +379,8 @@ class SparkHelper:
         self.instance = instance
         self.spot_price = spot_price
 
+        logger.handlers = []
+        logger.addHandler(logging.FileHandler('deploy.log', mode='w'))
         self._io_setup = ThreadIO()
         self._thread_setup = ThreadWrapper(self._launch_spark, self._io_setup)
         self._setup_status = IN_PROCESS
