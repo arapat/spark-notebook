@@ -27,10 +27,11 @@ IN_PROCESS = "IN_PROCESS"
 FAILED = "FAILED"
 SUCCEED = "SUCCEED"
 
+logfile = logging.FileHandler('deploy.log')
+logfile.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.FileHandler('deploy.log'))
+logger.addHandler(logfile)
 logger.setLevel(logging.INFO)
-logger.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 
 
 class SparkHelper:
