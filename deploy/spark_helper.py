@@ -165,8 +165,8 @@ class SparkHelper:
         logger.info("Writing spark/conf/spark-defaults.conf")
         mem_size = int(0.9 * self._ec2_config[self.instance])
         self._send_command(
-            ('echo "\nspark.driver.memory\t%dg\n" '
-             '>> ~/spark/conf/spark-defaults.conf' % mem_size), True)
+            ('echo "\nspark.driver.memory\t%dg\nspark.executor.memory\t%dg\n" '
+             '>> ~/spark/conf/spark-defaults.conf' % (mem_size, mem_size)), True)
         extraclasspath = (
             "/home/ec2-user/hadoop/share/hadoop/tools/lib/hadoop-aws-2.7.2.jar:"
             "/home/ec2-user/hadoop/share/hadoop/tools/lib/aws-java-sdk-1.7.4.jar:"
