@@ -167,6 +167,17 @@ class SparkHelper:
         self._send_command(
             ('echo "\nspark.driver.memory\t%dg\n" '
              '>> ~/spark/conf/spark-defaults.conf' % mem_size), True)
+        extraclasspath = (
+            "/home/ec2-user/hadoop/share/hadoop/tools/lib/hadoop-aws-2.7.2.jar:"
+            "/home/ec2-user/hadoop/share/hadoop/tools/lib/aws-java-sdk-1.7.4.jar:"
+            "/home/ec2-user/hadoop/share/hadoop/tools/lib/guava-11.0.2.jar"
+        )
+        self._send_command(
+            ('echo "\nspark.driver.extraClassPath\t%s\n" '
+             '>> ~/spark/conf/spark-defaults.conf' % extraclasspath), True)
+        self._send_command(
+            ('echo "\nspark.executor.extraClassPath\t%s\n" '
+             '>> ~/spark/conf/spark-defaults.conf' % extraclasspath), True)
 
         # Set up IPython Notebook
         print("Setting up IPython Notebook.")
