@@ -10,7 +10,7 @@ providers:
     ami: ami-6869aa05
     availability-zone: us-east-1b
     instance-initiated-shutdown-behavior: terminate
-    instance-type: m3.medium
+    instance-type: r3.2xlarge
     region: us-east-1
     user: ec2-user
 services:
