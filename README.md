@@ -39,7 +39,7 @@ If the required packages are installed in a virtualenv, activate the virtualenv 
 ```
 source <env_name>/bin/activate
 ```
-1. Run `python spark-notebook.py`.
+1. Run `python run.py`.
 2. A browser window will automatically open the URL: `http://localhost:5000`.
 
 
