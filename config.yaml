@@ -1,8 +1,8 @@
 credentials:
   path: ./credentials.yaml
 launch:
-  install-hdfs: True
-  install-spark: True
+  install-hdfs: true
+  install-spark: true
   name: demo-cluster
   num-slaves: 1
   password: change-me-321
@@ -13,6 +13,7 @@ providers:
     instance-initiated-shutdown-behavior: terminate
     instance-type: r3.2xlarge
     region: us-east-1
+    spot-price: 1.0
     user: ec2-user
 services:
   hdfs:
