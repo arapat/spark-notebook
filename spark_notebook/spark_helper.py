@@ -115,6 +115,10 @@ class SparkHelper:
             print(line)
             logger.info(line)
             if proc.poll() is not None:
+                for line in proc.stdout.readlines():
+                    line = line.decode().strip()
+                    print(line)
+                    logger.info(line)
                 break
             sleep(0.1)
 
