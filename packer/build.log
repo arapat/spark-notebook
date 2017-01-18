@@ -1,0 +1,557 @@
+[1;32mamazon-ebs output will be in this color.[0m
+
+[1;32m==> amazon-ebs: Prevalidating AMI Name...[0m
+[0;32m    amazon-ebs: Found Image ID: ami-9be6f38c[0m
+[1;32m==> amazon-ebs: Creating temporary keypair: packer_587eefd4-ce49-da37-2cee-22f171feb488[0m
+[1;32m==> amazon-ebs: Creating temporary security group for this instance...[0m
+[1;32m==> amazon-ebs: Authorizing access to port 22 the temporary security group...[0m
+[1;32m==> amazon-ebs: Launching a source AWS instance...[0m
+[0;32m    amazon-ebs: Instance ID: i-0a1c3faa51beec6dd[0m
+[1;32m==> amazon-ebs: Waiting for instance (i-0a1c3faa51beec6dd) to become ready...[0m
+[1;32m==> amazon-ebs: Waiting for SSH to become available...[0m
+[1;32m==> amazon-ebs: Connected to SSH![0m
+[1;32m==> amazon-ebs: Provisioning with shell script: /tmp/packer-shell219939061[0m
+[0;32m    amazon-ebs: Loaded plugins: priorities, update-motd, upgrade-helper[0m
+[0;32m    amazon-ebs: Resolving Dependencies[0m
+[0;32m    amazon-ebs: --> Running transaction check[0m
+[0;32m    amazon-ebs: ---> Package kernel.x86_64 0:4.4.41-35.53.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package kernel-tools.x86_64 0:4.4.35-33.55.amzn1 will be updated[0m
+[0;32m    amazon-ebs: ---> Package kernel-tools.x86_64 0:4.4.41-35.53.amzn1 will be an update[0m
+[0;32m    amazon-ebs: ---> Package ntp.x86_64 0:4.2.6p5-41.32.amzn1 will be updated[0m
+[0;32m    amazon-ebs: ---> Package ntp.x86_64 0:4.2.6p5-43.33.amzn1 will be an update[0m
+[0;32m    amazon-ebs: ---> Package ntpdate.x86_64 0:4.2.6p5-41.32.amzn1 will be updated[0m
+[0;32m    amazon-ebs: ---> Package ntpdate.x86_64 0:4.2.6p5-43.33.amzn1 will be an update[0m
+[0;32m    amazon-ebs: ---> Package sudo.x86_64 0:1.8.6p3-20.22.amzn1 will be updated[0m
+[0;32m    amazon-ebs: ---> Package sudo.x86_64 0:1.8.6p3-25.23.amzn1 will be an update[0m
+[0;32m    amazon-ebs: ---> Package vim-common.x86_64 2:8.0.0134-1.43.amzn1 will be updated[0m
+[0;32m    amazon-ebs: ---> Package vim-common.x86_64 2:8.0.0134-1.44.amzn1 will be an update[0m
+[0;32m    amazon-ebs: ---> Package vim-enhanced.x86_64 2:8.0.0134-1.43.amzn1 will be updated[0m
+[0;32m    amazon-ebs: ---> Package vim-enhanced.x86_64 2:8.0.0134-1.44.amzn1 will be an update[0m
+[0;32m    amazon-ebs: ---> Package vim-filesystem.x86_64 2:8.0.0134-1.43.amzn1 will be updated[0m
+[0;32m    amazon-ebs: ---> Package vim-filesystem.x86_64 2:8.0.0134-1.44.amzn1 will be an update[0m
+[0;32m    amazon-ebs: ---> Package vim-minimal.x86_64 2:8.0.0134-1.43.amzn1 will be updated[0m
+[0;32m    amazon-ebs: ---> Package vim-minimal.x86_64 2:8.0.0134-1.44.amzn1 will be an update[0m
+[0;32m    amazon-ebs: --> Finished Dependency Resolution[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Dependencies Resolved[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Package            Arch       Version                   Repository        Size[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Installing:[0m
+[0;32m    amazon-ebs: kernel             x86_64     4.4.41-35.53.amzn1        amzn-updates      16 M[0m
+[0;32m    amazon-ebs: Updating:[0m
+[0;32m    amazon-ebs: kernel-tools       x86_64     4.4.41-35.53.amzn1        amzn-updates      99 k[0m
+[0;32m    amazon-ebs: ntp                x86_64     4.2.6p5-43.33.amzn1       amzn-updates     658 k[0m
+[0;32m    amazon-ebs: ntpdate            x86_64     4.2.6p5-43.33.amzn1       amzn-updates      91 k[0m
+[0;32m    amazon-ebs: sudo               x86_64     1.8.6p3-25.23.amzn1       amzn-updates     929 k[0m
+[0;32m    amazon-ebs: vim-common         x86_64     2:8.0.0134-1.44.amzn1     amzn-updates     9.0 M[0m
+[0;32m    amazon-ebs: vim-enhanced       x86_64     2:8.0.0134-1.44.amzn1     amzn-updates     1.2 M[0m
+[0;32m    amazon-ebs: vim-filesystem     x86_64     2:8.0.0134-1.44.amzn1     amzn-updates      12 k[0m
+[0;32m    amazon-ebs: vim-minimal        x86_64     2:8.0.0134-1.44.amzn1     amzn-updates     495 k[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Transaction Summary[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Install  1 Package[0m
+[0;32m    amazon-ebs: Upgrade  8 Packages[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Total download size: 28 M[0m
+[0;32m    amazon-ebs: Downloading packages:[0m
+[0;32m    amazon-ebs: --------------------------------------------------------------------------------[0m
+[0;32m    amazon-ebs: Total                                               37 MB/s |  28 MB  00:00[0m
+[0;32m    amazon-ebs: Running transaction check[0m
+[0;32m    amazon-ebs: Running transaction test[0m
+[0;32m    amazon-ebs: Transaction test succeeded[0m
+[0;32m    amazon-ebs: Running transaction[0m
+[0;32m    amazon-ebs: Updating   : ntpdate-4.2.6p5-43.33.amzn1.x86_64                          1/17[0m
+[0;32m    amazon-ebs: Updating   : 2:vim-minimal-8.0.0134-1.44.amzn1.x86_64                    2/17[0m
+[0;32m    amazon-ebs: Updating   : 2:vim-filesystem-8.0.0134-1.44.amzn1.x86_64                 3/17[0m
+[0;32m    amazon-ebs: Updating   : 2:vim-common-8.0.0134-1.44.amzn1.x86_64                     4/17[0m
+[0;32m    amazon-ebs: Updating   : 2:vim-enhanced-8.0.0134-1.44.amzn1.x86_64                   5/17[0m
+[0;32m    amazon-ebs: Updating   : sudo-1.8.6p3-25.23.amzn1.x86_64                             6/17[0m
+[0;32m    amazon-ebs: Updating   : ntp-4.2.6p5-43.33.amzn1.x86_64                              7/17[0m
+[0;32m    amazon-ebs: Updating   : kernel-tools-4.4.41-35.53.amzn1.x86_64                      8/17[0m
+[0;32m    amazon-ebs: Installing : kernel-4.4.41-35.53.amzn1.x86_64                            9/17[0m
+[0;32m    amazon-ebs: Cleanup    : sudo-1.8.6p3-20.22.amzn1.x86_64                            10/17[0m
+[0;32m    amazon-ebs: Cleanup    : ntp-4.2.6p5-41.32.amzn1.x86_64                             11/17[0m
+[0;32m    amazon-ebs: Cleanup    : 2:vim-enhanced-8.0.0134-1.43.amzn1.x86_64                  12/17[0m
+[0;32m    amazon-ebs: Cleanup    : 2:vim-common-8.0.0134-1.43.amzn1.x86_64                    13/17[0m
+[0;32m    amazon-ebs: Cleanup    : 2:vim-filesystem-8.0.0134-1.43.amzn1.x86_64                14/17[0m
+[0;32m    amazon-ebs: Cleanup    : ntpdate-4.2.6p5-41.32.amzn1.x86_64                         15/17[0m
+[0;32m    amazon-ebs: Cleanup    : 2:vim-minimal-8.0.0134-1.43.amzn1.x86_64                   16/17[0m
+[0;32m    amazon-ebs: Cleanup    : kernel-tools-4.4.35-33.55.amzn1.x86_64                     17/17[0m
+[0;32m    amazon-ebs: Verifying  : 2:vim-enhanced-8.0.0134-1.44.amzn1.x86_64                   1/17[0m
+[0;32m    amazon-ebs: Verifying  : 2:vim-filesystem-8.0.0134-1.44.amzn1.x86_64                 2/17[0m
+[0;32m    amazon-ebs: Verifying  : kernel-4.4.41-35.53.amzn1.x86_64                            3/17[0m
+[0;32m    amazon-ebs: Verifying  : ntp-4.2.6p5-43.33.amzn1.x86_64                              4/17[0m
+[0;32m    amazon-ebs: Verifying  : 2:vim-minimal-8.0.0134-1.44.amzn1.x86_64                    5/17[0m
+[0;32m    amazon-ebs: Verifying  : 2:vim-common-8.0.0134-1.44.amzn1.x86_64                     6/17[0m
+[0;32m    amazon-ebs: Verifying  : kernel-tools-4.4.41-35.53.amzn1.x86_64                      7/17[0m
+[0;32m    amazon-ebs: Verifying  : ntpdate-4.2.6p5-43.33.amzn1.x86_64                          8/17[0m
+[0;32m    amazon-ebs: Verifying  : sudo-1.8.6p3-25.23.amzn1.x86_64                             9/17[0m
+[0;32m    amazon-ebs: Verifying  : ntp-4.2.6p5-41.32.amzn1.x86_64                             10/17[0m
+[0;32m    amazon-ebs: Verifying  : sudo-1.8.6p3-20.22.amzn1.x86_64                            11/17[0m
+[0;32m    amazon-ebs: Verifying  : 2:vim-enhanced-8.0.0134-1.43.amzn1.x86_64                  12/17[0m
+[0;32m    amazon-ebs: Verifying  : ntpdate-4.2.6p5-41.32.amzn1.x86_64                         13/17[0m
+[0;32m    amazon-ebs: Verifying  : kernel-tools-4.4.35-33.55.amzn1.x86_64                     14/17[0m
+[0;32m    amazon-ebs: Verifying  : 2:vim-filesystem-8.0.0134-1.43.amzn1.x86_64                15/17[0m
+[0;32m    amazon-ebs: Verifying  : 2:vim-minimal-8.0.0134-1.43.amzn1.x86_64                   16/17[0m
+[0;32m    amazon-ebs: Verifying  : 2:vim-common-8.0.0134-1.43.amzn1.x86_64                    17/17[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Installed:[0m
+[0;32m    amazon-ebs: kernel.x86_64 0:4.4.41-35.53.amzn1[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Updated:[0m
+[0;32m    amazon-ebs: kernel-tools.x86_64 0:4.4.41-35.53.amzn1[0m
+[0;32m    amazon-ebs: ntp.x86_64 0:4.2.6p5-43.33.amzn1[0m
+[0;32m    amazon-ebs: ntpdate.x86_64 0:4.2.6p5-43.33.amzn1[0m
+[0;32m    amazon-ebs: sudo.x86_64 0:1.8.6p3-25.23.amzn1[0m
+[0;32m    amazon-ebs: vim-common.x86_64 2:8.0.0134-1.44.amzn1[0m
+[0;32m    amazon-ebs: vim-enhanced.x86_64 2:8.0.0134-1.44.amzn1[0m
+[0;32m    amazon-ebs: vim-filesystem.x86_64 2:8.0.0134-1.44.amzn1[0m
+[0;32m    amazon-ebs: vim-minimal.x86_64 2:8.0.0134-1.44.amzn1[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Complete![0m
+[0;32m    amazon-ebs: Loaded plugins: priorities, update-motd, upgrade-helper[0m
+[0;32m    amazon-ebs: Existing lock /var/run/yum.pid: another copy is running as pid 8054.[0m
+[0;32m    amazon-ebs: Another app is currently holding the yum lock; waiting for it to exit...[0m
+[0;32m    amazon-ebs: The other application is: yum[0m
+[0;32m    amazon-ebs: Memory :  51 M RSS (293 MB VSZ)[0m
+[0;32m    amazon-ebs: Started: Wed Jan 18 04:34:11 2017 - 00:00 ago[0m
+[0;32m    amazon-ebs: State  : Running, pid: 8054[0m
+[0;32m    amazon-ebs: Resolving Dependencies[0m
+[0;32m    amazon-ebs: --> Running transaction check[0m
+[0;32m    amazon-ebs: ---> Package gcc.noarch 0:4.8.3-3.20.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Processing Dependency: gcc48 = 4.8.3 for package: gcc-4.8.3-3.20.amzn1.noarch[0m
+[0;32m    amazon-ebs: ---> Package gcc-c++.noarch 0:4.8.3-3.20.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Processing Dependency: gcc48-c++ = 4.8.3 for package: gcc-c++-4.8.3-3.20.amzn1.noarch[0m
+[0;32m    amazon-ebs: --> Processing Dependency: libstdc++48-devel = 4.8.3 for package: gcc-c++-4.8.3-3.20.amzn1.noarch[0m
+[0;32m    amazon-ebs: ---> Package git.x86_64 0:2.7.4-1.47.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Processing Dependency: perl-Git = 2.7.4-1.47.amzn1 for package: git-2.7.4-1.47.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: perl(Term::ReadKey) for package: git-2.7.4-1.47.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: perl(Git) for package: git-2.7.4-1.47.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: perl(Error) for package: git-2.7.4-1.47.amzn1.x86_64[0m
+[0;32m    amazon-ebs: ---> Package java-1.8.0-openjdk.x86_64 1:1.8.0.111-1.b15.25.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Processing Dependency: java-1.8.0-openjdk-headless = 1:1.8.0.111-1.b15.25.amzn1 for package: 1:java-1.8.0-openjdk-1.8.0.111-1.b15.25.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Running transaction check[0m
+[0;32m    amazon-ebs: ---> Package gcc48.x86_64 0:4.8.3-9.111.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Processing Dependency: cpp48(x86-64) = 4.8.3-9.111.amzn1 for package: gcc48-4.8.3-9.111.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: libgomp(x86-64) >= 4.8.3-9.111.amzn1 for package: gcc48-4.8.3-9.111.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: glibc-devel(x86-64) >= 2.2.90-12 for package: gcc48-4.8.3-9.111.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: libmpc.so.3()(64bit) for package: gcc48-4.8.3-9.111.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: libgomp.so.1()(64bit) for package: gcc48-4.8.3-9.111.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: libmpfr.so.4()(64bit) for package: gcc48-4.8.3-9.111.amzn1.x86_64[0m
+[0;32m    amazon-ebs: ---> Package gcc48-c++.x86_64 0:4.8.3-9.111.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package java-1.8.0-openjdk-headless.x86_64 1:1.8.0.111-1.b15.25.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Processing Dependency: lksctp-tools for package: 1:java-1.8.0-openjdk-headless-1.8.0.111-1.b15.25.amzn1.x86_64[0m
+[0;32m    amazon-ebs: ---> Package libstdc++48-devel.x86_64 0:4.8.3-9.111.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package perl-Error.noarch 1:0.17020-2.9.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package perl-Git.noarch 0:2.7.4-1.47.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package perl-TermReadKey.x86_64 0:2.30-20.9.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Running transaction check[0m
+[0;32m    amazon-ebs: ---> Package cpp48.x86_64 0:4.8.3-9.111.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package glibc-devel.x86_64 0:2.17-106.168.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Processing Dependency: glibc-headers = 2.17-106.168.amzn1 for package: glibc-devel-2.17-106.168.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: glibc-headers for package: glibc-devel-2.17-106.168.amzn1.x86_64[0m
+[0;32m    amazon-ebs: ---> Package libgomp.x86_64 0:4.8.3-9.111.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package libmpc.x86_64 0:1.0.1-3.3.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package lksctp-tools.x86_64 0:1.0.10-7.7.amzn1 will be installed[0m
+[0;32m    amazon-ebs: ---> Package mpfr.x86_64 0:3.1.1-4.14.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Running transaction check[0m
+[0;32m    amazon-ebs: ---> Package glibc-headers.x86_64 0:2.17-106.168.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Processing Dependency: kernel-headers >= 2.2.1 for package: glibc-headers-2.17-106.168.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Processing Dependency: kernel-headers for package: glibc-headers-2.17-106.168.amzn1.x86_64[0m
+[0;32m    amazon-ebs: --> Running transaction check[0m
+[0;32m    amazon-ebs: ---> Package kernel-headers.x86_64 0:4.4.41-35.53.amzn1 will be installed[0m
+[0;32m    amazon-ebs: --> Finished Dependency Resolution[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Dependencies Resolved[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Package                   Arch   Version                    Repository    Size[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Installing:[0m
+[0;32m    amazon-ebs: gcc                       noarch 4.8.3-3.20.amzn1           amzn-main    3.9 k[0m
+[0;32m    amazon-ebs: gcc-c++                   noarch 4.8.3-3.20.amzn1           amzn-main    3.8 k[0m
+[0;32m    amazon-ebs: git                       x86_64 2.7.4-1.47.amzn1           amzn-main     11 M[0m
+[0;32m    amazon-ebs: java-1.8.0-openjdk        x86_64 1:1.8.0.111-1.b15.25.amzn1 amzn-updates 227 k[0m
+[0;32m    amazon-ebs: Installing for dependencies:[0m
+[0;32m    amazon-ebs: cpp48                     x86_64 4.8.3-9.111.amzn1          amzn-main    6.7 M[0m
+[0;32m    amazon-ebs: gcc48                     x86_64 4.8.3-9.111.amzn1          amzn-main     17 M[0m
+[0;32m    amazon-ebs: gcc48-c++                 x86_64 4.8.3-9.111.amzn1          amzn-main    8.1 M[0m
+[0;32m    amazon-ebs: glibc-devel               x86_64 2.17-106.168.amzn1         amzn-main    1.1 M[0m
+[0;32m    amazon-ebs: glibc-headers             x86_64 2.17-106.168.amzn1         amzn-main    737 k[0m
+[0;32m    amazon-ebs: java-1.8.0-openjdk-headless[0m
+[0;32m    amazon-ebs: x86_64 1:1.8.0.111-1.b15.25.amzn1 amzn-updates  39 M[0m
+[0;32m    amazon-ebs: kernel-headers            x86_64 4.4.41-35.53.amzn1         amzn-updates 1.0 M[0m
+[0;32m    amazon-ebs: libgomp                   x86_64 4.8.3-9.111.amzn1          amzn-main    175 k[0m
+[0;32m    amazon-ebs: libmpc                    x86_64 1.0.1-3.3.amzn1            amzn-main     53 k[0m
+[0;32m    amazon-ebs: libstdc++48-devel         x86_64 4.8.3-9.111.amzn1          amzn-main    1.7 M[0m
+[0;32m    amazon-ebs: lksctp-tools              x86_64 1.0.10-7.7.amzn1           amzn-main     89 k[0m
+[0;32m    amazon-ebs: mpfr                      x86_64 3.1.1-4.14.amzn1           amzn-main    237 k[0m
+[0;32m    amazon-ebs: perl-Error                noarch 1:0.17020-2.9.amzn1        amzn-main     33 k[0m
+[0;32m    amazon-ebs: perl-Git                  noarch 2.7.4-1.47.amzn1           amzn-main     64 k[0m
+[0;32m    amazon-ebs: perl-TermReadKey          x86_64 2.30-20.9.amzn1            amzn-main     33 k[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Transaction Summary[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Install  4 Packages (+15 Dependent packages)[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Total download size: 87 M[0m
+[0;32m    amazon-ebs: Installed size: 205 M[0m
+[0;32m    amazon-ebs: Downloading packages:[0m
+[0;32m    amazon-ebs: --------------------------------------------------------------------------------[0m
+[0;32m    amazon-ebs: Total                                               39 MB/s |  87 MB  00:02[0m
+[0;32m    amazon-ebs: Running transaction check[0m
+[0;32m    amazon-ebs: Running transaction test[0m
+[0;32m    amazon-ebs: Transaction test succeeded[0m
+[0;32m    amazon-ebs: Running transaction[0m
+[0;32m    amazon-ebs: Installing : mpfr-3.1.1-4.14.amzn1.x86_64                                1/19[0m
+[0;32m    amazon-ebs: Installing : libmpc-1.0.1-3.3.amzn1.x86_64                               2/19[0m
+[0;32m    amazon-ebs: Installing : 1:perl-Error-0.17020-2.9.amzn1.noarch                       3/19[0m
+[0;32m    amazon-ebs: Installing : libstdc++48-devel-4.8.3-9.111.amzn1.x86_64                  4/19[0m
+[0;32m    amazon-ebs: Installing : cpp48-4.8.3-9.111.amzn1.x86_64                              5/19[0m
+[0;32m    amazon-ebs: Installing : lksctp-tools-1.0.10-7.7.amzn1.x86_64                        6/19[0m
+[0;32m    amazon-ebs: Installing : 1:java-1.8.0-openjdk-headless-1.8.0.111-1.b15.25.amzn1.x    7/19[0m
+[0;32m    amazon-ebs: Installing : libgomp-4.8.3-9.111.amzn1.x86_64                            8/19[0m
+[0;32m    amazon-ebs: Installing : perl-TermReadKey-2.30-20.9.amzn1.x86_64                     9/19[0m
+[0;32m    amazon-ebs: Installing : git-2.7.4-1.47.amzn1.x86_64                                10/19[0m
+[0;32m    amazon-ebs: Installing : perl-Git-2.7.4-1.47.amzn1.noarch                           11/19[0m
+[0;32m    amazon-ebs: Installing : kernel-headers-4.4.41-35.53.amzn1.x86_64                   12/19[0m
+[0;32m    amazon-ebs: Installing : glibc-headers-2.17-106.168.amzn1.x86_64                    13/19[0m
+[0;32m    amazon-ebs: Installing : glibc-devel-2.17-106.168.amzn1.x86_64                      14/19[0m
+[0;32m    amazon-ebs: Installing : gcc48-4.8.3-9.111.amzn1.x86_64                             15/19[0m
+[0;32m    amazon-ebs: Installing : gcc-4.8.3-3.20.amzn1.noarch                                16/19[0m
+[0;32m    amazon-ebs: Installing : gcc48-c++-4.8.3-9.111.amzn1.x86_64                         17/19[0m
+[0;32m    amazon-ebs: Installing : gcc-c++-4.8.3-3.20.amzn1.noarch                            18/19[0m
+[0;32m    amazon-ebs: Installing : 1:java-1.8.0-openjdk-1.8.0.111-1.b15.25.amzn1.x86_64       19/19[0m
+[0;32m    amazon-ebs: Verifying  : libstdc++48-devel-4.8.3-9.111.amzn1.x86_64                  1/19[0m
+[0;32m    amazon-ebs: Verifying  : 1:perl-Error-0.17020-2.9.amzn1.noarch                       2/19[0m
+[0;32m    amazon-ebs: Verifying  : kernel-headers-4.4.41-35.53.amzn1.x86_64                    3/19[0m
+[0;32m    amazon-ebs: Verifying  : glibc-headers-2.17-106.168.amzn1.x86_64                     4/19[0m
+[0;32m    amazon-ebs: Verifying  : perl-TermReadKey-2.30-20.9.amzn1.x86_64                     5/19[0m
+[0;32m    amazon-ebs: Verifying  : libgomp-4.8.3-9.111.amzn1.x86_64                            6/19[0m
+[0;32m    amazon-ebs: Verifying  : cpp48-4.8.3-9.111.amzn1.x86_64                              7/19[0m
+[0;32m    amazon-ebs: Verifying  : 1:java-1.8.0-openjdk-1.8.0.111-1.b15.25.amzn1.x86_64        8/19[0m
+[0;32m    amazon-ebs: Verifying  : gcc-4.8.3-3.20.amzn1.noarch                                 9/19[0m
+[0;32m    amazon-ebs: Verifying  : gcc48-4.8.3-9.111.amzn1.x86_64                             10/19[0m
+[0;32m    amazon-ebs: Verifying  : lksctp-tools-1.0.10-7.7.amzn1.x86_64                       11/19[0m
+[0;32m    amazon-ebs: Verifying  : git-2.7.4-1.47.amzn1.x86_64                                12/19[0m
+[0;32m    amazon-ebs: Verifying  : libmpc-1.0.1-3.3.amzn1.x86_64                              13/19[0m
+[0;32m    amazon-ebs: Verifying  : perl-Git-2.7.4-1.47.amzn1.noarch                           14/19[0m
+[0;32m    amazon-ebs: Verifying  : gcc48-c++-4.8.3-9.111.amzn1.x86_64                         15/19[0m
+[0;32m    amazon-ebs: Verifying  : mpfr-3.1.1-4.14.amzn1.x86_64                               16/19[0m
+[0;32m    amazon-ebs: Verifying  : gcc-c++-4.8.3-3.20.amzn1.noarch                            17/19[0m
+[0;32m    amazon-ebs: Verifying  : 1:java-1.8.0-openjdk-headless-1.8.0.111-1.b15.25.amzn1.x   18/19[0m
+[0;32m    amazon-ebs: Verifying  : glibc-devel-2.17-106.168.amzn1.x86_64                      19/19[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Installed:[0m
+[0;32m    amazon-ebs: gcc.noarch 0:4.8.3-3.20.amzn1[0m
+[0;32m    amazon-ebs: gcc-c++.noarch 0:4.8.3-3.20.amzn1[0m
+[0;32m    amazon-ebs: git.x86_64 0:2.7.4-1.47.amzn1[0m
+[0;32m    amazon-ebs: java-1.8.0-openjdk.x86_64 1:1.8.0.111-1.b15.25.amzn1[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Dependency Installed:[0m
+[0;32m    amazon-ebs: cpp48.x86_64 0:4.8.3-9.111.amzn1[0m
+[0;32m    amazon-ebs: gcc48.x86_64 0:4.8.3-9.111.amzn1[0m
+[0;32m    amazon-ebs: gcc48-c++.x86_64 0:4.8.3-9.111.amzn1[0m
+[0;32m    amazon-ebs: glibc-devel.x86_64 0:2.17-106.168.amzn1[0m
+[0;32m    amazon-ebs: glibc-headers.x86_64 0:2.17-106.168.amzn1[0m
+[0;32m    amazon-ebs: java-1.8.0-openjdk-headless.x86_64 1:1.8.0.111-1.b15.25.amzn1[0m
+[0;32m    amazon-ebs: kernel-headers.x86_64 0:4.4.41-35.53.amzn1[0m
+[0;32m    amazon-ebs: libgomp.x86_64 0:4.8.3-9.111.amzn1[0m
+[0;32m    amazon-ebs: libmpc.x86_64 0:1.0.1-3.3.amzn1[0m
+[0;32m    amazon-ebs: libstdc++48-devel.x86_64 0:4.8.3-9.111.amzn1[0m
+[0;32m    amazon-ebs: lksctp-tools.x86_64 0:1.0.10-7.7.amzn1[0m
+[0;32m    amazon-ebs: mpfr.x86_64 0:3.1.1-4.14.amzn1[0m
+[0;32m    amazon-ebs: perl-Error.noarch 1:0.17020-2.9.amzn1[0m
+[0;32m    amazon-ebs: perl-Git.noarch 0:2.7.4-1.47.amzn1[0m
+[0;32m    amazon-ebs: perl-TermReadKey.x86_64 0:2.30-20.9.amzn1[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Complete![0m
+[0;32m    amazon-ebs: Loaded plugins: priorities, update-motd, upgrade-helper[0m
+[0;32m    amazon-ebs: Resolving Dependencies[0m
+[0;32m    amazon-ebs: --> Running transaction check[0m
+[0;32m    amazon-ebs: ---> Package java-1.7.0-openjdk.x86_64 1:1.7.0.121-2.6.8.1.69.amzn1 will be erased[0m
+[0;32m    amazon-ebs: --> Finished Dependency Resolution[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Dependencies Resolved[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Package              Arch     Version                        Repository   Size[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Removing:[0m
+[0;32m    amazon-ebs: java-1.7.0-openjdk   x86_64   1:1.7.0.121-2.6.8.1.69.amzn1   installed    90 M[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Transaction Summary[0m
+[0;32m    amazon-ebs: ================================================================================[0m
+[0;32m    amazon-ebs: Remove  1 Package[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Installed size: 90 M[0m
+[0;32m    amazon-ebs: Downloading packages:[0m
+[0;32m    amazon-ebs: Running transaction check[0m
+[0;32m    amazon-ebs: Running transaction test[0m
+[0;32m    amazon-ebs: Transaction test succeeded[0m
+[0;32m    amazon-ebs: Running transaction[0m
+[0;32m    amazon-ebs: Erasing    : 1:java-1.7.0-openjdk-1.7.0.121-2.6.8.1.69.amzn1.x86_64       1/1[0m
+[0;32m    amazon-ebs: Verifying  : 1:java-1.7.0-openjdk-1.7.0.121-2.6.8.1.69.amzn1.x86_64       1/1[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Removed:[0m
+[0;32m    amazon-ebs: java-1.7.0-openjdk.x86_64 1:1.7.0.121-2.6.8.1.69.amzn1[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: Complete![0m
+[0;32m    amazon-ebs: You are using pip version 6.1.1, however version 9.0.1 is available.[0m
+[0;32m    amazon-ebs: You should consider upgrading via the 'pip install --upgrade pip' command.[0m
+[0;32m    amazon-ebs: Collecting pip[0m
+[0;32m    amazon-ebs: Downloading pip-9.0.1-py2.py3-none-any.whl (1.3MB)[0m
+[0;32m    amazon-ebs: Installing collected packages: pip[0m
+[0;32m    amazon-ebs: Found existing installation: pip 6.1.1[0m
+[0;32m    amazon-ebs: Uninstalling pip-6.1.1:[0m
+[0;32m    amazon-ebs: Successfully uninstalled pip-6.1.1[0m
+[0;32m    amazon-ebs: Successfully installed pip-9.0.1[0m
+[0;32m    amazon-ebs: Collecting jupyter[0m
+[0;32m    amazon-ebs: Downloading jupyter-1.0.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Requirement already satisfied: boto in /usr/lib/python2.7/dist-packages[0m
+[0;32m    amazon-ebs: Requirement already satisfied: requests in /usr/lib/python2.7/dist-packages[0m
+[0;32m    amazon-ebs: Collecting qtconsole (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading qtconsole-4.2.1-py2.py3-none-any.whl (104kB)[0m
+[0;32m    amazon-ebs: Collecting jupyter-console (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading jupyter_console-5.0.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting ipykernel (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading ipykernel-4.5.2-py2.py3-none-any.whl (98kB)[0m
+[0;32m    amazon-ebs: Collecting notebook (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading notebook-4.3.1-py2.py3-none-any.whl (6.8MB)[0m
+[0;32m    amazon-ebs: Collecting nbconvert (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading nbconvert-5.0.0-py2.py3-none-any.whl (371kB)[0m
+[0;32m    amazon-ebs: Collecting ipywidgets (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading ipywidgets-5.2.2-py2.py3-none-any.whl (43kB)[0m
+[0;32m    amazon-ebs: Collecting pygments (from qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Downloading Pygments-2.1.3-py2.py3-none-any.whl (755kB)[0m
+[0;32m    amazon-ebs: Collecting traitlets (from qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Downloading traitlets-4.3.1-py2.py3-none-any.whl (74kB)[0m
+[0;32m    amazon-ebs: Collecting jupyter-client>=4.1 (from qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Downloading jupyter_client-4.4.0-py2.py3-none-any.whl (76kB)[0m
+[0;32m    amazon-ebs: Collecting jupyter-core (from qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Downloading jupyter_core-4.2.1-py2.py3-none-any.whl (125kB)[0m
+[0;32m    amazon-ebs: Collecting prompt-toolkit<2.0.0,>=1.0.0 (from jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading prompt_toolkit-1.0.9-py2-none-any.whl (241kB)[0m
+[0;32m    amazon-ebs: Collecting ipython (from jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading ipython-5.1.0-py2-none-any.whl (747kB)[0m
+[0;32m    amazon-ebs: Collecting tornado>=4.0 (from ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading tornado-4.4.2.tar.gz (460kB)[0m
+[0;32m    amazon-ebs: Collecting terminado>=0.3.3; sys_platform != "win32" (from notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading terminado-0.6.tar.gz[0m
+[0;32m    amazon-ebs: Collecting ipython-genutils (from notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading ipython_genutils-0.1.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Requirement already satisfied: jinja2 in /usr/lib/python2.7/dist-packages (from notebook->jupyter)[0m
+[0;32m    amazon-ebs: Collecting nbformat (from notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading nbformat-4.2.0-py2.py3-none-any.whl (153kB)[0m
+[0;32m    amazon-ebs: Collecting testpath (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading testpath-0.3-py2.py3-none-any.whl (82kB)[0m
+[0;32m    amazon-ebs: Collecting bleach (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading bleach-1.5.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting pandocfilters>=1.4.1 (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pandocfilters-1.4.1.tar.gz[0m
+[0;32m    amazon-ebs: Collecting entrypoints>=0.2.2 (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading entrypoints-0.2.2-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting mistune!=0.6 (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading mistune-0.7.3-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting widgetsnbextension>=1.2.6 (from ipywidgets->jupyter)[0m
+[0;32m    amazon-ebs: Downloading widgetsnbextension-1.2.6-py2.py3-none-any.whl (1.5MB)[0m
+[0;32m    amazon-ebs: Requirement already satisfied: six in /usr/lib/python2.7/dist-packages (from traitlets->qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Collecting enum34; python_version == "2.7" (from traitlets->qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Downloading enum34-1.1.6-py2-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting decorator (from traitlets->qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Downloading decorator-4.0.11-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting pyzmq>=13 (from jupyter-client>=4.1->qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pyzmq-16.0.2-cp27-cp27mu-manylinux1_x86_64.whl (3.0MB)[0m
+[0;32m    amazon-ebs: Collecting wcwidth (from prompt-toolkit<2.0.0,>=1.0.0->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading wcwidth-0.1.7-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting simplegeneric>0.8 (from ipython->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading simplegeneric-0.8.1.zip[0m
+[0;32m    amazon-ebs: Collecting setuptools>=18.5 (from ipython->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading setuptools-33.1.1-py2.py3-none-any.whl (472kB)[0m
+[0;32m    amazon-ebs: Collecting pickleshare (from ipython->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pickleshare-0.7.4-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting pexpect; sys_platform != "win32" (from ipython->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pexpect-4.2.1-py2.py3-none-any.whl (55kB)[0m
+[0;32m    amazon-ebs: Collecting pathlib2; python_version == "2.7" or python_version == "3.3" (from ipython->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pathlib2-2.2.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting backports.shutil-get-terminal-size; python_version == "2.7" (from ipython->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading backports.shutil_get_terminal_size-1.0.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting singledispatch (from tornado>=4.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading singledispatch-3.4.0.3-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting certifi (from tornado>=4.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading certifi-2016.9.26-py2.py3-none-any.whl (377kB)[0m
+[0;32m    amazon-ebs: Collecting backports_abc>=0.4 (from tornado>=4.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading backports_abc-0.5-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting ptyprocess (from terminado>=0.3.3; sys_platform != "win32"->notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading ptyprocess-0.5.1-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Requirement already satisfied: markupsafe in /usr/lib64/python2.7/dist-packages (from jinja2->notebook->jupyter)[0m
+[0;32m    amazon-ebs: Collecting jsonschema!=2.5.0,>=2.4 (from nbformat->notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading jsonschema-2.5.1-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting html5lib!=0.9999,!=0.99999,<0.99999999,>=0.999 (from bleach->nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading html5lib-0.9999999.tar.gz (889kB)[0m
+[0;32m    amazon-ebs: Collecting configparser>=3.5; python_version == "2.7" (from entrypoints>=0.2.2->nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading configparser-3.5.0.tar.gz[0m
+[0;32m    amazon-ebs: Collecting scandir (from pathlib2; python_version == "2.7" or python_version == "3.3"->ipython->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading scandir-1.4.zip[0m
+[0;32m    amazon-ebs: Collecting functools32; python_version == "2.7" (from jsonschema!=2.5.0,>=2.4->nbformat->notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading functools32-3.2.3-2.zip[0m
+[0;32m    amazon-ebs: Installing collected packages: pygments, enum34, ipython-genutils, decorator, traitlets, pyzmq, jupyter-core, jupyter-client, simplegeneric, setuptools, wcwidth, prompt-toolkit, scandir, pathlib2, pickleshare, ptyprocess, pexpect, backports.shutil-get-terminal-size, ipython, singledispatch, certifi, backports-abc, tornado, ipykernel, qtconsole, jupyter-console, terminado, testpath, html5lib, bleach, pandocfilters, configparser, entrypoints, functools32, jsonschema, nbformat, mistune, nbconvert, notebook, widgetsnbextension, ipywidgets, jupyter[0m
+[0;32m    amazon-ebs: Running setup.py install for simplegeneric: started[0m
+[0;32m    amazon-ebs: Running setup.py install for simplegeneric: finished with status 'done'[0m
+[0;32m    amazon-ebs: Found existing installation: setuptools 12.2[0m
+[0;32m    amazon-ebs: Uninstalling setuptools-12.2:[0m
+[0;32m    amazon-ebs: Successfully uninstalled setuptools-12.2[0m
+[0;32m    amazon-ebs: Running setup.py install for scandir: started[0m
+[0;32m    amazon-ebs: Running setup.py install for scandir: finished with status 'done'[0m
+[0;32m    amazon-ebs: Running setup.py install for tornado: started[0m
+[0;32m    amazon-ebs: Running setup.py install for tornado: finished with status 'done'[0m
+[0;32m    amazon-ebs: Running setup.py install for terminado: started[0m
+[0;32m    amazon-ebs: Running setup.py install for terminado: finished with status 'done'[0m
+[0;32m    amazon-ebs: Running setup.py install for html5lib: started[0m
+[0;32m    amazon-ebs: Running setup.py install for html5lib: finished with status 'done'[0m
+[0;32m    amazon-ebs: Running setup.py install for pandocfilters: started[0m
+[0;32m    amazon-ebs: Running setup.py install for pandocfilters: finished with status 'done'[0m
+[0;32m    amazon-ebs: Running setup.py install for configparser: started[0m
+[0;32m    amazon-ebs: Running setup.py install for configparser: finished with status 'done'[0m
+[0;32m    amazon-ebs: Running setup.py install for functools32: started[0m
+[0;32m    amazon-ebs: Running setup.py install for functools32: finished with status 'done'[0m
+[0;32m    amazon-ebs: Successfully installed backports-abc-0.5 backports.shutil-get-terminal-size-1.0.0 bleach-1.5.0 certifi-2016.9.26 configparser-3.5.0 decorator-4.0.11 entrypoints-0.2.2 enum34-1.1.6 functools32-3.2.3.post2 html5lib-0.9999999 ipykernel-4.5.2 ipython-5.1.0 ipython-genutils-0.1.0 ipywidgets-5.2.2 jsonschema-2.5.1 jupyter-1.0.0 jupyter-client-4.4.0 jupyter-console-5.0.0 jupyter-core-4.2.1 mistune-0.7.3 nbconvert-5.0.0 nbformat-4.2.0 notebook-4.3.1 pandocfilters-1.4.1 pathlib2-2.2.0 pexpect-4.2.1 pickleshare-0.7.4 prompt-toolkit-1.0.9 ptyprocess-0.5.1 pygments-2.1.3 pyzmq-16.0.2 qtconsole-4.2.1 scandir-1.4 setuptools-33.1.1 simplegeneric-0.8.1 singledispatch-3.4.0.3 terminado-0.6 testpath-0.3 tornado-4.4.2 traitlets-4.3.1 wcwidth-0.1.7 widgetsnbextension-1.2.6[0m
+[0;32m    amazon-ebs: Collecting numpy[0m
+[0;32m    amazon-ebs: Downloading numpy-1.12.0-cp27-cp27mu-manylinux1_x86_64.whl (16.5MB)[0m
+[0;32m    amazon-ebs: Collecting matplotlib[0m
+[0;32m    amazon-ebs: Downloading matplotlib-2.0.0-cp27-cp27mu-manylinux1_x86_64.whl (14.6MB)[0m
+[0;32m    amazon-ebs: Collecting pandas[0m
+[0;32m    amazon-ebs: Downloading pandas-0.19.2-cp27-cp27mu-manylinux1_x86_64.whl (17.2MB)[0m
+[0;32m    amazon-ebs: Collecting scipy[0m
+[0;32m    amazon-ebs: Downloading scipy-0.18.1-cp27-cp27mu-manylinux1_x86_64.whl (40.3MB)[0m
+[0;32m    amazon-ebs: Collecting subprocess32 (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading subprocess32-3.2.7.tar.gz (54kB)[0m
+[0;32m    amazon-ebs: Requirement already satisfied: functools32 in /usr/local/lib/python2.7/site-packages (from matplotlib)[0m
+[0;32m    amazon-ebs: Requirement already satisfied: python-dateutil in /usr/lib/python2.7/dist-packages (from matplotlib)[0m
+[0;32m    amazon-ebs: Collecting pytz (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading pytz-2016.10-py2.py3-none-any.whl (483kB)[0m
+[0;32m    amazon-ebs: Collecting six>=1.10 (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading six-1.10.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting cycler>=0.10 (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading cycler-0.10.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting pyparsing!=2.0.0,!=2.0.4,!=2.1.2,!=2.1.6,>=1.5.6 (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading pyparsing-2.1.10-py2.py3-none-any.whl (56kB)[0m
+[0;32m    amazon-ebs: Installing collected packages: numpy, subprocess32, pytz, six, cycler, pyparsing, matplotlib, pandas, scipy[0m
+[0;32m    amazon-ebs: Running setup.py install for subprocess32: started[0m
+[0;32m    amazon-ebs: Running setup.py install for subprocess32: finished with status 'done'[0m
+[0;32m    amazon-ebs: Found existing installation: six 1.8.0[0m
+[0;32m    amazon-ebs: Uninstalling six-1.8.0:[0m
+[0;32m    amazon-ebs: Successfully uninstalled six-1.8.0[0m
+[0;32m    amazon-ebs: Successfully installed cycler-0.10.0 matplotlib-2.0.0 numpy-1.12.0 pandas-0.19.2 pyparsing-2.1.10 pytz-2016.10 scipy-0.18.1 six-1.10.0 subprocess32-3.2.7[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: aws-cfn-bootstrap==1.4[0m
+[0;32m    amazon-ebs: awscli==1.11.29[0m
+[0;32m    amazon-ebs: Babel==0.9.4[0m
+[0;32m    amazon-ebs: backports-abc==0.5[0m
+[0;32m    amazon-ebs: backports.shutil-get-terminal-size==1.0.0[0m
+[0;32m    amazon-ebs: backports.ssl-match-hostname==3.4.0.2[0m
+[0;32m    amazon-ebs: bleach==1.5.0[0m
+[0;32m    amazon-ebs: boto==2.42.0[0m
+[0;32m    amazon-ebs: botocore==1.4.86[0m
+[0;32m    amazon-ebs: certifi==2016.9.26[0m
+[0;32m    amazon-ebs: chardet==2.0.1[0m
+[0;32m    amazon-ebs: cloud-init==0.7.6[0m
+[0;32m    amazon-ebs: colorama==0.2.5[0m
+[0;32m    amazon-ebs: configobj==4.7.2[0m
+[0;32m    amazon-ebs: configparser==3.5.0[0m
+[0;32m    amazon-ebs: cycler==0.10.0[0m
+[0;32m    amazon-ebs: decorator==4.0.11[0m
+[0;32m    amazon-ebs: docutils==0.11[0m
+[0;32m    amazon-ebs: ecdsa==0.11[0m
+[0;32m    amazon-ebs: entrypoints==0.2.2[0m
+[0;32m    amazon-ebs: enum34==1.1.6[0m
+[0;32m    amazon-ebs: functools32==3.2.3.post2[0m
+[0;32m    amazon-ebs: futures==3.0.3[0m
+[0;32m    amazon-ebs: html5lib==0.9999999[0m
+[0;32m    amazon-ebs: iniparse==0.3.1[0m
+[0;32m    amazon-ebs: ipykernel==4.5.2[0m
+[0;32m    amazon-ebs: ipython==5.1.0[0m
+[0;32m    amazon-ebs: ipython-genutils==0.1.0[0m
+[0;32m    amazon-ebs: ipywidgets==5.2.2[0m
+[0;32m    amazon-ebs: Jinja2==2.7.2[0m
+[0;32m    amazon-ebs: jmespath==0.9.0[0m
+[0;32m    amazon-ebs: jsonpatch==1.2[0m
+[0;32m    amazon-ebs: jsonpointer==1.0[0m
+[0;32m    amazon-ebs: jsonschema==2.5.1[0m
+[0;32m    amazon-ebs: jupyter==1.0.0[0m
+[0;32m    amazon-ebs: jupyter-client==4.4.0[0m
+[0;32m    amazon-ebs: jupyter-console==5.0.0[0m
+[0;32m    amazon-ebs: jupyter-core==4.2.1[0m
+[0;32m    amazon-ebs: kitchen==1.1.1[0m
+[0;32m    amazon-ebs: lockfile==0.8[0m
+[0;32m    amazon-ebs: MarkupSafe==0.11[0m
+[0;32m    amazon-ebs: matplotlib==2.0.0[0m
+[0;32m    amazon-ebs: mistune==0.7.3[0m
+[0;32m    amazon-ebs: nbconvert==5.0.0[0m
+[0;32m    amazon-ebs: nbformat==4.2.0[0m
+[0;32m    amazon-ebs: notebook==4.3.1[0m
+[0;32m    amazon-ebs: numpy==1.12.0[0m
+[0;32m    amazon-ebs: pandas==0.19.2[0m
+[0;32m    amazon-ebs: pandocfilters==1.4.1[0m
+[0;32m    amazon-ebs: paramiko==1.15.1[0m
+[0;32m    amazon-ebs: pathlib2==2.2.0[0m
+[0;32m    amazon-ebs: pexpect==4.2.1[0m
+[0;32m    amazon-ebs: pickleshare==0.7.4[0m
+[0;32m    amazon-ebs: PIL==1.1.6[0m
+[0;32m    amazon-ebs: ply==3.4[0m
+[0;32m    amazon-ebs: prompt-toolkit==1.0.9[0m
+[0;32m    amazon-ebs: ptyprocess==0.5.1[0m
+[0;32m    amazon-ebs: pyasn1==0.1.7[0m
+[0;32m    amazon-ebs: pycrypto==2.6.1[0m
+[0;32m    amazon-ebs: pycurl==7.19.0[0m
+[0;32m    amazon-ebs: Pygments==2.1.3[0m
+[0;32m    amazon-ebs: pygpgme==0.3[0m
+[0;32m    amazon-ebs: pyliblzma==0.5.3[0m
+[0;32m    amazon-ebs: pyparsing==2.1.10[0m
+[0;32m    amazon-ebs: pystache==0.5.3[0m
+[0;32m    amazon-ebs: python-daemon==1.5.2[0m
+[0;32m    amazon-ebs: python-dateutil==2.1[0m
+[0;32m    amazon-ebs: pytz==2016.10[0m
+[0;32m    amazon-ebs: pyxattr==0.5.0[0m
+[0;32m    amazon-ebs: PyYAML==3.10[0m
+[0;32m    amazon-ebs: pyzmq==16.0.2[0m
+[0;32m    amazon-ebs: qtconsole==4.2.1[0m
+[0;32m    amazon-ebs: requests==1.2.3[0m
+[0;32m    amazon-ebs: rsa==3.4.1[0m
+[0;32m    amazon-ebs: scandir==1.4[0m
+[0;32m    amazon-ebs: scipy==0.18.1[0m
+[0;32m    amazon-ebs: simplegeneric==0.8.1[0m
+[0;32m    amazon-ebs: simplejson==3.6.5[0m
+[0;32m    amazon-ebs: singledispatch==3.4.0.3[0m
+[0;32m    amazon-ebs: six==1.10.0[0m
+[0;32m    amazon-ebs: subprocess32==3.2.7[0m
+[0;32m    amazon-ebs: terminado==0.6[0m
+[0;32m    amazon-ebs: testpath==0.3[0m
+[0;32m    amazon-ebs: tornado==4.4.2[0m
+[0;32m    amazon-ebs: traitlets==4.3.1[0m
+[0;32m    amazon-ebs: urlgrabber==3.9.1[0m
+[0;32m    amazon-ebs: urllib3==1.8.2[0m
+[0;32m    amazon-ebs: virtualenv==12.0.7[0m
+[0;32m    amazon-ebs: wcwidth==0.1.7[0m
+[0;32m    amazon-ebs: widgetsnbextension==1.2.6[0m
+[0;32m    amazon-ebs: yum-metadata-parser==1.1.4[0m
+[1;32m==> amazon-ebs: Stopping the source instance...[0m
+[1;32m==> amazon-ebs: Waiting for the instance to stop...[0m
+[1;32m==> amazon-ebs: Creating the AMI: spark-notebook-1484713940[0m
+[0;32m    amazon-ebs: AMI: ami-e12ac3f7[0m
+[1;32m==> amazon-ebs: Waiting for AMI to become ready...[0m
+[1;32m==> amazon-ebs: Terminating the source AWS instance...[0m
+[1;32m==> amazon-ebs: Cleaning up any extra volumes...[0m
+[1;32m==> amazon-ebs: No volumes to clean up, skipping[0m
+[1;32m==> amazon-ebs: Deleting temporary security group...[0m
+[1;32m==> amazon-ebs: Deleting temporary keypair...[0m
+[1;32mBuild 'amazon-ebs' finished.[0m
+
+==> Builds finished. The artifacts of successful builds are:
+--> amazon-ebs: AMIs were created:
+
+us-east-1: ami-e12ac3f7
