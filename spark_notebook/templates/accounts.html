@@ -24,7 +24,7 @@
                 <p>Please select an AWS account to create cluster.</p>
                 <ul>
                   {% for cluster in clusters["ec2"] %}
-                  <li><a href="/account/{{cluster}}">{{cluster}}</a></li>
+                  <li><a href="/g/{{cluster}}">{{cluster}}</a></li>
                   {% endfor %}
                 </ul>
             {% endif %}

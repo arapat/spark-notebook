@@ -90,7 +90,7 @@ def select_account():
                            credentials_status=credentials_status)
 
 
-@app.route('/account/<account>', methods=['GET', 'POST'])
+@app.route('/g/<account>', methods=['GET', 'POST'])
 def open_account(account):
     '''Open AWS account info page'''
     spark.init_account(account)
@@ -127,14 +127,7 @@ def open_account(account):
     return render_template('clusters.html', data=data)
 
 
-@app.route('/reset/<account>', methods=['POST'])
-def reset_account(account):
-    spark.name = ''
-    spark.reset_spark_setup()
-    return redirect(url_for('open_account', account=account))
-
-
-@app.route('/cluster/<account>/<cluster>', methods=["GET", "POST"])
+@app.route('/g/<account>/<cluster>', methods=["GET", "POST"])
 def open_cluster(account, cluster):
     '''Open cluster info page'''
     spark.init_account(account)
@@ -155,26 +148,7 @@ def open_cluster(account, cluster):
                            spark.master_url))
 
     if request.method == "POST":
-        action = request.form['type']
-
-        # Upload files to AWS
-        if action == 'upload':
-            data['upload-log'] = spark.upload(
-                os.path.expanduser(request.form['local-path']),
-                request.form['remote-path'])
-        # Download files from AWS
-        elif action == 'download':
-            data['download-log'] = spark.download(
-                request.form['remote-path'],
-                os.path.expanduser(request.form['local-path']))
-        # List files in a remote directory, default: ~/workspace
-        elif action == 'list':
-            path = request.form['list-path'].strip()
-            if not path:
-                path = '~/workspace'
-            data['files'] = spark.list_files(path)
-        # Set a new S3 credentials to the Jupyter Notebook on AWS
-        elif action == 's3':
+        if request.form['type'] == 's3':
             usage, name = request.form["usage"], request.form["name"]
             spark.setup_s3(data["credentials"][usage][name])
             process_nb = spark.check_notebook(force=True)
@@ -185,6 +159,13 @@ def open_cluster(account, cluster):
             pass
 
     return render_template("cluster-settings.html", data=data)
+
+
+@app.route('/reset/<account>', methods=['POST'])
+def reset_account(account):
+    spark.name = ''
+    spark.reset_spark_setup()
+    return redirect(url_for('open_account', account=account))
 
 
 @app.route('/destroy/<account>/<cluster>', methods=["POST"])

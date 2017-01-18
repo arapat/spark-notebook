@@ -312,23 +312,6 @@ class SparkHelper:
         self.scp = ["scp", "-r"] + options
         self.check_security_groups()
 
-    def list_files(self, path):
-        command = self.ssh + ["ls", "-lrt", path]
-        out, err = self._run_command(command)
-        return out.decode() + '\n' + err.decode()
-
-    def download(self, remote, local):
-        self._send_command("mv ~/workspace/metastore_db ~", True)
-        r = self._get_file(remote, local)
-        self._send_command("mv ~/metastore_db ~/workspace", True)
-        return r
-
-    # TODO: sync files across the cluster
-    def upload(self, local, remote):
-        if os.path.exists(local):
-            return self._send_file(local, remote)
-        return "%s doesn't exist." % local
-
     def check_security_groups(self):
         '''
         Add current IP address to the security group.
