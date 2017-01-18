@@ -1,0 +1,618 @@
+[1;32mamazon-ebs output will be in this color.[0m
+
+[1;32m==> amazon-ebs: Prevalidating AMI Name...[0m
+[0;32m    amazon-ebs: Found Image ID: ami-e13739f6[0m
+[1;32m==> amazon-ebs: Creating temporary keypair: packer_587e9166-f221-7bc9-2b07-68d9e5630d3e[0m
+[1;32m==> amazon-ebs: Creating temporary security group for this instance...[0m
+[1;32m==> amazon-ebs: Authorizing access to port 22 the temporary security group...[0m
+[1;32m==> amazon-ebs: Launching a source AWS instance...[0m
+[0;32m    amazon-ebs: Instance ID: i-082267e48f14c32d8[0m
+[1;32m==> amazon-ebs: Waiting for instance (i-082267e48f14c32d8) to become ready...[0m
+[1;32m==> amazon-ebs: Waiting for SSH to become available...[0m
+[1;32m==> amazon-ebs: Connected to SSH![0m
+[1;32m==> amazon-ebs: Provisioning with shell script: /tmp/packer-shell978373681[0m
+[0;32m    amazon-ebs: Hit:1 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial InRelease[0m
+[0;32m    amazon-ebs: Get:2 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates InRelease [102 kB][0m
+[0;32m    amazon-ebs: Get:3 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-backports InRelease [102 kB][0m
+[0;32m    amazon-ebs: Get:4 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main Sources [868 kB][0m
+[0;32m    amazon-ebs: Get:5 http://security.ubuntu.com/ubuntu xenial-security InRelease [102 kB][0m
+[0;32m    amazon-ebs: Get:6 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/restricted Sources [4,808 B][0m
+[0;32m    amazon-ebs: Get:7 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/universe Sources [7,728 kB][0m
+[0;32m    amazon-ebs: Get:8 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/multiverse Sources [179 kB][0m
+[0;32m    amazon-ebs: Get:9 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main Sources [215 kB][0m
+[0;32m    amazon-ebs: Get:10 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/restricted Sources [1,804 B][0m
+[0;32m    amazon-ebs: Get:11 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/universe Sources [118 kB][0m
+[0;32m    amazon-ebs: Get:12 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/multiverse Sources [4,016 B][0m
+[0;32m    amazon-ebs: Get:13 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 Packages [452 kB][0m
+[0;32m    amazon-ebs: Get:14 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main Translation-en [178 kB][0m
+[0;32m    amazon-ebs: Get:15 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/universe amd64 Packages [378 kB][0m
+[0;32m    amazon-ebs: Get:16 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/universe Translation-en [140 kB][0m
+[0;32m    amazon-ebs: Get:17 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/multiverse amd64 Packages [7,384 B][0m
+[0;32m    amazon-ebs: Get:18 http://security.ubuntu.com/ubuntu xenial-security/main Sources [54.5 kB][0m
+[0;32m    amazon-ebs: Get:19 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/multiverse Translation-en [3,080 B][0m
+[0;32m    amazon-ebs: Get:20 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-backports/main Sources [3,244 B][0m
+[0;32m    amazon-ebs: Get:21 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-backports/universe Sources [1,868 B][0m
+[0;32m    amazon-ebs: Get:22 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-backports/main amd64 Packages [4,404 B][0m
+[0;32m    amazon-ebs: Get:23 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-backports/main Translation-en [3,124 B][0m
+[0;32m    amazon-ebs: Get:24 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-backports/universe amd64 Packages [2,412 B][0m
+[0;32m    amazon-ebs: Get:25 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-backports/universe Translation-en [1,216 B][0m
+[0;32m    amazon-ebs: Get:26 http://security.ubuntu.com/ubuntu xenial-security/restricted Sources [1,804 B][0m
+[0;32m    amazon-ebs: Get:27 http://security.ubuntu.com/ubuntu xenial-security/universe Sources [16.9 kB][0m
+[0;32m    amazon-ebs: Get:28 http://security.ubuntu.com/ubuntu xenial-security/multiverse Sources [724 B][0m
+[0;32m    amazon-ebs: Get:29 http://security.ubuntu.com/ubuntu xenial-security/main amd64 Packages [201 kB][0m
+[0;32m    amazon-ebs: Get:30 http://security.ubuntu.com/ubuntu xenial-security/main Translation-en [84.3 kB][0m
+[0;32m    amazon-ebs: Get:31 http://security.ubuntu.com/ubuntu xenial-security/universe amd64 Packages [69.3 kB][0m
+[0;32m    amazon-ebs: Get:32 http://security.ubuntu.com/ubuntu xenial-security/universe Translation-en [37.9 kB][0m
+[0;32m    amazon-ebs: Get:33 http://security.ubuntu.com/ubuntu xenial-security/multiverse amd64 Packages [2,760 B][0m
+[0;32m    amazon-ebs: Fetched 11.1 MB in 2s (5,171 kB/s)[0m
+[0;32m    amazon-ebs: Reading package lists...[0m
+[0;32m    amazon-ebs: Reading package lists...[0m
+[0;32m    amazon-ebs: Building dependency tree...[0m
+[0;32m    amazon-ebs: Reading state information...[0m
+[0;32m    amazon-ebs: The following additional packages will be installed:[0m
+[0;32m    amazon-ebs: binutils build-essential cpp cpp-5 dpkg-dev fakeroot g++-5 gcc-5[0m
+[0;32m    amazon-ebs: libalgorithm-diff-perl libalgorithm-diff-xs-perl libalgorithm-merge-perl[0m
+[0;32m    amazon-ebs: libasan2 libatomic1 libc-dev-bin libc6-dev libcc1-0 libcilkrts5 libdpkg-perl[0m
+[0;32m    amazon-ebs: libexpat1-dev libfakeroot libfile-fcntllock-perl libgcc-5-dev libgomp1[0m
+[0;32m    amazon-ebs: libisl15 libitm1 liblsan0 libmpc3 libmpx0 libpython-all-dev libpython-dev[0m
+[0;32m    amazon-ebs: libpython-stdlib libpython2.7 libpython2.7-dev libpython2.7-minimal[0m
+[0;32m    amazon-ebs: libpython2.7-stdlib libquadmath0 libstdc++-5-dev libtsan0 libubsan0[0m
+[0;32m    amazon-ebs: linux-libc-dev make manpages-dev python python-all python-all-dev python-dev[0m
+[0;32m    amazon-ebs: python-minimal python-pip-whl python-pkg-resources python-setuptools[0m
+[0;32m    amazon-ebs: python-wheel python2.7 python2.7-dev python2.7-minimal[0m
+[0;32m    amazon-ebs: Suggested packages:[0m
+[0;32m    amazon-ebs: binutils-doc cpp-doc gcc-5-locales debian-keyring g++-multilib[0m
+[0;32m    amazon-ebs: g++-5-multilib gcc-5-doc libstdc++6-5-dbg gcc-multilib autoconf automake[0m
+[0;32m    amazon-ebs: libtool flex bison gdb gcc-doc gcc-5-multilib libgcc1-dbg libgomp1-dbg[0m
+[0;32m    amazon-ebs: libitm1-dbg libatomic1-dbg libasan2-dbg liblsan0-dbg libtsan0-dbg[0m
+[0;32m    amazon-ebs: libubsan0-dbg libcilkrts5-dbg libmpx0-dbg libquadmath0-dbg glibc-doc[0m
+[0;32m    amazon-ebs: libstdc++-5-doc make-doc python-doc python-tk python-setuptools-doc[0m
+[0;32m    amazon-ebs: python2.7-doc binfmt-support[0m
+[0;32m    amazon-ebs: The following NEW packages will be installed:[0m
+[0;32m    amazon-ebs: binutils build-essential cpp cpp-5 dpkg-dev fakeroot g++ g++-5 gcc gcc-5[0m
+[0;32m    amazon-ebs: libalgorithm-diff-perl libalgorithm-diff-xs-perl libalgorithm-merge-perl[0m
+[0;32m    amazon-ebs: libasan2 libatomic1 libc-dev-bin libc6-dev libcc1-0 libcilkrts5 libdpkg-perl[0m
+[0;32m    amazon-ebs: libexpat1-dev libfakeroot libfile-fcntllock-perl libgcc-5-dev libgomp1[0m
+[0;32m    amazon-ebs: libisl15 libitm1 liblsan0 libmpc3 libmpx0 libpython-all-dev libpython-dev[0m
+[0;32m    amazon-ebs: libpython-stdlib libpython2.7 libpython2.7-dev libpython2.7-minimal[0m
+[0;32m    amazon-ebs: libpython2.7-stdlib libquadmath0 libstdc++-5-dev libtsan0 libubsan0[0m
+[0;32m    amazon-ebs: linux-libc-dev make manpages-dev python python-all python-all-dev python-dev[0m
+[0;32m    amazon-ebs: python-minimal python-pip python-pip-whl python-pkg-resources[0m
+[0;32m    amazon-ebs: python-setuptools python-wheel python2.7 python2.7-dev python2.7-minimal[0m
+[0;32m    amazon-ebs: 0 upgraded, 57 newly installed, 0 to remove and 58 not upgraded.[0m
+[0;32m    amazon-ebs: Need to get 73.0 MB of archives.[0m
+[0;32m    amazon-ebs: After this operation, 209 MB of additional disk space will be used.[0m
+[0;32m    amazon-ebs: Get:1 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libpython2.7-minimal amd64 2.7.12-1ubuntu0~16.04.1 [339 kB][0m
+[0;32m    amazon-ebs: Get:2 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 python2.7-minimal amd64 2.7.12-1ubuntu0~16.04.1 [1,295 kB][0m
+[0;32m    amazon-ebs: Get:3 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 python-minimal amd64 2.7.11-1 [28.2 kB][0m
+[0;32m    amazon-ebs: Get:4 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libpython2.7-stdlib amd64 2.7.12-1ubuntu0~16.04.1 [1,884 kB][0m
+[0;32m    amazon-ebs: Get:5 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 python2.7 amd64 2.7.12-1ubuntu0~16.04.1 [224 kB][0m
+[0;32m    amazon-ebs: Get:6 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libpython-stdlib amd64 2.7.11-1 [7,656 B][0m
+[0;32m    amazon-ebs: Get:7 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 python amd64 2.7.11-1 [137 kB][0m
+[0;32m    amazon-ebs: Get:8 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libmpc3 amd64 1.0.3-1 [39.7 kB][0m
+[0;32m    amazon-ebs: Get:9 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 binutils amd64 2.26.1-1ubuntu1~16.04.3 [2,310 kB][0m
+[0;32m    amazon-ebs: Get:10 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libc-dev-bin amd64 2.23-0ubuntu5 [68.7 kB][0m
+[0;32m    amazon-ebs: Get:11 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 linux-libc-dev amd64 4.4.0-59.80 [828 kB][0m
+[0;32m    amazon-ebs: Get:12 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libc6-dev amd64 2.23-0ubuntu5 [2,078 kB][0m
+[0;32m    amazon-ebs: Get:13 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libisl15 amd64 0.16.1-1 [524 kB][0m
+[0;32m    amazon-ebs: Get:14 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 cpp-5 amd64 5.4.0-6ubuntu1~16.04.4 [7,653 kB][0m
+[0;32m    amazon-ebs: Get:15 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 cpp amd64 4:5.3.1-1ubuntu1 [27.7 kB][0m
+[0;32m    amazon-ebs: Get:16 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libcc1-0 amd64 5.4.0-6ubuntu1~16.04.4 [38.8 kB][0m
+[0;32m    amazon-ebs: Get:17 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libgomp1 amd64 5.4.0-6ubuntu1~16.04.4 [55.0 kB][0m
+[0;32m    amazon-ebs: Get:18 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libitm1 amd64 5.4.0-6ubuntu1~16.04.4 [27.4 kB][0m
+[0;32m    amazon-ebs: Get:19 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libatomic1 amd64 5.4.0-6ubuntu1~16.04.4 [8,912 B][0m
+[0;32m    amazon-ebs: Get:20 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libasan2 amd64 5.4.0-6ubuntu1~16.04.4 [264 kB][0m
+[0;32m    amazon-ebs: Get:21 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 liblsan0 amd64 5.4.0-6ubuntu1~16.04.4 [105 kB][0m
+[0;32m    amazon-ebs: Get:22 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libtsan0 amd64 5.4.0-6ubuntu1~16.04.4 [244 kB][0m
+[0;32m    amazon-ebs: Get:23 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libubsan0 amd64 5.4.0-6ubuntu1~16.04.4 [95.3 kB][0m
+[0;32m    amazon-ebs: Get:24 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libcilkrts5 amd64 5.4.0-6ubuntu1~16.04.4 [40.1 kB][0m
+[0;32m    amazon-ebs: Get:25 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libmpx0 amd64 5.4.0-6ubuntu1~16.04.4 [9,766 B][0m
+[0;32m    amazon-ebs: Get:26 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libquadmath0 amd64 5.4.0-6ubuntu1~16.04.4 [131 kB][0m
+[0;32m    amazon-ebs: Get:27 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libgcc-5-dev amd64 5.4.0-6ubuntu1~16.04.4 [2,237 kB][0m
+[0;32m    amazon-ebs: Get:28 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 gcc-5 amd64 5.4.0-6ubuntu1~16.04.4 [8,577 kB][0m
+[0;32m    amazon-ebs: Get:29 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 gcc amd64 4:5.3.1-1ubuntu1 [5,244 B][0m
+[0;32m    amazon-ebs: Get:30 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libstdc++-5-dev amd64 5.4.0-6ubuntu1~16.04.4 [1,426 kB][0m
+[0;32m    amazon-ebs: Get:31 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 g++-5 amd64 5.4.0-6ubuntu1~16.04.4 [8,300 kB][0m
+[0;32m    amazon-ebs: Get:32 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 g++ amd64 4:5.3.1-1ubuntu1 [1,504 B][0m
+[0;32m    amazon-ebs: Get:33 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 make amd64 4.1-6 [151 kB][0m
+[0;32m    amazon-ebs: Get:34 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libdpkg-perl all 1.18.4ubuntu1.1 [195 kB][0m
+[0;32m    amazon-ebs: Get:35 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 dpkg-dev all 1.18.4ubuntu1.1 [584 kB][0m
+[0;32m    amazon-ebs: Get:36 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 build-essential amd64 12.1ubuntu2 [4,758 B][0m
+[0;32m    amazon-ebs: Get:37 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libfakeroot amd64 1.20.2-1ubuntu1 [25.5 kB][0m
+[0;32m    amazon-ebs: Get:38 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 fakeroot amd64 1.20.2-1ubuntu1 [61.8 kB][0m
+[0;32m    amazon-ebs: Get:39 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libalgorithm-diff-perl all 1.19.03-1 [47.6 kB][0m
+[0;32m    amazon-ebs: Get:40 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libalgorithm-diff-xs-perl amd64 0.04-4build1 [11.0 kB][0m
+[0;32m    amazon-ebs: Get:41 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libalgorithm-merge-perl all 0.08-3 [12.0 kB][0m
+[0;32m    amazon-ebs: Get:42 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libexpat1-dev amd64 2.1.0-7ubuntu0.16.04.2 [115 kB][0m
+[0;32m    amazon-ebs: Get:43 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libfile-fcntllock-perl amd64 0.22-3 [32.0 kB][0m
+[0;32m    amazon-ebs: Get:44 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libpython2.7 amd64 2.7.12-1ubuntu0~16.04.1 [1,070 kB][0m
+[0;32m    amazon-ebs: Get:45 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libpython2.7-dev amd64 2.7.12-1ubuntu0~16.04.1 [27.8 MB][0m
+[0;32m    amazon-ebs: Get:46 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libpython-dev amd64 2.7.11-1 [7,728 B][0m
+[0;32m    amazon-ebs: Get:47 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 libpython-all-dev amd64 2.7.11-1 [992 B][0m
+[0;32m    amazon-ebs: Get:48 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 manpages-dev all 4.04-2 [2,048 kB][0m
+[0;32m    amazon-ebs: Get:49 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 python-all amd64 2.7.11-1 [978 B][0m
+[0;32m    amazon-ebs: Get:50 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/main amd64 python2.7-dev amd64 2.7.12-1ubuntu0~16.04.1 [276 kB][0m
+[0;32m    amazon-ebs: Get:51 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 python-dev amd64 2.7.11-1 [1,160 B][0m
+[0;32m    amazon-ebs: Get:52 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 python-all-dev amd64 2.7.11-1 [1,000 B][0m
+[0;32m    amazon-ebs: Get:53 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/universe amd64 python-pip-whl all 8.1.1-2ubuntu0.4 [1,110 kB][0m
+[0;32m    amazon-ebs: Get:54 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial-updates/universe amd64 python-pip all 8.1.1-2ubuntu0.4 [144 kB][0m
+[0;32m    amazon-ebs: Get:55 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 python-pkg-resources all 20.7.0-1 [108 kB][0m
+[0;32m    amazon-ebs: Get:56 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/main amd64 python-setuptools all 20.7.0-1 [169 kB][0m
+[0;32m    amazon-ebs: Get:57 http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial/universe amd64 python-wheel all 0.29.0-1 [48.0 kB][0m
+[0;32m    amazon-ebs: debconf: unable to initialize frontend: Dialog[0m
+[0;32m    amazon-ebs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)[0m
+[0;32m    amazon-ebs: debconf: falling back to frontend: Readline[0m
+[0;32m    amazon-ebs: debconf: unable to initialize frontend: Readline[0m
+[0;32m    amazon-ebs: debconf: (This frontend requires a controlling tty.)[0m
+[0;32m    amazon-ebs: debconf: falling back to frontend: Teletype[0m
+[0;32m    amazon-ebs: dpkg-preconfigure: unable to re-open stdin:[0m
+[0;32m    amazon-ebs: Fetched 73.0 MB in 3s (22.4 MB/s)[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libpython2.7-minimal:amd64.[0m
+[0;32m    amazon-ebs: (Reading database ... 53712 files and directories currently installed.)[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libpython2.7-minimal_2.7.12-1ubuntu0~16.04.1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libpython2.7-minimal:amd64 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python2.7-minimal.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python2.7-minimal_2.7.12-1ubuntu0~16.04.1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python2.7-minimal (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-minimal.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-minimal_2.7.11-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-minimal (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libpython2.7-stdlib:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libpython2.7-stdlib_2.7.12-1ubuntu0~16.04.1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libpython2.7-stdlib:amd64 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python2.7.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python2.7_2.7.12-1ubuntu0~16.04.1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python2.7 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libpython-stdlib:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libpython-stdlib_2.7.11-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libpython-stdlib:amd64 (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Processing triggers for man-db (2.7.5-1) ...[0m
+[0;32m    amazon-ebs: Processing triggers for mime-support (3.59ubuntu1) ...[0m
+[0;32m    amazon-ebs: Setting up libpython2.7-minimal:amd64 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Setting up python2.7-minimal (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Linking and byte-compiling packages for runtime python2.7...[0m
+[0;32m    amazon-ebs: Setting up python-minimal (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python.[0m
+[0;32m    amazon-ebs: (Reading database ... 54458 files and directories currently installed.)[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python_2.7.11-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libmpc3:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libmpc3_1.0.3-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libmpc3:amd64 (1.0.3-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package binutils.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../binutils_2.26.1-1ubuntu1~16.04.3_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking binutils (2.26.1-1ubuntu1~16.04.3) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libc-dev-bin.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libc-dev-bin_2.23-0ubuntu5_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libc-dev-bin (2.23-0ubuntu5) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package linux-libc-dev:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../linux-libc-dev_4.4.0-59.80_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking linux-libc-dev:amd64 (4.4.0-59.80) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libc6-dev:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libc6-dev_2.23-0ubuntu5_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libc6-dev:amd64 (2.23-0ubuntu5) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libisl15:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libisl15_0.16.1-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libisl15:amd64 (0.16.1-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package cpp-5.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../cpp-5_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking cpp-5 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package cpp.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../cpp_4%3a5.3.1-1ubuntu1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking cpp (4:5.3.1-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libcc1-0:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libcc1-0_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libcc1-0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libgomp1:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libgomp1_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libgomp1:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libitm1:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libitm1_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libitm1:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libatomic1:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libatomic1_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libatomic1:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libasan2:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libasan2_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libasan2:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package liblsan0:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../liblsan0_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking liblsan0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libtsan0:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libtsan0_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libtsan0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libubsan0:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libubsan0_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libubsan0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libcilkrts5:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libcilkrts5_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libcilkrts5:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libmpx0:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libmpx0_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libmpx0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libquadmath0:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libquadmath0_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libquadmath0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libgcc-5-dev:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libgcc-5-dev_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libgcc-5-dev:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package gcc-5.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../gcc-5_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking gcc-5 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package gcc.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../gcc_4%3a5.3.1-1ubuntu1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking gcc (4:5.3.1-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libstdc++-5-dev:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libstdc++-5-dev_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libstdc++-5-dev:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package g++-5.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../g++-5_5.4.0-6ubuntu1~16.04.4_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking g++-5 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package g++.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../g++_4%3a5.3.1-1ubuntu1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking g++ (4:5.3.1-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package make.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../archives/make_4.1-6_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking make (4.1-6) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libdpkg-perl.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libdpkg-perl_1.18.4ubuntu1.1_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libdpkg-perl (1.18.4ubuntu1.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package dpkg-dev.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../dpkg-dev_1.18.4ubuntu1.1_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking dpkg-dev (1.18.4ubuntu1.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package build-essential.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../build-essential_12.1ubuntu2_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking build-essential (12.1ubuntu2) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libfakeroot:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libfakeroot_1.20.2-1ubuntu1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libfakeroot:amd64 (1.20.2-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package fakeroot.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../fakeroot_1.20.2-1ubuntu1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking fakeroot (1.20.2-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libalgorithm-diff-perl.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libalgorithm-diff-perl_1.19.03-1_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libalgorithm-diff-perl (1.19.03-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libalgorithm-diff-xs-perl.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libalgorithm-diff-xs-perl_0.04-4build1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libalgorithm-diff-xs-perl (0.04-4build1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libalgorithm-merge-perl.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libalgorithm-merge-perl_0.08-3_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libalgorithm-merge-perl (0.08-3) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libexpat1-dev:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libexpat1-dev_2.1.0-7ubuntu0.16.04.2_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libexpat1-dev:amd64 (2.1.0-7ubuntu0.16.04.2) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libfile-fcntllock-perl.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libfile-fcntllock-perl_0.22-3_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libfile-fcntllock-perl (0.22-3) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libpython2.7:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libpython2.7_2.7.12-1ubuntu0~16.04.1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libpython2.7:amd64 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libpython2.7-dev:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libpython2.7-dev_2.7.12-1ubuntu0~16.04.1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libpython2.7-dev:amd64 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libpython-dev:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libpython-dev_2.7.11-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libpython-dev:amd64 (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package libpython-all-dev:amd64.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../libpython-all-dev_2.7.11-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking libpython-all-dev:amd64 (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package manpages-dev.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../manpages-dev_4.04-2_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking manpages-dev (4.04-2) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-all.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-all_2.7.11-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-all (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python2.7-dev.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python2.7-dev_2.7.12-1ubuntu0~16.04.1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python2.7-dev (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-dev.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-dev_2.7.11-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-dev (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-all-dev.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-all-dev_2.7.11-1_amd64.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-all-dev (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-pip-whl.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-pip-whl_8.1.1-2ubuntu0.4_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-pip-whl (8.1.1-2ubuntu0.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-pip.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-pip_8.1.1-2ubuntu0.4_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-pip (8.1.1-2ubuntu0.4) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-pkg-resources.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-pkg-resources_20.7.0-1_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-pkg-resources (20.7.0-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-setuptools.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-setuptools_20.7.0-1_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-setuptools (20.7.0-1) ...[0m
+[0;32m    amazon-ebs: Selecting previously unselected package python-wheel.[0m
+[0;32m    amazon-ebs: Preparing to unpack .../python-wheel_0.29.0-1_all.deb ...[0m
+[0;32m    amazon-ebs: Unpacking python-wheel (0.29.0-1) ...[0m
+[0;32m    amazon-ebs: Processing triggers for man-db (2.7.5-1) ...[0m
+[0;32m    amazon-ebs: Processing triggers for libc-bin (2.23-0ubuntu5) ...[0m
+[0;32m    amazon-ebs: Setting up libpython2.7-stdlib:amd64 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Setting up python2.7 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Setting up libpython-stdlib:amd64 (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Setting up python (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Setting up libmpc3:amd64 (1.0.3-1) ...[0m
+[0;32m    amazon-ebs: Setting up binutils (2.26.1-1ubuntu1~16.04.3) ...[0m
+[0;32m    amazon-ebs: Setting up libc-dev-bin (2.23-0ubuntu5) ...[0m
+[0;32m    amazon-ebs: Setting up linux-libc-dev:amd64 (4.4.0-59.80) ...[0m
+[0;32m    amazon-ebs: Setting up libc6-dev:amd64 (2.23-0ubuntu5) ...[0m
+[0;32m    amazon-ebs: Setting up libisl15:amd64 (0.16.1-1) ...[0m
+[0;32m    amazon-ebs: Setting up cpp-5 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up cpp (4:5.3.1-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: Setting up libcc1-0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libgomp1:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libitm1:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libatomic1:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libasan2:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up liblsan0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libtsan0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libubsan0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libcilkrts5:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libmpx0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libquadmath0:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up libgcc-5-dev:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up gcc-5 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up gcc (4:5.3.1-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: Setting up libstdc++-5-dev:amd64 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up g++-5 (5.4.0-6ubuntu1~16.04.4) ...[0m
+[0;32m    amazon-ebs: Setting up g++ (4:5.3.1-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode[0m
+[0;32m    amazon-ebs: Setting up make (4.1-6) ...[0m
+[0;32m    amazon-ebs: Setting up libdpkg-perl (1.18.4ubuntu1.1) ...[0m
+[0;32m    amazon-ebs: Setting up dpkg-dev (1.18.4ubuntu1.1) ...[0m
+[0;32m    amazon-ebs: Setting up build-essential (12.1ubuntu2) ...[0m
+[0;32m    amazon-ebs: Setting up libfakeroot:amd64 (1.20.2-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: Setting up fakeroot (1.20.2-1ubuntu1) ...[0m
+[0;32m    amazon-ebs: update-alternatives: using /usr/bin/fakeroot-sysv to provide /usr/bin/fakeroot (fakeroot) in auto mode[0m
+[0;32m    amazon-ebs: Setting up libalgorithm-diff-perl (1.19.03-1) ...[0m
+[0;32m    amazon-ebs: Setting up libalgorithm-diff-xs-perl (0.04-4build1) ...[0m
+[0;32m    amazon-ebs: Setting up libalgorithm-merge-perl (0.08-3) ...[0m
+[0;32m    amazon-ebs: Setting up libexpat1-dev:amd64 (2.1.0-7ubuntu0.16.04.2) ...[0m
+[0;32m    amazon-ebs: Setting up libfile-fcntllock-perl (0.22-3) ...[0m
+[0;32m    amazon-ebs: Setting up libpython2.7:amd64 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Setting up libpython2.7-dev:amd64 (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Setting up libpython-dev:amd64 (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Setting up libpython-all-dev:amd64 (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Setting up manpages-dev (4.04-2) ...[0m
+[0;32m    amazon-ebs: Setting up python-all (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Setting up python2.7-dev (2.7.12-1ubuntu0~16.04.1) ...[0m
+[0;32m    amazon-ebs: Setting up python-dev (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Setting up python-all-dev (2.7.11-1) ...[0m
+[0;32m    amazon-ebs: Setting up python-pip-whl (8.1.1-2ubuntu0.4) ...[0m
+[0;32m    amazon-ebs: Setting up python-pip (8.1.1-2ubuntu0.4) ...[0m
+[0;32m    amazon-ebs: Setting up python-pkg-resources (20.7.0-1) ...[0m
+[0;32m    amazon-ebs: Setting up python-setuptools (20.7.0-1) ...[0m
+[0;32m    amazon-ebs: Setting up python-wheel (0.29.0-1) ...[0m
+[0;32m    amazon-ebs: Processing triggers for libc-bin (2.23-0ubuntu5) ...[0m
+[0;32m    amazon-ebs: Collecting pip[0m
+[0;32m    amazon-ebs: Downloading pip-9.0.1-py2.py3-none-any.whl (1.3MB)[0m
+[0;32m    amazon-ebs: Installing collected packages: pip[0m
+[0;32m    amazon-ebs: Found existing installation: pip 8.1.1[0m
+[0;32m    amazon-ebs: Not uninstalling pip at /usr/lib/python2.7/dist-packages, outside environment /usr[0m
+[0;32m    amazon-ebs: Successfully installed pip-9.0.1[0m
+[0;32m    amazon-ebs: Collecting jupyter[0m
+[0;32m    amazon-ebs: Downloading jupyter-1.0.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting boto[0m
+[0;32m    amazon-ebs: Downloading boto-2.45.0-py2.py3-none-any.whl (1.3MB)[0m
+[0;32m    amazon-ebs: Collecting requests[0m
+[0;32m    amazon-ebs: Downloading requests-2.12.4-py2.py3-none-any.whl (576kB)[0m
+[0;32m    amazon-ebs: Collecting ipykernel (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading ipykernel-4.5.2-py2.py3-none-any.whl (98kB)[0m
+[0;32m    amazon-ebs: Collecting jupyter-console (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading jupyter_console-5.0.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting qtconsole (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading qtconsole-4.2.1-py2.py3-none-any.whl (104kB)[0m
+[0;32m    amazon-ebs: Collecting notebook (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading notebook-4.3.1-py2.py3-none-any.whl (6.8MB)[0m
+[0;32m    amazon-ebs: Collecting ipywidgets (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading ipywidgets-5.2.2-py2.py3-none-any.whl (43kB)[0m
+[0;32m    amazon-ebs: Collecting nbconvert (from jupyter)[0m
+[0;32m    amazon-ebs: Downloading nbconvert-5.0.0-py2.py3-none-any.whl (371kB)[0m
+[0;32m    amazon-ebs: Collecting ipython>=4.0.0 (from ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading ipython-5.1.0-py2-none-any.whl (747kB)[0m
+[0;32m    amazon-ebs: Collecting traitlets>=4.1.0 (from ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading traitlets-4.3.1-py2.py3-none-any.whl (74kB)[0m
+[0;32m    amazon-ebs: Collecting tornado>=4.0 (from ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading tornado-4.4.2.tar.gz (460kB)[0m
+[0;32m    amazon-ebs: Collecting jupyter-client (from ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading jupyter_client-4.4.0-py2.py3-none-any.whl (76kB)[0m
+[0;32m    amazon-ebs: Collecting prompt-toolkit<2.0.0,>=1.0.0 (from jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading prompt_toolkit-1.0.9-py2-none-any.whl (241kB)[0m
+[0;32m    amazon-ebs: Collecting pygments (from jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading Pygments-2.1.3-py2.py3-none-any.whl (755kB)[0m
+[0;32m    amazon-ebs: Collecting jupyter-core (from qtconsole->jupyter)[0m
+[0;32m    amazon-ebs: Downloading jupyter_core-4.2.1-py2.py3-none-any.whl (125kB)[0m
+[0;32m    amazon-ebs: Collecting ipython-genutils (from notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading ipython_genutils-0.1.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting nbformat (from notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading nbformat-4.2.0-py2.py3-none-any.whl (153kB)[0m
+[0;32m    amazon-ebs: Collecting jinja2 (from notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading Jinja2-2.9.4-py2.py3-none-any.whl (274kB)[0m
+[0;32m    amazon-ebs: Collecting terminado>=0.3.3; sys_platform != "win32" (from notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading terminado-0.6.tar.gz[0m
+[0;32m    amazon-ebs: Collecting widgetsnbextension>=1.2.6 (from ipywidgets->jupyter)[0m
+[0;32m    amazon-ebs: Downloading widgetsnbextension-1.2.6-py2.py3-none-any.whl (1.5MB)[0m
+[0;32m    amazon-ebs: Collecting bleach (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading bleach-1.5.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting mistune!=0.6 (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading mistune-0.7.3-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting testpath (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading testpath-0.3-py2.py3-none-any.whl (82kB)[0m
+[0;32m    amazon-ebs: Collecting entrypoints>=0.2.2 (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading entrypoints-0.2.2-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting pandocfilters>=1.4.1 (from nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pandocfilters-1.4.1.tar.gz[0m
+[0;32m    amazon-ebs: Collecting pickleshare (from ipython>=4.0.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pickleshare-0.7.4-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting backports.shutil-get-terminal-size; python_version == "2.7" (from ipython>=4.0.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading backports.shutil_get_terminal_size-1.0.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting decorator (from ipython>=4.0.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading decorator-4.0.11-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting simplegeneric>0.8 (from ipython>=4.0.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading simplegeneric-0.8.1.zip[0m
+[0;32m    amazon-ebs: Collecting pexpect; sys_platform != "win32" (from ipython>=4.0.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pexpect-4.2.1-py2.py3-none-any.whl (55kB)[0m
+[0;32m    amazon-ebs: Collecting pathlib2; python_version == "2.7" or python_version == "3.3" (from ipython>=4.0.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pathlib2-2.2.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Requirement already satisfied: setuptools>=18.5 in /usr/lib/python2.7/dist-packages (from ipython>=4.0.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Collecting enum34; python_version == "2.7" (from traitlets>=4.1.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading enum34-1.1.6-py2-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting six (from traitlets>=4.1.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading six-1.10.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting singledispatch (from tornado>=4.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading singledispatch-3.4.0.3-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting certifi (from tornado>=4.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading certifi-2016.9.26-py2.py3-none-any.whl (377kB)[0m
+[0;32m    amazon-ebs: Collecting backports_abc>=0.4 (from tornado>=4.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading backports_abc-0.5-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting pyzmq>=13 (from jupyter-client->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading pyzmq-16.0.2-cp27-cp27mu-manylinux1_x86_64.whl (3.0MB)[0m
+[0;32m    amazon-ebs: Collecting wcwidth (from prompt-toolkit<2.0.0,>=1.0.0->jupyter-console->jupyter)[0m
+[0;32m    amazon-ebs: Downloading wcwidth-0.1.7-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting jsonschema!=2.5.0,>=2.4 (from nbformat->notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading jsonschema-2.5.1-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting MarkupSafe>=0.23 (from jinja2->notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading MarkupSafe-0.23.tar.gz[0m
+[0;32m    amazon-ebs: Collecting ptyprocess (from terminado>=0.3.3; sys_platform != "win32"->notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading ptyprocess-0.5.1-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting html5lib!=0.9999,!=0.99999,<0.99999999,>=0.999 (from bleach->nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading html5lib-0.9999999.tar.gz (889kB)[0m
+[0;32m    amazon-ebs: Collecting configparser>=3.5; python_version == "2.7" (from entrypoints>=0.2.2->nbconvert->jupyter)[0m
+[0;32m    amazon-ebs: Downloading configparser-3.5.0.tar.gz[0m
+[0;32m    amazon-ebs: Collecting scandir (from pathlib2; python_version == "2.7" or python_version == "3.3"->ipython>=4.0.0->ipykernel->jupyter)[0m
+[0;32m    amazon-ebs: Downloading scandir-1.4.zip[0m
+[0;32m    amazon-ebs: Collecting functools32; python_version == "2.7" (from jsonschema!=2.5.0,>=2.4->nbformat->notebook->jupyter)[0m
+[0;32m    amazon-ebs: Downloading functools32-3.2.3-2.zip[0m
+[0;32m    amazon-ebs: Building wheels for collected packages: tornado, terminado, pandocfilters, simplegeneric, MarkupSafe, html5lib, configparser, scandir, functools32[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for tornado: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for tornado: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/b3/db/47/46e05d1ee3ecfba252fcab42f0a156dab0df0cddf99fa0827c[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for terminado: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for terminado: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/3b/c2/ea/af635ffb63857a8c2ddd22da6a4b52f5b7ea3065db94ef5d7c[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for pandocfilters: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for pandocfilters: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/d4/01/68/49055c80b9f01ccb49241e73c8019628605064730941d70b56[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for simplegeneric: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for simplegeneric: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/7b/31/08/c85e74c84188cbec6a6827beec4d640f2bd78ae003dc1ec09d[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for MarkupSafe: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for MarkupSafe: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/a3/fa/dc/0198eed9ad95489b8a4f45d14dd5d2aee3f8984e46862c5748[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for html5lib: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for html5lib: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/6f/85/6c/56b8e1292c6214c4eb73b9dda50f53e8e977bf65989373c962[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for configparser: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for configparser: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/1c/bd/b4/277af3f6c40645661b4cd1c21df26aca0f2e1e9714a1d4cda8[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for scandir: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for scandir: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/31/79/6f/d0107427b00f37471daff10cdd0262dd981f55b24154040f30[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for functools32: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for functools32: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/3c/d0/09/cd78d0ff4d6cfecfbd730782a7815a4571cd2cd4d2ed6e69d9[0m
+[0;32m    amazon-ebs: Successfully built tornado terminado pandocfilters simplegeneric MarkupSafe html5lib configparser scandir functools32[0m
+[0;32m    amazon-ebs: Installing collected packages: six, scandir, pathlib2, pickleshare, wcwidth, prompt-toolkit, enum34, decorator, ipython-genutils, traitlets, backports.shutil-get-terminal-size, pygments, simplegeneric, ptyprocess, pexpect, ipython, singledispatch, certifi, backports-abc, tornado, pyzmq, jupyter-core, jupyter-client, ipykernel, jupyter-console, qtconsole, functools32, jsonschema, nbformat, html5lib, bleach, mistune, testpath, MarkupSafe, jinja2, configparser, entrypoints, pandocfilters, nbconvert, terminado, notebook, widgetsnbextension, ipywidgets, jupyter, boto, requests[0m
+[0;32m    amazon-ebs: Successfully installed MarkupSafe-0.23 backports-abc-0.5 backports.shutil-get-terminal-size-1.0.0 bleach-1.5.0 boto-2.45.0 certifi-2016.9.26 configparser-3.5.0 decorator-4.0.11 entrypoints-0.2.2 enum34-1.1.6 functools32-3.2.3.post2 html5lib-0.9999999 ipykernel-4.5.2 ipython-5.1.0 ipython-genutils-0.1.0 ipywidgets-5.2.2 jinja2-2.9.4 jsonschema-2.5.1 jupyter-1.0.0 jupyter-client-4.4.0 jupyter-console-5.0.0 jupyter-core-4.2.1 mistune-0.7.3 nbconvert-5.0.0 nbformat-4.2.0 notebook-4.3.1 pandocfilters-1.4.1 pathlib2-2.2.0 pexpect-4.2.1 pickleshare-0.7.4 prompt-toolkit-1.0.9 ptyprocess-0.5.1 pygments-2.1.3 pyzmq-16.0.2 qtconsole-4.2.1 requests-2.12.4 scandir-1.4 simplegeneric-0.8.1 singledispatch-3.4.0.3 six-1.10.0 terminado-0.6 testpath-0.3 tornado-4.4.2 traitlets-4.3.1 wcwidth-0.1.7 widgetsnbextension-1.2.6[0m
+[0;32m    amazon-ebs: Collecting numpy[0m
+[0;32m    amazon-ebs: Downloading numpy-1.12.0-cp27-cp27mu-manylinux1_x86_64.whl (16.5MB)[0m
+[0;32m    amazon-ebs: Collecting matplotlib[0m
+[0;32m    amazon-ebs: Downloading matplotlib-2.0.0-cp27-cp27mu-manylinux1_x86_64.whl (14.6MB)[0m
+[0;32m    amazon-ebs: Collecting pandas[0m
+[0;32m    amazon-ebs: Downloading pandas-0.19.2-cp27-cp27mu-manylinux1_x86_64.whl (17.2MB)[0m
+[0;32m    amazon-ebs: Collecting scipy[0m
+[0;32m    amazon-ebs: Downloading scipy-0.18.1-cp27-cp27mu-manylinux1_x86_64.whl (40.3MB)[0m
+[0;32m    amazon-ebs: Collecting cycler>=0.10 (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading cycler-0.10.0-py2.py3-none-any.whl[0m
+[0;32m    amazon-ebs: Collecting python-dateutil (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading python_dateutil-2.6.0-py2.py3-none-any.whl (194kB)[0m
+[0;32m    amazon-ebs: Requirement already satisfied: functools32 in /usr/local/lib/python2.7/dist-packages (from matplotlib)[0m
+[0;32m    amazon-ebs: Requirement already satisfied: six>=1.10 in /usr/local/lib/python2.7/dist-packages (from matplotlib)[0m
+[0;32m    amazon-ebs: Collecting pytz (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading pytz-2016.10-py2.py3-none-any.whl (483kB)[0m
+[0;32m    amazon-ebs: Collecting pyparsing!=2.0.0,!=2.0.4,!=2.1.2,!=2.1.6,>=1.5.6 (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading pyparsing-2.1.10-py2.py3-none-any.whl (56kB)[0m
+[0;32m    amazon-ebs: Collecting subprocess32 (from matplotlib)[0m
+[0;32m    amazon-ebs: Downloading subprocess32-3.2.7.tar.gz (54kB)[0m
+[0;32m    amazon-ebs: Building wheels for collected packages: subprocess32[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for subprocess32: started[0m
+[0;32m    amazon-ebs: Running setup.py bdist_wheel for subprocess32: finished with status 'done'[0m
+[0;32m    amazon-ebs: Stored in directory: /root/.cache/pip/wheels/7d/4c/a4/ce9ceb463dae01f4b95e670abd9afc8d65a45f38012f8030cc[0m
+[0;32m    amazon-ebs: Successfully built subprocess32[0m
+[0;32m    amazon-ebs: Installing collected packages: numpy, cycler, python-dateutil, pytz, pyparsing, subprocess32, matplotlib, pandas, scipy[0m
+[0;32m    amazon-ebs: Successfully installed cycler-0.10.0 matplotlib-2.0.0 numpy-1.12.0 pandas-0.19.2 pyparsing-2.1.10 python-dateutil-2.6.0 pytz-2016.10 scipy-0.18.1 subprocess32-3.2.7[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs:[0m
+[0;32m    amazon-ebs: backports-abc==0.5[0m
+[0;32m    amazon-ebs: backports.shutil-get-terminal-size==1.0.0[0m
+[0;32m    amazon-ebs: bleach==1.5.0[0m
+[0;32m    amazon-ebs: boto==2.45.0[0m
+[0;32m    amazon-ebs: certifi==2016.9.26[0m
+[0;32m    amazon-ebs: configparser==3.5.0[0m
+[0;32m    amazon-ebs: cycler==0.10.0[0m
+[0;32m    amazon-ebs: decorator==4.0.11[0m
+[0;32m    amazon-ebs: entrypoints==0.2.2[0m
+[0;32m    amazon-ebs: enum34==1.1.6[0m
+[0;32m    amazon-ebs: functools32==3.2.3.post2[0m
+[0;32m    amazon-ebs: html5lib==0.9999999[0m
+[0;32m    amazon-ebs: ipykernel==4.5.2[0m
+[0;32m    amazon-ebs: ipython==5.1.0[0m
+[0;32m    amazon-ebs: ipython-genutils==0.1.0[0m
+[0;32m    amazon-ebs: ipywidgets==5.2.2[0m
+[0;32m    amazon-ebs: Jinja2==2.9.4[0m
+[0;32m    amazon-ebs: jsonschema==2.5.1[0m
+[0;32m    amazon-ebs: jupyter==1.0.0[0m
+[0;32m    amazon-ebs: jupyter-client==4.4.0[0m
+[0;32m    amazon-ebs: jupyter-console==5.0.0[0m
+[0;32m    amazon-ebs: jupyter-core==4.2.1[0m
+[0;32m    amazon-ebs: MarkupSafe==0.23[0m
+[0;32m    amazon-ebs: matplotlib==2.0.0[0m
+[0;32m    amazon-ebs: mistune==0.7.3[0m
+[0;32m    amazon-ebs: nbconvert==5.0.0[0m
+[0;32m    amazon-ebs: nbformat==4.2.0[0m
+[0;32m    amazon-ebs: notebook==4.3.1[0m
+[0;32m    amazon-ebs: numpy==1.12.0[0m
+[0;32m    amazon-ebs: pandas==0.19.2[0m
+[0;32m    amazon-ebs: pandocfilters==1.4.1[0m
+[0;32m    amazon-ebs: pathlib2==2.2.0[0m
+[0;32m    amazon-ebs: pexpect==4.2.1[0m
+[0;32m    amazon-ebs: pickleshare==0.7.4[0m
+[0;32m    amazon-ebs: prompt-toolkit==1.0.9[0m
+[0;32m    amazon-ebs: ptyprocess==0.5.1[0m
+[0;32m    amazon-ebs: Pygments==2.1.3[0m
+[0;32m    amazon-ebs: pyparsing==2.1.10[0m
+[0;32m    amazon-ebs: python-dateutil==2.6.0[0m
+[0;32m    amazon-ebs: pytz==2016.10[0m
+[0;32m    amazon-ebs: pyzmq==16.0.2[0m
+[0;32m    amazon-ebs: qtconsole==4.2.1[0m
+[0;32m    amazon-ebs: requests==2.12.4[0m
+[0;32m    amazon-ebs: scandir==1.4[0m
+[0;32m    amazon-ebs: scipy==0.18.1[0m
+[0;32m    amazon-ebs: simplegeneric==0.8.1[0m
+[0;32m    amazon-ebs: singledispatch==3.4.0.3[0m
+[0;32m    amazon-ebs: six==1.10.0[0m
+[0;32m    amazon-ebs: subprocess32==3.2.7[0m
+[0;32m    amazon-ebs: terminado==0.6[0m
+[0;32m    amazon-ebs: testpath==0.3[0m
+[0;32m    amazon-ebs: tornado==4.4.2[0m
+[0;32m    amazon-ebs: traitlets==4.3.1[0m
+[0;32m    amazon-ebs: wcwidth==0.1.7[0m
+[0;32m    amazon-ebs: widgetsnbextension==1.2.6[0m
+[1;32m==> amazon-ebs: Stopping the source instance...[0m
+[1;32m==> amazon-ebs: Waiting for the instance to stop...[0m
+[1;32m==> amazon-ebs: Creating the AMI: spark-notebook-1484689766[0m
+[0;32m    amazon-ebs: AMI: ami-d6826bc0[0m
+[1;32m==> amazon-ebs: Waiting for AMI to become ready...[0m
+[1;32m==> amazon-ebs: Terminating the source AWS instance...[0m
+[1;32m==> amazon-ebs: Cleaning up any extra volumes...[0m
+[1;32m==> amazon-ebs: No volumes to clean up, skipping[0m
+[1;32m==> amazon-ebs: Deleting temporary security group...[0m
+[1;32m==> amazon-ebs: Deleting temporary keypair...[0m
+[1;32mBuild 'amazon-ebs' finished.[0m
+
+==> Builds finished. The artifacts of successful builds are:
+--> amazon-ebs: AMIs were created:
+
+us-east-1: ami-d6826bc0

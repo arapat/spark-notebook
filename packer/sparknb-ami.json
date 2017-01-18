@@ -1,0 +1,32 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": ""
+    },
+    "builders": [{
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "region": "us-east-1",
+        "source_ami": "ami-e13739f6",
+        "instance_type": "t2.micro",
+        "ssh_username": "ubuntu",
+        "ami_name": "spark-notebook-{{timestamp}}"
+    }],
+    "provisioners": [{
+        "type": "shell",
+        "inline": [
+            "sleep 30",
+            "sudo apt-get update",
+            "sudo apt-get install -y gcc g++ python-pip",
+            "sudo -H pip install --upgrade pip",
+            "sudo -H pip install jupyter boto requests",
+            "sudo -H pip install numpy matplotlib pandas scipy",
+            "echo",
+            "echo",
+            "echo",
+            "pip freeze"
+        ]
+    }]
+}
+

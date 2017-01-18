@@ -143,9 +143,9 @@ class SparkHelper:
         # Write .bashrc
         print("Writing bash configurations.")
         logger.info("Writing .bashrc.")
-        self._send_file("remote/spark-ec2/bashrc", "~/.bashrc")
+        self._send_file("spark_notebook/remote/spark-ec2/bashrc", "~/.bashrc")
         logger.info("Writing .bash_profile.")
-        self._send_file("remote/spark-ec2/bash_profile", "~/.bash_profile")
+        self._send_file("spark_notebook/remote/spark-ec2/bash_profile", "~/.bash_profile")
 
         # Set up HDFS
         print("Writing HDFS configurations.")
@@ -183,11 +183,11 @@ class SparkHelper:
         print("Setting up IPython Notebook.")
         # IPython config
         self._send_command("mkdir -p ~/.ipython/profile_default", True)
-        self._send_file("remote/spark-ec2/ipython_config.py",
+        self._send_file("spark_notebook/remote/spark-ec2/ipython_config.py",
                         "~/.ipython/profile_default/ipython_config.py")
         # IPython Notebook config
         nb_config = set_password(self.passwd,
-                                 "remote/spark-ec2/ipython_notebook_config.py")
+                                 "spark_notebook/remote/spark-ec2/ipython_notebook_config.py")
         self._send_file(nb_config,
                         "~/.ipython/profile_default/ipython_notebook_config.py")
         os.remove(nb_config)
@@ -196,24 +196,9 @@ class SparkHelper:
         # when a new notebook is opened
         print("Uploading helper functions.")
         logger.info("Uploading helper functions.")
-        self._send_file("./remote/init_sc.py", "~")
-        self._send_file("./remote/init_s3.py", "~")
-        self._send_file("./remote/s3helper.py", "~")
-
-        # Install Python packages
-        print("Installing python packages... (may take 2-3 minutes)")
-        logger.info("Installing python packages.")
-
-        self._send_command(
-            "sudo yum install -y python27-numpy python27-matplotlib")
-        print("Installed python package: numpy, matplotlib.")
-        self._send_command(
-            "sudo yum install -y gcc gcc-c++ git", True)
-        print("Installed gcc, git.")
-        for package in ["jupyter", "boto", "requests"]:
-            self._send_command(
-                ("sudo pip install --upgrade " + package), True)
-            print("Installed python package: " + package + ".")
+        self._send_file("./spark_notebook/remote/init_sc.py", "~")
+        self._send_file("./spark_notebook/remote/init_s3.py", "~")
+        self._send_file("./spark_notebook/remote/s3helper.py", "~")
 
         self._setup_status = SUCCEED
         print("The cluster is up!")
@@ -225,7 +210,7 @@ class SparkHelper:
         self._send_command("kill -9 $(pgrep jupyter)", True)
         # Upload sample notebooks
         self._send_command("mkdir -p ~/workspace/examples", True)
-        self._send_file('./remote/examples/FilesIO.ipynb',
+        self._send_file('./spark_notebook/remote/examples/FilesIO.ipynb',
                         '~/workspace/examples')
         # Restart Spark - in case some python process stucked
         self._send_command("~/spark/sbin/stop-all.sh", True)
@@ -374,7 +359,7 @@ class SparkHelper:
             sg.authorize('tcp', 0, 65535, str(ip_address) + "/32")
 
     def setup_s3(self, cred):
-        tempfile = "./remote/init_s3.py.temp"
+        tempfile = "./spark_notebook/remote/init_s3.py.temp"
         with open(tempfile, "w") as f:
             f.write("s3helper.set_credential('%s', '%s')" %
                     (cred["aws-access-key-id"], cred["aws-secret-access-key"]))

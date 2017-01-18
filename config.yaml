@@ -7,7 +7,7 @@ launch:
   password: change-me-321
 providers:
   ec2:
-    ami: ami-6869aa05
+    ami: ami-d6826bc0
     availability-zone: us-east-1b
     instance-initiated-shutdown-behavior: terminate
     instance-type: r3.2xlarge
