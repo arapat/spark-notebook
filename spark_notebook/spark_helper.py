@@ -205,6 +205,7 @@ class SparkHelper:
         self._send_file("./spark_notebook/remote/s3helper.py", "~")
 
         self._setup_status = SUCCEED
+        self.check_notebook()
         print("The cluster is up!")
         logger.info("The cluster is up!")
 
