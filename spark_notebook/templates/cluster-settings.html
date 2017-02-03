@@ -9,7 +9,7 @@
 <div class="row-fluid marketing">
     <div class="span12">
         <h1>
-            account: <a href="/account/{{data['account']}}">{{data["account_name"]}}</a>
+            account: <a href="/g/{{data['account']}}">{{data["account_name"]}}</a>
             <br/>
             cluster: {{data["cluster_name"]}}
         </h1>
@@ -103,73 +103,6 @@
                 </div>
             </div>
         </div>
-
-        <hr>
-
-        <form class="form-signin" action="" method="POST">
-            <h4 class="form-signin-heading">List files</h4>
-            <input type="hidden" name="type" value="list"/>
-            <label>Remote path</label>
-                <div class="input-group">
-                    <input type="text" id="path" name="list-path" class="form-control"
-                           placeholder="Default: ~/workspace">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">List</button>
-                    </span>
-                </div>
-            {% if "files" in data %}
-            <pre>{{data["files"].strip()}}</pre>
-            {% endif %}
-        </form>
-
-        <hr>
-
-        <form class="form-signin" action="" method="POST">
-            <h4 class="form-signin-heading">Upload files</h4>
-            <input type="hidden" name="type" value="upload"/>
-            <label>Local path</label>
-            <input type="text" name="local-path" class="form-control"
-                   placeholder="" required>
-            <label>Remote path</label>
-            <input type="text" name="remote-path" class="form-control"
-                   placeholder="" required>
-            <button class="btn btn-primary btn-block" type="submit">Upload</button>
-            {% if "upload-log" in data%}
-                {% if data["upload-log"] is none %}
-                    <div class="alert alert-success" role="alert">Succeed!</div>
-                {% else %}
-                    <div class="alert alert-danger" role="alert">
-                        <pre>{{data["upload-log"].strip()}}</pre>
-                    </div>
-                {% endif %}
-            {% endif %}
-        </form>
-
-        <hr>
-
-        <form class="form-signin" action="" method="POST">
-            <h4 class="form-signin-heading">Download files</h4>
-            <input type="hidden" name="type" value="download"/>
-            <label>Remote path</label>
-            <input type="text" name="remote-path" class="form-control"
-                   placeholder="" required>
-            <label>Local path</label>
-            <input type="text" name="local-path" class="form-control"
-                   placeholder="" required>
-
-            <button class="btn btn-primary btn-block" type="submit">Download</button>
-
-
-            {% if "download-log" in data %}
-                {% if data["download-log"] is none %}
-                <div class="alert alert-success" role="alert">Succeed!</div>
-                {% else %}
-                <div class="alert alert-danger" role="alert">
-                    <pre>{{data["download-log"].strip()}}</pre>
-                </div>
-                {% endif %}
-            {% endif %}
-        </form>
 
         <hr>
 
