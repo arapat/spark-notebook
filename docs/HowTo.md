@@ -9,6 +9,30 @@ This document covers some tricks to do common tasks on AWS.
 
 Please refer to [SparkAndS3](SparkAndS3.md).
 
+### How do I transfer files from the cluster's local disk to my laptop's local disk or vice versa?
+
+`scp` is a good option for this task, especially for large files or directories that
+contain many files.
+
+The usage of the `scp` command is very similar to `ssh`. So we start by copying the SSH command provided
+on the cluster info page. As an example, the SSH command may look like this
+`ssh -i ~/vault/mypem.pem ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com`.
+
+(1) `scp` from the server to the laptop
+
+`scp -r -i ~/vault/mypem.pem ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com:</remote/file/path> </local/file/path>`
+
+Replace `</remote/file/path>` and `</local/file/path>` to the actual file paths.
+
+(2) `scp` from the laptop to the server
+
+`scp -r -i ~/vault/mypem.pem </local/file/path> ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com:</remote/file/path>`
+
+Replace `</remote/file/path>` and `</local/file/path>` to the actual file paths.
+
+The `-r` option above is only required for transferring directories.
+
+
 ### How do I use Git?
 
 At this moment you have to login to the cluster master node to use git.
