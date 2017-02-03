@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="masthead">
+    <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
+</div>
+
+<hr>
+
+{% if credentials_status != None %}
+    {% for status in credentials_status %}
+    <div class="alert {{ status["alert-type"] }}">
+        {{ status["message"] }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+<div class="row-fluid">
+    <div class="span12">
+        <h4>Open an AWS account</h4>
+        <div id="aws-accounts">
+            {% if clusters["ec2"]|length == 0 %}
+                <p>Please add an AWS account.</p>
+            {% else %}
+                <p>Please select an AWS account to create cluster.</p>
+                <ul>
+                  {% for cluster in clusters["ec2"] %}
+                  <li><a href="/g/{{cluster}}">{{cluster}}</a></li>
+                  {% endfor %}
+                </ul>
+            {% endif %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-aws">
+                Add a new AWS account
+            </button>
+        </div>
+
+        <hr>
+
+        <h4>Change AWS credential file location</h4>
+        <form class="form-credential-path" action="" method="POST">
+            <p>Make sure <b>NOT</b> to upload this file to any public GitHub repository for
+                the security of your accounts.</p>
+            <input type="hidden" name="type" value="set-path"/>
+            <input name="path" class="form-control"
+                   placeholder="{{"Current path: " + cred_path}}"
+                   required>
+            <button type="submit" class="btn btn-primary btn-form">
+                Set path
+            </button>
+        </form>
+
+        <div class="modal fade" id="add-aws" tabindex="-1" role="dialog" aria-labelledby="add-aws-title">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="add-aws-title">Add a new AWS account</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-add-account" action="" method="POST">
+                            <input type="hidden" name="type" value="add-account"/>
+                            <label>Display Name</label>
+                            <input id="name" name="name" class="form-control"
+                                   placeholder="A name that will show in the dropdown menu above"
+                                   required>
+
+                            <label>Your Email Address</label>
+                            <input id="name" name="email-address" class="form-control"
+                                   placeholder="Enter your @eng.ucsd.edu email address"
+                                   required>
+
+                            <label>AWS Access Key ID</label>
+                            <input id="aws-access-key-id" class="form-control"
+                                   name="aws-access-key-id" required>
+
+                            <label>AWS Secret Access Key</label>
+                            <input id="aws-secret-access-key" class="form-control"
+                                   name="aws-secret-access-key" required>
+
+                            <br/>
+                            <div id="myButtons" class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input id="ssh-key" type="radio" class="form-control"
+                                           name="ssh-key" value="generate" checked> Generate a New SSH Key
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input id="ssh-key" type="radio" class="form-control"
+                                           name="ssh-key" value="existing"> Use an Existing SSH Key
+                                </label>
+                            </div>
+
+                            <br/>
+                            <div id="existing-key" style="display: none">
+                                <br/>
+                                <label>Key Name</label>
+                                <input id="key-name" class="form-control" name="key-name">
+
+                                <label>Key Identity File Path</label>
+                                <input id="identity-file" class="form-control"
+                                       name="identity-file">
+                            </div>
+
+                            <button class="btn btn-primary btn-block" type="submit">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" language="javascript">
+    $("input:radio[name=ssh-key]").change(function() {
+        var value = $(this).val();
+
+        if (value == "existing") {
+            $("#existing-key").css("display", "inline");
+            $("#key-name").attr("required", "true");
+            $("#identity-file").attr("required", "true");
+        } else {
+            $("#existing-key").css("display", "none");
+            $("#key-name").removeAttr("required");
+            $("#identity-file").removeAttr("required");
+        }
+    });
+</script>
+{% endblock %}

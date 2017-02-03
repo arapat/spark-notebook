@@ -15,7 +15,7 @@ default_config = {
             "instance-type": "r3.2xlarge",
             "ami": "ami-6869aa05",
             "user": "ec2-user",
-            "spot-price": 0.5
+            "spot-price": 1.0
         }
     },
     "services": {

@@ -19,7 +19,7 @@
             {% if data["launching"] and not data["ready"] and cluster == data["pname"] %}
             {{cluster}} (launching)
             {% else %}
-            <a href="/cluster/{{data['account']}}/{{cluster}}">
+            <a href="/g/{{data['account']}}/{{cluster}}">
               {{cluster}}
             </a>
             {% endif %}
