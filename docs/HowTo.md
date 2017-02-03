@@ -26,7 +26,7 @@ the Jupyter notebook.
 
 You will be asked to type your GitHub username and password.
 
-**Example: ** `git clone git@github.com:arapat/spark-notebook.git`
+**Example:** `git clone git@github.com:arapat/spark-notebook.git`
 
 ![git clone](images/git.png)
 
