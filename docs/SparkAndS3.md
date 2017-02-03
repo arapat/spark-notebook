@@ -27,4 +27,4 @@ contains examples of using `s3helper`. Alternatively, you can try to call `s3hel
 
 In the cluster details page, you can set up your S3 credentials on the cluster by clicking the credential's name under the "Set up S3" section.
 
-(TODO: insert a screenshot here)
+![s3setup](images/s3setup.png)
