@@ -25,6 +25,8 @@ contains examples of using `s3helper`. Alternatively, you can try to call `s3hel
 
 ### Set up your S3 credentials
 
-In the cluster details page, you can set up your S3 credentials on the cluster by clicking the credential's name under the "Set up S3" section.
+By default, `s3helper` uses the credentials of the AWS account that used for creating the cluster.
+In the cluster details page, you can change the S3 credentials of the `s3helper` by clicking on
+a different credential's name under the "Set up S3" section.
 
 ![s3setup](images/s3setup.png)
