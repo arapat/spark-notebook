@@ -48,7 +48,7 @@ the Jupyter notebook.
 3. Click "Use HTTPS" link.
 4. Copy the repository HTTPS URL, then run `git clone <HTTPS url>` in the terminal.
 
-You will be asked to type your GitHub username and password.
+You will be asked to type in your GitHub username and password.
 
 **Example:** `git clone git@github.com:arapat/spark-notebook.git`
 
@@ -57,3 +57,5 @@ You will be asked to type your GitHub username and password.
 #### Push to the remote repository
 
 Simply run `git push` in the terminal.
+
+You will be asked to type in your GitHub username and password.
