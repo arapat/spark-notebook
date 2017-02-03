@@ -18,13 +18,13 @@ The usage of the `scp` command is very similar to `ssh`. So we start by copying 
 on the cluster info page. As an example, the SSH command may look like this
 `ssh -i ~/vault/mypem.pem ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com`.
 
-(1) `scp` from the server to the laptop
+#### `scp` from the server to the laptop
 
 `scp -r -i ~/vault/mypem.pem ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com:</remote/file/path> </local/file/path>`
 
 Replace `</remote/file/path>` and `</local/file/path>` to the actual file paths.
 
-(2) `scp` from the laptop to the server
+#### `scp` from the laptop to the server
 
 `scp -r -i ~/vault/mypem.pem </local/file/path> ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com:</remote/file/path>`
 
