@@ -5,14 +5,9 @@
 </div>
 
 <hr>
+    <!-- {{ credential_file }} -->
 
-{% if credentials_status != None %}
-    {% for status in credentials_status %}
-    <div class="alert {{ status["alert-type"] }}">
-        {{ status["message"] }}
-    </div>
-    {% endfor %}
-{% endif %}
+    {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
 
 <div class="row-fluid">
     <div class="span12">
