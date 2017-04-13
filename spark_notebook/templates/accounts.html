@@ -33,21 +33,6 @@
             </button>
         </div>
 
-        <hr>
-
-        <h4>Change AWS credential file location</h4>
-        <form class="form-credential-path" action="" method="POST">
-            <p>Make sure <b>NOT</b> to upload this file to any public GitHub repository for
-                the security of your accounts.</p>
-            <input type="hidden" name="type" value="set-path"/>
-            <input name="path" class="form-control"
-                   placeholder="{{"Current path: " + cred_path}}"
-                   required>
-            <button type="submit" class="btn btn-primary btn-form">
-                Set path
-            </button>
-        </form>
-
         <div class="modal fade" id="add-aws" tabindex="-1" role="dialog" aria-labelledby="add-aws-title">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
