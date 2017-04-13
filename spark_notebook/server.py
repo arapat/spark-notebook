@@ -109,6 +109,28 @@ def select_account():
                            clusters=config.credentials.credentials,
                            cred_path=config.credentials.file_path,
                            credentials_status=credentials_status)
+@app.route('/config', methods=['GET', 'POST'])
+def save_config_location():
+    error = None
+
+    if request.method == 'POST':
+        path = request.form['path'].encode('utf8').decode()
+
+        global credentials
+        credentials = Credentials(path)
+        error = credentials.save()
+
+        # If there were no errors saving the credentials file then update the credentials path in
+        # the config file
+        if error is None:
+            config.config["credentials"]["path"] = path
+            config.save()
+            flash("Credentials saved to %s" % path)
+            return redirect(url_for('select_account'))
+
+    return render_template('config.html',
+                           cred_path=config.config["credentials"]["path"],
+                           error=error)
 
 
 @app.route('/g/<account>', methods=['GET', 'POST'])
