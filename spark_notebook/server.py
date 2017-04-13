@@ -1,7 +1,9 @@
 import os
+import os.path
 import time
 
 from .config import Config
+from .credentials import Credentials
 from .spark_helper import SparkHelper
 from .spark_helper import IN_PROCESS
 from .spark_helper import SUCCEED
@@ -12,9 +14,12 @@ from flask import redirect
 from flask import request
 from flask import render_template
 from flask import url_for
+from flask import flash
 
 app = Flask(__name__)
+app.secret_key = 'some_secret'
 config = Config()
+credentials = Credentials(config.config["credentials"]["path"])
 spark = SparkHelper(config)
 
 
@@ -65,7 +70,23 @@ def launch_new_cluster():
                         spot_price=spot_price, passwd=password)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
+def main():
+
+    if "config_path" in request.args:
+        global config
+        global credentials
+        config = Config(file_path=request.args.get('config_path'))
+        credentials = Credentials(config.config["credentials"]["path"])
+        flash("Using config file: %s" % config.file_path)
+
+    if os.path.isfile(config.config["credentials"]["path"]):
+        return redirect(url_for('select_account'))
+    else:
+        return redirect(url_for('save_config_location'))
+
+
+@app.route('/accounts', methods=['GET'])
 def select_account():
     credentials_status = []
     '''Show all available AWS accounts.'''
