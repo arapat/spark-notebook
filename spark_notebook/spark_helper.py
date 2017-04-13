@@ -5,6 +5,7 @@ The idea is to split the deployment logic from the Spark-Notebook UI
 Current implementation applies spark-ec2 script for the deployment.
 '''
 
+from __future__ import print_function
 import boto.ec2
 import json
 import logging
@@ -17,8 +18,11 @@ import webbrowser
 import yaml
 from os.path import expanduser
 from time import sleep
-from urllib.request import urlopen
 from IPython.lib import passwd
+
+from future.standard_library import install_aliases
+install_aliases()
+from urllib.request import urlopen
 
 from .thread_wrapper import ThreadWrapper
 from .thread_wrapper import ThreadIO
