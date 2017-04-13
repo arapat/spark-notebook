@@ -1,0 +1,22 @@
+credentials:
+  path: /tmp/temp_credentials.yaml
+providers:
+  ec2:
+    ami: test-ami
+    availability-zone: us-east-1b
+    instance-initiated-shutdown-behavior: terminate
+    instance-type: r3.2xlarge
+    region: us-east-1
+    spot-price: 1.0
+    user: ec2-user
+services:
+  hdfs:
+    version: 2.7.2
+  spark:
+    version: 2.1.0
+launch:
+  install-hdfs: true
+  install-spark: true
+  name: test-cluster
+  num-slaves: 1
+  password: test
