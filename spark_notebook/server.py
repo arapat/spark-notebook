@@ -2,6 +2,7 @@ import os
 import os.path
 import time
 
+from .cloud.aws import AWS
 from .config import Config
 from .credentials import Credentials
 from .spark_helper import SparkHelper
@@ -88,27 +89,63 @@ def main():
 
 @app.route('/accounts', methods=['GET'])
 def select_account():
-    credentials_status = []
-    '''Show all available AWS accounts.'''
-    if request.method == "POST":
-        # Set a new config file path
-        if request.form["type"] == "set-path":
-            credentials_status = config.set_credentials_file_path(str(request.form["path"]))
-        # Add a new AWS account
-        elif request.form["type"] == "add-account":
-            data = {key: str(request.form[key])
-                    for key in config.credentials.ec2_keys}
-            data['name'] = str(request.form['name'])
-            data['identity-file'] = os.path.expanduser(data['identity-file'])
-            credentials_status = config.credentials.add(data, 'ec2')
-        # Invalid parameter
-        else:
-            pass
 
     return render_template('accounts.html',
-                           clusters=config.credentials.credentials,
-                           cred_path=config.credentials.file_path,
-                           credentials_status=credentials_status)
+                           accounts=credentials.credentials,
+                           credential_file=config.config["credentials"]["path"])
+
+
+@app.route('/accounts', methods=['POST'])
+def add_account():
+    name = None
+    email_address = None
+    access_key_id = None
+    secret_access_key = None
+    ssh_key = None
+    key_name = None
+    identity_file = None
+
+    if "name" in request.form:
+        name = request.form["name"].encode('utf8').decode()
+    if "email_address" in request.form:
+        email_address = request.form["email_address"].encode('utf8').decode()
+    if "access_key_id" in request.form:
+        access_key_id = request.form["access_key_id"].encode('utf8').decode()
+    if "secret_access_key" in request.form:
+        secret_access_key = request.form["secret_access_key"].encode('utf8').decode()
+    if "ssh_key" in request.form:
+        ssh_key = request.form["ssh_key"].encode('utf8').decode()
+    if "key_name" in request.form:
+        key_name = request.form["key_name"].encode('utf8').decode()
+    if "identity_file" in request.form:
+        identity_file = request.form["identity_file"].encode('utf8').decode()
+
+    region_name = config.config["providers"]["ec2"]["region"]
+
+    cloud_account = AWS(access_key_id, secret_access_key, region_name)
+
+    error = cloud_account.test_credentials()
+
+    if error is None and ssh_key == "generate":
+        error = cloud_account.create_ssh_key(email_address, os.path.dirname(credentials.file_path))
+        key_name = cloud_account.key_name
+        identity_file = cloud_account.identity_file
+
+    if error is None:
+        error = cloud_account.test_ssh_key(key_name, identity_file)
+
+    if error is None:
+        error = credentials.add(name, email_address, access_key_id, secret_access_key, key_name,
+                                identity_file)
+
+    if error is None:
+        flash("Account %s added" % name)
+
+    return render_template('accounts.html',
+                           accounts=credentials.credentials,
+                           error=error)
+
+
 @app.route('/config', methods=['GET', 'POST'])
 def save_config_location():
     error = None
