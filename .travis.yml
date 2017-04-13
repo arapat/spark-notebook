@@ -8,4 +8,4 @@ install:
   - "pip install -q -r requirements.txt"
 
 script:
-  - "run_tests.sh"
+  - "python run_tests.py"
