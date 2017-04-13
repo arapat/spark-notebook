@@ -13,13 +13,13 @@
     <div class="span12">
         <h4>Open an AWS account</h4>
         <div id="aws-accounts">
-            {% if clusters["ec2"]|length == 0 %}
-                <p>Please add an AWS account.</p>
+            {% if accounts|length == 0 %}
+                <p>No AWS accounts found.</p>
             {% else %}
                 <p>Please select an AWS account to create cluster.</p>
                 <ul>
-                  {% for cluster in clusters["ec2"] %}
-                  <li><a href="/g/{{cluster}}">{{cluster}}</a></li>
+                  {% for account in accounts %}
+                  <li><a href="/g/{{account}}">{{account}}</a></li>
                   {% endfor %}
                 </ul>
             {% endif %}
