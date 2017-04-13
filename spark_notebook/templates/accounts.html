@@ -44,27 +44,27 @@
                                    required>
 
                             <label>Your Email Address</label>
-                            <input id="name" name="email-address" class="form-control"
+                            <input id="email_address" name="email_address" class="form-control"
                                    placeholder="Enter your @eng.ucsd.edu email address"
                                    required>
 
                             <label>AWS Access Key ID</label>
-                            <input id="aws-access-key-id" class="form-control"
-                                   name="aws-access-key-id" required>
+                            <input id="access_key_id" class="form-control"
+                                   name="access_key_id" required>
 
                             <label>AWS Secret Access Key</label>
-                            <input id="aws-secret-access-key" class="form-control"
-                                   name="aws-secret-access-key" required>
+                            <input id="secret_access_key" class="form-control"
+                                   name="secret_access_key" required>
 
                             <br/>
                             <div id="myButtons" class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-primary active">
-                                    <input id="ssh-key" type="radio" class="form-control"
-                                           name="ssh-key" value="generate" checked> Generate a New SSH Key
+                                    <input id="ssh_key" type="radio" class="form-control"
+                                           name="ssh_key" value="generate" checked> Generate a New SSH Key
                                 </label>
                                 <label class="btn btn-primary">
-                                    <input id="ssh-key" type="radio" class="form-control"
-                                           name="ssh-key" value="existing"> Use an Existing SSH Key
+                                    <input id="ssh_key" type="radio" class="form-control"
+                                           name="ssh_key" value="existing"> Use an Existing SSH Key
                                 </label>
                             </div>
 
@@ -72,11 +72,11 @@
                             <div id="existing-key" style="display: none">
                                 <br/>
                                 <label>Key Name</label>
-                                <input id="key-name" class="form-control" name="key-name">
+                                <input id="key_name" class="form-control" name="key_name">
 
                                 <label>Key Identity File Path</label>
-                                <input id="identity-file" class="form-control"
-                                       name="identity-file">
+                                <input id="identity_file" class="form-control"
+                                       name="identity_file">
                             </div>
 
                             <button class="btn btn-primary btn-block" type="submit">Add</button>
@@ -89,17 +89,17 @@
 
 {% block js %}
 <script type="text/javascript" language="javascript">
-    $("input:radio[name=ssh-key]").change(function() {
+    $("input:radio[name=ssh_key]").change(function() {
         var value = $(this).val();
 
         if (value == "existing") {
             $("#existing-key").css("display", "inline");
-            $("#key-name").attr("required", "true");
-            $("#identity-file").attr("required", "true");
+            $("#key_name").attr("required", "true");
+            $("#identity_file").attr("required", "true");
         } else {
             $("#existing-key").css("display", "none");
-            $("#key-name").removeAttr("required");
-            $("#identity-file").removeAttr("required");
+            $("#key_name").removeAttr("required");
+            $("#identity_file").removeAttr("required");
         }
     });
 </script>
