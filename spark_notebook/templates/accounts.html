@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="masthead">
-    <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
-</div>
 
-<hr>
     <!-- {{ credential_file }} -->
 
     {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
 
 <div class="row-fluid">
     <div class="span12">
-        <h4>Open an AWS account</h4>
+        <h4>Select an AWS account</h4>
         <div id="aws-accounts">
             {% if accounts|length == 0 %}
                 <p>No AWS accounts found.</p>
@@ -37,7 +33,6 @@
                     </div>
                     <div class="modal-body">
                         <form class="form-add-account" action="" method="POST">
-                            <input type="hidden" name="type" value="add-account"/>
                             <label>Display Name</label>
                             <input id="name" name="name" class="form-control"
                                    placeholder="A name that will show in the dropdown menu above"
