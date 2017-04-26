@@ -61,7 +61,7 @@ class AWS:
                 error_message = "Key %s not found on AWS" % self.key_name
             else:
                 error_message = "There was an error describing the SSH key pairs: %s" % \
-                                e.response["Error"]["Code"]
+                                e.response["Error"]["Message"]
 
         # Verify the identity file exists
         if not os.path.isfile(self.identity_file):
@@ -97,7 +97,7 @@ class AWS:
                 error_message = "Invalid AWS access key id or aws secret access key"
             else:
                 error_message = "There was an error creating a new SSH key pair: %s" % \
-                                e.response["Error"]["Code"]
+                                e.response["Error"]["Message"]
         except Exception as e:
             error_message = "Unknown Error: %s" % e
 
