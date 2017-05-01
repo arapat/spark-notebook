@@ -27,3 +27,37 @@ class FakeBotoClient(object):
         else:
             error_response = {'Error': {'Code': 'InvalidKeyPair.NotFound'}}
             raise botocore.exceptions.ClientError(error_response, "ec2")
+
+    @staticmethod
+    def run_job_flow(*args, **kwargs):
+        expected = {'Name': u'cluster-1',
+                    'LogUri': 's3://aws-logs-846273844940-us-east-1/elasticmapreduce/',
+                    'ReleaseLabel': 'emr-5.2.0',
+                    'VisibleToAllUsers': True,
+                    'JobFlowRole': 'EMR_EC2_DefaultRole',
+                    'ServiceRole': 'EMR_DefaultRole',
+                    'Applications': [{'Name': 'Spark'}],
+                    'Instances': {'KeepJobFlowAliveWhenNoSteps': True,
+                                  'TerminationProtected': False,
+                                  'Ec2KeyName': 'key_name',
+                                  'InstanceGroups': [{'InstanceCount': 1,
+                                                      'Name': 'Master nodes',
+                                                      'InstanceRole': 'MASTER',
+                                                      'BidPrice': '1.0',
+                                                      'InstanceType': u'r3.xlarge',
+                                                      'Market': 'SPOT'},
+                                                     {'InstanceCount': 1,
+                                                      'Name': 'Slave nodes',
+                                                      'InstanceRole': 'CORE',
+                                                      'BidPrice': '1.0',
+                                                      'InstanceType': u'r3.xlarge',
+                                                      'Market': 'SPOT'}]},
+                    'Steps': [],
+                    'Tags': [{'Key': 'tag_name_1',
+                              'Value': 'tab_value_1'},
+                             {'Key': 'tag_name_2',
+                              'Value': 'tag_value_2'}]}
+
+        if kwargs != expected:
+            error_response = {'Error': {'Code': 'Failed'}}
+            raise botocore.exceptions.ClientError(error_response, "emr")
