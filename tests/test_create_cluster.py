@@ -42,5 +42,7 @@ class SparkNotebookTestCase(unittest.TestCase):
 
             assert '<div class="flash">Cluster launched: cluster-1</div>' in rv.data.decode('utf-8')
 
+            # TODO: Test that cluster-1 is in the cluster list
+
 if __name__ == '__main__':
     unittest.main()
