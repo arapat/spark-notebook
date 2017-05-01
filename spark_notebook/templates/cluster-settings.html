@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="masthead">
-    <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
-</div>
+
+    {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
+
+    <div class="masthead">
+        <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
+    </div>
 
 <hr>
 
