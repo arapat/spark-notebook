@@ -14,6 +14,7 @@ class AWS:
         self.region_name = region_name
         self.key_name = None
         self.identity_file = None
+        self.cluster_list = None
 
     def test_credentials(self):
 
@@ -104,5 +105,119 @@ class AWS:
         # Verify the key pair was saved locally
         if not os.path.isfile(self.identity_file):
             error_message = "SSH key %s not saved" % self.identity_file
+
+        return error_message
+
+    # TODO: Add password to pass to BootstrapActions
+    def create_cluster(self, cluster_name, key_name, instance_type, worker_count, instance_market, bid_price):
+        error_message = None
+
+        # TODO: Temp Vars
+        log_uri = "s3://aws-logs-846273844940-us-east-1/elasticmapreduce/"
+        version = "emr-5.2.0"
+
+        if instance_market:
+            market = "SPOT"
+        else:
+            market = "ON_DEMAND"
+
+        try:
+            client = boto3.client('emr',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            error_message = "There was an error connecting to EMR: %s" % e
+            return error_message
+
+        # TODO: Add VPC (Ec2SubnetId) so m4 gen EC2 instances work
+        # TODO: Make Core instance roles optional so a cluster can be launched with only a master
+        # TODO: Add Tags
+        # TODO: Remove BidPrice when not using spot instances
+        # TODO: Add BootstrapActions
+        try:
+            cluster_id = client.run_job_flow(
+                Name=cluster_name,
+                LogUri=log_uri,
+                ReleaseLabel=version,
+                VisibleToAllUsers=True,
+                JobFlowRole='EMR_EC2_DefaultRole',
+                ServiceRole='EMR_DefaultRole',
+                Applications=[
+                    {
+                        'Name': 'Spark'
+                    },
+                ],
+                Instances={
+                    'Ec2KeyName': key_name,
+                    'KeepJobFlowAliveWhenNoSteps': True,
+                    'TerminationProtected': False,
+                    #'Ec2SubnetId': '<Your Subnet ID>',
+                    'InstanceGroups': [
+                        {
+                            'Name': "Master nodes",
+                            'Market': market,
+                            'BidPrice': str(bid_price),
+                            'InstanceRole': 'MASTER',
+                            'InstanceType': instance_type,
+                            'InstanceCount': 1,
+                        },
+                        {
+                            'Name': "Slave nodes",
+                            'Market': market,
+                            'BidPrice': str(bid_price),
+                            'InstanceRole': 'CORE',
+                            'InstanceType': instance_type,
+                            'InstanceCount': int(worker_count),
+                        }
+                    ],
+                },
+                Steps=[],
+                Tags=[
+                    {
+                        'Key': 'tag_name_1',
+                        'Value': 'tab_value_1',
+                    },
+                    {
+                        'Key': 'tag_name_2',
+                        'Value': 'tag_value_2',
+                    },
+                ],
+            )
+        except botocore.exceptions.ClientError as e:
+            if e.response["Error"]["Code"] == "AuthFailure":
+                error_message = "Invalid AWS access key id or aws secret access key"
+            else:
+                error_message = "There was an error creating a new EMR cluster: %s" % \
+                                e.response["Error"]["Message"]
+        except Exception as e:
+            error_message = "Unknown Error: %s" % e
+
+        #print (cluster_id['JobFlowId'])
+
+        return error_message
+
+    def list_clusters(self):
+        error_message = None
+
+        try:
+            client = boto3.client('emr',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            error_message = "There was an error connecting to EMR: %s" % e
+            return error_message
+
+        try:
+            self.cluster_list = client.list_clusters()
+        except botocore.exceptions.ClientError as e:
+            if e.response["Error"]["Code"] == "AuthFailure":
+                error_message = "Invalid AWS access key id or aws secret access key"
+            else:
+                error_message = "There was an error creating a new EMR cluster: %s" % \
+                                e.response["Error"]["Message"]
+        except Exception as e:
+            error_message = "Unknown Error: %s" % e
 
         return error_message
