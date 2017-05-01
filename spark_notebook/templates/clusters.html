@@ -15,71 +15,22 @@
         <hr>
         <h2>Running Clusters</h2>
 
-        {% if data["clusters"] %}
+        {% if cluster_list %}
         <ul>
-          {% for cluster in data["clusters"] %}
+          {% for cluster in cluster_list["Clusters"] %}
           <li>
-            {% if data["launching"] and not data["ready"] and cluster == data["pname"] %}
-            {{cluster}} (launching)
-            {% else %}
-            <a href="/g/{{data['account']}}/{{cluster}}">
-              {{cluster}}
-            </a>
-            {% endif %}
+            <a href="/g/{{data['account']}}/{{cluster["Id"]}}">
+              {{cluster["Name"]}}
+            </a> - {{cluster["Status"]["State"]}}
           </li>
           {% endfor %}
         </ul>
         {% else %}
-        <p>No cluster is running.</p>
+        <p>No clusters are running.</p>
         {% endif %}
 
         <hr>
 
-        {% if data["launching"] %}
-        <div>
-            <h2>Initializing a new cluster</h2>
-
-            <label>Cluster name:</label>
-            <p>{{data["pname"]}} (launched {{data["timer"]}} ago)</p>
-
-            {% if data['ready'] %}
-            <label>Status</label>
-            <div class="alert alert-success" role="alert">
-                <p>Ready. You can safely disconnect from Internet or kill the Spark-notebook script now.</p>
-            </div>
-            <label>Log</label>
-            <pre>{{data['launch-log']}}</pre>
-            <form class="form-signin" action="/reset/{{data['account']}}" method="POST">
-                <button class="btn btn-primary" type="submit">Launch a new one</button>
-            </form>
-
-            {% elif data['dead'] %}
-            <label>Status</label>
-            <div class="alert alert-danger">
-                <p>Failed. Please check the following logs and the log file "deploy.log" for more information.</p>
-            </div>
-            <label>Log</label>
-            <pre>{{data['launch-log']}}</pre>
-            <form class="form-signin" action="/reset/{{data['account']}}" method="POST">
-                <button class="btn btn-primary" type="submit">Launch a new one</button>
-            </form>
-
-            {% else %}
-            <label>Status</label> <p>Not ready. Try refresh again later
-            (may take up to 15 minutes after the instances are granted).</p>
-            <div class="alert alert-danger">
-                <p>Setup in process. <br/>
-                   Please keep the Spark-notebook script running! Please do not disconnect from Internet!</p>
-            </div>
-            <label>Log</label>
-            <pre>{{data['launch-log']}}</pre>
-            <button class="btn btn-default" onclick="window.location.href=window.location.href;">
-                refresh
-            </button>
-            {% endif %}
-        </div>
-
-        {% else %}
         <form class="form-signin" action="" method="POST">
             <h2 class="form-signin-heading">Create a new cluster</h2>
             <label>Cluster name</label>
@@ -89,24 +40,23 @@
             <input id="password" class="form-control" name="password"
                    placeholder="{{"Default: " + data["password"]}}">
             <label>Number of worker nodes (1 master node will also be created)</label>
-            <input id="num_of_workers" class="form-control" name="workers"
-                   placeholder="{{"Default: " + data["num_of_workers"]}}">
-            <label>Instances type</label>
-            <input id="instances_type" class="form-control" name="instances"
-                   placeholder="{{"Default: " + data["instances_type"]}}">
+            <input id="worker_count" class="form-control" name="worker_count"
+                   placeholder="{{"Default: " + data["worker_count"]}}">
+            <label>Instance type</label>
+            <input id="instance_type" class="form-control" name="instance_type"
+                   placeholder="{{"Default: " + data["instance_type"]}}">
 
-            <input type="checkbox" name="spot" id="use-spot" value="yes" checked/>
+            <input type="checkbox" name="use_spot" id="use_spot" value="true" checked/>
             <label style="margin-top: 10px;">
                 Use spot instances (uncheck for on-demand instances)
             </label>
             <div id="spot-price">
                 <label>Maximum price per hour</label>
-                <input class="form-control" name="spot-price"
+                <input class="form-control" name="spot_price"
                        placeholder="{{"Default: $" + data["spot_price"]}}">
             </div>
             <button class="btn btn-primary btn-block" type="submit">Create</button>
         </form>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -114,7 +64,7 @@
 {% block js %}
 <script>
 $(document).ready(function() {
-    $('#use-spot').change(function() {
+    $('#use_spot').change(function() {
         $('#spot-price').toggle();
     });
 });
