@@ -172,39 +172,76 @@ def save_config_location():
 
 @app.route('/g/<account>', methods=['GET', 'POST'])
 def open_account(account):
-    '''Open AWS account info page'''
-    spark.init_account(account)
+    error = None
 
+    cloud_account = AWS(credentials.credentials[account]["access_key_id"],
+                        credentials.credentials[account]["secret_access_key"],
+                        config.config["providers"]["ec2"]["region"])
+
+    error = cloud_account.list_clusters()
+
+    # TODO: pass password to create_cluster
+    # if request method is post then create the cluster
     if request.method == "POST":
-        msg = launch_new_cluster()
-        # Should return None if nothing is wrong
-        if msg:
-            return msg
-        return redirect(url_for('open_account', account=account))
+        name = None
+        password = None
+        worker_count = None
+        instance_type = None
+        use_spot = None
+        spot_price = None
 
+        if "name" in request.form:
+            if request.form["name"].encode('utf8').decode() != "":
+                name = request.form["name"].encode('utf8').decode()
+            else:
+                name = config.config['launch']['name']
+        if "password" in request.form:
+            if request.form["password"].encode('utf8').decode() != "":
+                password = request.form["password"].encode('utf8').decode()
+            else:
+                password = config.config['launch']['password']
+        if "worker_count" in request.form:
+            if request.form["worker_count"].encode('utf8').decode() != "":
+                worker_count = request.form["worker_count"].encode('utf8').decode()
+            else:
+                worker_count = int(config.config['launch']['num-slaves'])
+        if "instance_type" in request.form:
+            if request.form["instance_type"].encode('utf8').decode() != "":
+                instance_type = request.form["instance_type"].encode('utf8').decode()
+            else:
+                instance_type = config.config['providers']['ec2']['instance-type']
+        if "use_spot" in request.form:
+            if request.form["use_spot"].encode('utf8').decode() == "true":
+                use_spot = True
+            else:
+                use_spot = False
+        if "spot_price" in request.form:
+            if request.form["spot_price"].encode('utf8').decode() != "":
+                spot_price = request.form["spot_price"].encode('utf8').decode()
+            else:
+                spot_price = config.config['providers']['ec2']['spot-price']
+
+        error = cloud_account.create_cluster(name, credentials.credentials[account]["key_name"],
+                                             instance_type, worker_count, use_spot, spot_price)
+
+        if error is None:
+            flash("Cluster launched: %s" % name)
+
+    # TODO: clean up config.config (config.py)
     data = {
         'account': account,
         'account_name': account,
-        'cluster_name': config['launch']['name'],
-        'num_of_workers': str(config['launch']['num-slaves']),
-        'spot_price': "%.2f" % config['providers']['ec2']['spot-price'],
-        'instances_type': config['providers']['ec2']['instance-type'],
-        'password': config['launch']['password']
+        'cluster_name': config.config['launch']['name'],
+        'worker_count': str(config.config['launch']['num-slaves']),
+        'spot_price': "%.2f" % config.config['providers']['ec2']['spot-price'],
+        'instance_type': config.config['providers']['ec2']['instance-type'],
+        'password': config.config['launch']['password'],
     }
-    try:
-        data['clusters'] = spark.get_cluster_names()
-    except Exception as e:
-        return e.message
-    data['launching'] = False
-    status = spark.get_setup_status()
-    if status is not None:
-        data['launching'] = True
-        data['pname'] = spark.name
-        data['timer'] = "%d seconds" % spark.get_setup_duration()
-        data['ready'] = (status == SUCCEED)
-        data['dead'] = (status == FAILED)
-        data['launch-log'] = spark.get_setup_log()
-    return render_template('clusters.html', data=data)
+
+    return render_template('clusters.html',
+                           cluster_list=cloud_account.cluster_list,
+                           data=data,
+                           error=error)
 
 
 @app.route('/g/<account>/<cluster>', methods=["GET", "POST"])
