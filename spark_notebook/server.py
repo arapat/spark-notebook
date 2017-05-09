@@ -173,6 +173,8 @@ def open_account(account):
 
         if error is None:
             flash("Cluster launched: %s" % name)
+            return redirect(url_for('open_cluster', account=account,
+                                    cluster_id=cloud_account.cluster_id))
 
     # TODO: clean up config.config (config.py)
     data = {
@@ -191,54 +193,48 @@ def open_account(account):
                            error=error)
 
 
-@app.route('/g/<account>/<cluster>', methods=["GET", "POST"])
-def open_cluster(account, cluster):
+@app.route('/g/<account>/<cluster_id>', methods=["GET", "POST"])
+def open_cluster(account, cluster_id):
+    error = None
 
+    cloud_account = AWS(credentials.credentials[account]["access_key_id"],
+                        credentials.credentials[account]["secret_access_key"],
+                        config.config["providers"]["ec2"]["region"])
+
+    error = cloud_account.describe_cluster(cluster_id)
+
+    master_public_dns_name = None
+
+    if "MasterPublicDnsName" in cloud_account.cluster_info["Cluster"]:
+        master_public_dns_name = cloud_account.cluster_info["Cluster"]["MasterPublicDnsName"]
+
+    # TODO: Added Juypter notebook password and ssh key path (replace UPDATE)
+    # TODO: Print EMR error message when status is TERMINATED_WITH_ERRORS
     data = {
         'account': account,
-        'credentials': config.credentials.credentials,
-        'account_name': account,
-        'cluster_name': cluster,
-        'master_url': spark.master_url,
-        'notebook-ready': status is None,
-        'password': config['launch']['password']
+        'cluster_name': cloud_account.cluster_info['Cluster']['Name'],
+        'cluster_id': cluster_id,
+        'master_url': master_public_dns_name,
+        'status': cloud_account.cluster_info['Cluster']['Status']['State'],
+        'password': "UPDATE",
+        'aws_access': ("ssh -i %s hadoop@%s" % ("UPDATE", master_public_dns_name))
     }
-    data['aws_access'] = ("ssh -i %s %s@%s" %
-                          (spark.KEY_IDENT_FILE, config['providers']['ec2']['user'],
-                           spark.master_url))
 
-    if request.method == "POST":
-        if request.form['type'] == 's3':
-            usage, name = request.form["usage"], request.form["name"]
-            spark.setup_s3(data["credentials"][usage][name])
-            process_nb = spark.check_notebook(force=True)
-            data["notebook-ready"] = False
-            data["setup-s3"] = True
-        # Invalid parameter
-        else:
-            pass
-
-    return render_template("cluster-settings.html", data=data)
+    return render_template("cluster-settings.html", data=data, error=error)
 
 
-@app.route('/reset/<account>', methods=['POST'])
-def reset_account(account):
-    spark.name = ''
-    spark.reset_spark_setup()
-    return redirect(url_for('open_account', account=account))
+@app.route('/destroy/<account>/<cluster_id>', methods=["POST"])
+def destroy_cluster(account, cluster_id):
+    error = None
 
+    cloud_account = AWS(credentials.credentials[account]["access_key_id"],
+                        credentials.credentials[account]["secret_access_key"],
+                        config.config["providers"]["ec2"]["region"])
 
-@app.route('/destroy/<account>/<cluster>', methods=["POST"])
-def destroy_cluster(account, cluster):
-    spark.init_account(account)
-    spark.init_cluster(cluster)
-    spark.destroy()
-    return redirect(url_for('open_account', account=account))
+    error = cloud_account.terminate_cluster(cluster_id)
 
-
-@app.route("/addcred/<account>/<cluster>", methods=["POST"])
-def add_s3_cred(account, cluster):
-    data = {key: str(request.form[key]) for key in config.credentials.s3_keys}
-    data['name'] = str(request.form['name'])
-    config.credentials.add(data, 's3')
-    return redirect(url_for('open_cluster', account=account, cluster=cluster))
+    if error is None:
+        return redirect(url_for('open_account', account=account))
+    else:
+        data = {}
+        return render_template("cluster-settings.html", data=data, error=error)
