@@ -41,6 +41,7 @@ class SparkNotebookTestCase(unittest.TestCase):
                         follow_redirects=True)
 
             assert '<div class="flash">Cluster launched: cluster-1</div>' in rv.data.decode('utf-8')
+            assert '<p>Launching. Please refresh again later.' in rv.data.decode('utf-8')
 
             # TODO: Test that cluster-1 is in the cluster list
 
