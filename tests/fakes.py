@@ -61,3 +61,19 @@ class FakeBotoClient(object):
         if kwargs != expected:
             error_response = {'Error': {'Code': 'Failed'}}
             raise botocore.exceptions.ClientError(error_response, "emr")
+
+        return {'JobFlowId': 'J-ABC123ABC123'}
+
+    @staticmethod
+    def describe_cluster(ClusterId):
+        return {
+            'Cluster': {
+                'Id': 'J-ABC123ABC123',
+                'Name': 'cluster-1',
+                'Status': {
+                    'State': 'STARTING',
+                },
+                'MasterPublicDnsName': 'test.cluster.com',
+            }
+        }
+
