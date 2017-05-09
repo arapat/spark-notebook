@@ -14,6 +14,8 @@ class AWS:
         self.region_name = region_name
         self.key_name = None
         self.identity_file = None
+        self.cluster_id = None
+        self.cluster_info = None
         self.cluster_list = None
 
     def test_credentials(self):
@@ -109,7 +111,8 @@ class AWS:
         return error_message
 
     # TODO: Add password to pass to BootstrapActions
-    def create_cluster(self, cluster_name, key_name, instance_type, worker_count, instance_market, bid_price):
+    def create_cluster(self, cluster_name, key_name, instance_type, worker_count, instance_market,
+                       bid_price):
         error_message = None
 
         # TODO: Temp Vars
@@ -136,7 +139,7 @@ class AWS:
         # TODO: Remove BidPrice when not using spot instances
         # TODO: Add BootstrapActions
         try:
-            cluster_id = client.run_job_flow(
+            response = client.run_job_flow(
                 Name=cluster_name,
                 LogUri=log_uri,
                 ReleaseLabel=version,
@@ -184,6 +187,9 @@ class AWS:
                     },
                 ],
             )
+
+            self.cluster_id = response['JobFlowId']
+
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure":
                 error_message = "Invalid AWS access key id or aws secret access key"
@@ -192,8 +198,6 @@ class AWS:
                                 e.response["Error"]["Message"]
         except Exception as e:
             error_message = "Unknown Error: %s" % e
-
-        #print (cluster_id['JobFlowId'])
 
         return error_message
 
@@ -216,6 +220,56 @@ class AWS:
                 error_message = "Invalid AWS access key id or aws secret access key"
             else:
                 error_message = "There was an error creating a new EMR cluster: %s" % \
+                                e.response["Error"]["Message"]
+        except Exception as e:
+            error_message = "Unknown Error: %s" % e
+
+        return error_message
+
+    def describe_cluster(self, cluster_id):
+        error_message = None
+
+        try:
+            client = boto3.client('emr',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            error_message = "There was an error connecting to EMR: %s" % e
+            return error_message
+
+        try:
+            self.cluster_info = client.describe_cluster(ClusterId=cluster_id)
+        except botocore.exceptions.ClientError as e:
+            if e.response["Error"]["Code"] == "AuthFailure":
+                error_message = "Invalid AWS access key id or aws secret access key"
+            else:
+                error_message = "There was an error describing the EMR cluster: %s" % \
+                                e.response["Error"]["Message"]
+        except Exception as e:
+            error_message = "Unknown Error: %s" % e
+
+        return error_message
+
+    def terminate_cluster(self, cluster_id):
+        error_message = None
+
+        try:
+            client = boto3.client('emr',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            error_message = "There was an error connecting to EMR: %s" % e
+            return error_message
+
+        try:
+            self.cluster_info = client.terminate_job_flows(JobFlowIds=[cluster_id])
+        except botocore.exceptions.ClientError as e:
+            if e.response["Error"]["Code"] == "AuthFailure":
+                error_message = "Invalid AWS access key id or aws secret access key"
+            else:
+                error_message = "There was an error terminating the EMR cluster: %s" % \
                                 e.response["Error"]["Message"]
         except Exception as e:
             error_message = "Unknown Error: %s" % e
