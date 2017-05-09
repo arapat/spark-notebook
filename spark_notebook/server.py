@@ -1,14 +1,9 @@
 import os
 import os.path
-import time
 
 from .cloud.aws import AWS
 from .config import Config
 from .credentials import Credentials
-from .spark_helper import SparkHelper
-from .spark_helper import IN_PROCESS
-from .spark_helper import SUCCEED
-from .spark_helper import FAILED
 
 from flask import Flask
 from flask import redirect
@@ -21,54 +16,6 @@ app = Flask(__name__)
 app.secret_key = 'some_secret'
 config = Config()
 credentials = Credentials(config.config["credentials"]["path"])
-spark = SparkHelper(config)
-
-
-def launch_new_cluster():
-    if spark.get_setup_status() is not None:
-        return ("Error: There is already one cluster in "
-                "the launching process.")
-
-    name, password, workers, instance, spot_price = (
-        config['launch']['name'], config['launch']['password'],
-        config['launch']['num-slaves'], config['providers']['ec2']['instance-type'],
-        config['providers']['ec2']['spot-price'])
-
-    # Cluster name
-    if request.form["name"]:
-        name = request.form["name"]
-    if len(name.strip().split()) > 1:
-        return ("Error: The cluster name cannot contain whitespaces.")
-
-    # Cluster password
-    if request.form["password"]:
-        password = request.form["password"]
-
-    # Number of workers
-    if request.form["workers"]:
-        try:
-            workers = int(request.form["workers"])
-        except ValueError:
-            return "Error: Number of workers must be a numeric value."
-
-    # Instance type
-    if request.form["instances"]:
-        instance = request.form["instances"]
-    if not spark.is_valid_ec2_instance(instance):
-        return ('"Error: EC2 Instance type "' + instance + '" ' +
-                "is invalid or not supported.")
-
-    # Spot price: spot or on-demand
-    if "spot" not in request.form or request.form["spot"] != "yes":
-        spot_price = None
-    elif request.form["spot-price"]:
-        try:
-            spot_price = float(request.form["spot-price"])
-        except ValueError:
-            return "Error: Spot price must be a numeric value."
-
-    spark.setup_cluster(name, num_of_workers=workers, instance=instance,
-                        spot_price=spot_price, passwd=password)
 
 
 @app.route('/', methods=['GET'])
@@ -246,11 +193,7 @@ def open_account(account):
 
 @app.route('/g/<account>/<cluster>', methods=["GET", "POST"])
 def open_cluster(account, cluster):
-    '''Open cluster info page'''
-    spark.init_account(account)
-    spark.init_cluster(cluster)
 
-    status = spark.check_notebook()
     data = {
         'account': account,
         'credentials': config.credentials.credentials,
