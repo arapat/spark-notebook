@@ -1,7 +1,6 @@
 # coding: utf-8
 from boto.exception import S3ResponseError
 from boto.s3.connection import S3Connection
-from os.path import expanduser
 import os
 import subprocess
 
@@ -20,33 +19,24 @@ def _run_command(command, detail=False):
 
 
 def _list_hdfs(path):
-    command = expanduser("~/hadoop/bin/hdfs dfs -ls ") + path
+    command = "/usr/bin/hdfs dfs -ls %s" % path
     out, err = _run_command(command)
     if out:
         print out
 
 
-def _s3_to_hdfs(files, tgt, aws_access_key, aws_secret_access_key):
-    out, err1 = _run_command(
-        expanduser("~/hadoop/bin/hdfs dfs -mkdir -p ") + tgt)
+def _s3_to_hdfs(files, tgt):
+    out, err1 = _run_command("/usr/bin/hdfs dfs -mkdir -p %s" % tgt)
     if err1:
         print err1
         return
-    out, err2 = _run_command((
-        expanduser("~/hadoop/bin/hdfs dfs ") +
-        "-Dfs.s3n.awsAccessKeyId=%s -Dfs.s3n.awsSecretAccessKey=%s "
-        "-cp %s %s")
-        % (aws_access_key, aws_secret_access_key, files, tgt))
+    out, err2 = _run_command("/usr/bin/hdfs dfs -cp %s %s" % (files, tgt))
     if err2:
         print err2
 
 
-def _hdfs_to_s3(files, tgt, aws_access_key, aws_secret_access_key):
-    out, err = _run_command((
-        expanduser("~/hadoop/bin/hadoop distcp ") +
-        "-Dfs.s3n.awsAccessKeyId=%s -Dfs.s3n.awsSecretAccessKey=%s "
-        "%s %s")
-        % (aws_access_key, aws_secret_access_key, files, tgt), True)
+def _hdfs_to_s3(files, tgt):
+    out, err = _run_command("/usr/bin/hadoop distcp %s %s" % (files, tgt), True)
     if err:
         print err
 
@@ -54,14 +44,12 @@ def _hdfs_to_s3(files, tgt, aws_access_key, aws_secret_access_key):
 def _local_to_hdfs(src, tgt):
     if tgt[0] != '/':
         tgt = '/' + tgt
-    out, err1 = _run_command(
-        expanduser("~/hadoop/bin/hdfs dfs -mkdir -p ") + tgt)
+    out, err1 = _run_command("/usr/bin/hdfs dfs -mkdir -p %s" % tgt)
     if err1:
         print err1
         return
-    out, err2 = _run_command(
-        expanduser("~/hadoop/bin/hdfs dfs -cp %s %s")
-        % ("file://" + os.path.join(src, '*'), tgt))
+    out, err2 = _run_command("/usr/bin/hdfs dfs -cp %s %s" % ("file://" + os.path.join(src, '*'),
+                                                              tgt))
     if err2:
         print err2
 
@@ -69,31 +57,25 @@ def _local_to_hdfs(src, tgt):
 class S3Helper:
     """A helper function to access S3 files"""
     def __init__(self):
-        self.aws_access_key = None
-        self.aws_secret_access_key = None
         self.conn = None
         self.bucket_name = None
         self.bucket = None
 
-    def help(self):
+    @staticmethod
+    def help():
         print '''
         s3helper is a helper object to move files and directory between
         local filesystem, AWS S3 and local HDFS.
 
         Usage:
 
-        1. Set your aws credentials:
-            s3helper.set_credential(<aws_access_key>, <aws_secret_access_key>)
-        Spark-notebook may already set up the credentials for you. It can be
-        checked by
-            s3helper.print_credential()
-        2. Open a S3 bucket under your account
+        1. Open a S3 bucket under your account
             s3helper.open_bucket(<bucket_name>)
-        3. List all files under the opened S3 bucket
+        2. List all files under the opened S3 bucket
             s3helper.ls() or s3helper.ls_s3()
         Or optionally,
             s3helper.ls(<file_path>) or s3helper.ls_s3(<file_path>)
-        4. List all files on HDFS
+        3. List all files on HDFS
             s3helper.ls_hdfs()
         Or optionally,
             s3helper.ls_hdfs(<file_path>)
@@ -123,34 +105,6 @@ class S3Helper:
           Note this method do nothing on your local HDFS.
         '''
 
-    def set_credential(self, aws_access_key, aws_secret_access_key):
-        """Set AWS credential.
-
-            Args:
-                aws_access_key, aws_secret_access_key
-            Returns:
-                None
-        """
-        self.aws_access_key = aws_access_key
-        self.aws_secret_access_key = aws_secret_access_key
-
-    def set_sparkcontext(self, sc):
-        """Setup SparkContext to load files directly from S3.
-        """
-        if not self.aws_access_key:
-            raise ValueError('AWS credential is not set. '
-                             'Please use set_credential method first.')
-        _conf = sc._jsc.hadoopConfiguration()
-        _conf.set("fs.s3n.awsAccessKeyId", self.aws_access_key)
-        _conf.set("fs.s3n.awsSecretAccessKey", self.aws_secret_access_key)
-
-    def print_credential(self):
-        if not self.aws_access_key:
-            raise ValueError('AWS credential is not set. '
-                             'Please use set_credential method first.')
-        print ("AWS Access Key ID: %s\nAWS Secret Access Key: %s"
-               % (self.aws_access_key, self.aws_secret_access_key))
-
     def open_bucket(self, bucket_name):
         """Open a S3 bucket.
 
@@ -162,15 +116,11 @@ class S3Helper:
         if bucket_name.startswith('s3n://') or bucket_name.startswith('s3://'):
             raise ValueError('bucket_name must NOT contain any prefix '
                              '(e.g. s3:// or s3n://)')
-        if not self.aws_access_key:
-            raise ValueError('AWS credential is not set.'
-                             'Please use set_credential method first.')
 
         while bucket_name[-1] == '/':
             bucket_name = bucket_name[:-1]
         self.bucket_name = bucket_name
-        self.conn = S3Connection(self.aws_access_key,
-                                 self.aws_secret_access_key)
+        self.conn = S3Connection(host="s3.amazonaws.com")
         try:
             self.bucket = self.conn.get_bucket(self.bucket_name)
         except S3ResponseError as e:
@@ -205,7 +155,8 @@ class S3Helper:
         return sorted(list(set(
             ['/'.join(t.key.split('/')[:k]) for t in files])))
 
-    def ls_hdfs(self, path='/'):
+    @staticmethod
+    def ls_hdfs(path='/'):
         """List all files in `path` on HDFS."""
         if not path or path[0] != '/':
             path = '/' + path
@@ -250,8 +201,7 @@ class S3Helper:
             tgt = tgt + '/'
         files = self.bucket.list(prefix=src)
         prefix = "s3n://%s/" % self.bucket_name
-        _s3_to_hdfs(' '.join([prefix + t.key for t in files]),
-                    tgt, self.aws_access_key, self.aws_secret_access_key)
+        _s3_to_hdfs(' '.join([prefix + t.key for t in files]), tgt)
         self.ls_hdfs(tgt)
 
     def hdfs_to_s3(self, src, tgt):
@@ -277,7 +227,7 @@ class S3Helper:
         print ("*NOTE*\n"
                "This method will create a MapReudce job to upload the content "
                "in HDFS to S3. The process may take a while.\n\n")
-        _hdfs_to_s3(src, tgt, self.aws_access_key, self.aws_secret_access_key)
+        _hdfs_to_s3(src, tgt)
 
     def local_to_s3(self, filename, tgt):
         """Save a local file `filename` to the directory `tgt` on S3.
@@ -326,7 +276,8 @@ class S3Helper:
                 "do not support directory.")
         k.get_contents_to_filename(tgt)
 
-    def local_to_hdfs(self, src, tgt):
+    @staticmethod
+    def local_to_hdfs(src, tgt):
         """Upload local directory to HDFS.
 
            Args:
