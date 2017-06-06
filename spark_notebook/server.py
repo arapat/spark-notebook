@@ -127,7 +127,6 @@ def open_account(account):
 
     error = cloud_account.list_clusters()
 
-    # TODO: pass password to create_cluster
     # if request method is post then create the cluster
     if request.method == "POST":
         name = None
@@ -169,7 +168,8 @@ def open_account(account):
                 spot_price = config.config['providers']['ec2']['spot-price']
 
         error = cloud_account.create_cluster(name, credentials.credentials[account]["key_name"],
-                                             instance_type, worker_count, use_spot, spot_price)
+                                             instance_type, worker_count, use_spot, spot_price,
+                                             password)
 
         if error is None:
             flash("Cluster launched: %s" % name)

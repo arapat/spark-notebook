@@ -52,6 +52,12 @@ class FakeBotoClient(object):
                                                       'BidPrice': '1.0',
                                                       'InstanceType': u'r3.xlarge',
                                                       'Market': 'SPOT'}]},
+                    'BootstrapActions': [{'Name': 'jupyter-provision',
+                                          'ScriptBootstrapAction': {
+                                              'Path': 's3://mas-dse-emr/jupyter-provision.sh',
+                                              'Args': ["password"]}
+                                          },
+                                         ],
                     'Steps': [],
                     'Tags': [{'Key': 'tag_name_1',
                               'Value': 'tab_value_1'},

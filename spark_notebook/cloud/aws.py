@@ -110,9 +110,8 @@ class AWS:
 
         return error_message
 
-    # TODO: Add password to pass to BootstrapActions
     def create_cluster(self, cluster_name, key_name, instance_type, worker_count, instance_market,
-                       bid_price):
+                       bid_price, jupyter_password):
         error_message = None
 
         # TODO: Temp Vars
@@ -137,7 +136,6 @@ class AWS:
         # TODO: Make Core instance roles optional so a cluster can be launched with only a master
         # TODO: Add Tags
         # TODO: Remove BidPrice when not using spot instances
-        # TODO: Add BootstrapActions
         try:
             response = client.run_job_flow(
                 Name=cluster_name,
@@ -176,6 +174,17 @@ class AWS:
                     ],
                 },
                 Steps=[],
+                BootstrapActions=[
+                    {
+                        'Name': 'jupyter-provision',
+                        'ScriptBootstrapAction': {
+                            'Path': 's3://mas-dse-emr/jupyter-provision.sh',
+                            'Args': [
+                                jupyter_password,
+                            ]
+                        }
+                    },
+                ],
                 Tags=[
                     {
                         'Key': 'tag_name_1',
