@@ -6,6 +6,10 @@ python:
 
 install:
   - "pip install -q -r requirements.txt"
+  - "pip install -q -r test-requirements.txt"
+
+
+before_script: "flake8 --ignore=E402 --max-line-length=100  --show-source --count ."
 
 script:
   - "python run_tests.py"

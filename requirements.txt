@@ -3,5 +3,4 @@ boto3>=1.4.0
 botocore>=1.5.7
 Flask>=0.12
 future>=0.16.0
-mock>=2.0.0
 PyYAML>=3.12
