@@ -32,7 +32,7 @@ class FakeBotoClient(object):
     def run_job_flow(*args, **kwargs):
         expected = {'Name': u'cluster-1',
                     'LogUri': 's3://aws-logs-846273844940-us-east-1/elasticmapreduce/',
-                    'ReleaseLabel': 'emr-5.2.0',
+                    'ReleaseLabel': 'emr-5.6.0',
                     'VisibleToAllUsers': True,
                     'JobFlowRole': 'EMR_EC2_DefaultRole',
                     'ServiceRole': 'EMR_DefaultRole',
