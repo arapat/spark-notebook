@@ -29,11 +29,6 @@ def get_available_port():
 
 
 if __name__ == '__main__':
-    '''
-    if sys.version_info < (3, 4):
-        print("Error: Spark-notebook requires Python 3.4 or newer.")
-        sys.exit(1)
-    '''
     from spark_notebook.server import app
 
     # Find an available port
