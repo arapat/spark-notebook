@@ -116,7 +116,7 @@ class AWS:
 
         # TODO: Temp Vars
         log_uri = "s3://aws-logs-846273844940-us-east-1/elasticmapreduce/"
-        version = "emr-5.2.0"
+        version = "emr-5.6.0"
 
         if instance_market:
             market = "SPOT"
