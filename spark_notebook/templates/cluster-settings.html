@@ -24,11 +24,13 @@
         {% if data["status"] == "RUNNING" or data["status"] == "WAITING" %}
 
             <p><b>Jupyter notebook:</b>
-                <a href="http://{{data['master_url']}}:8888">http://{{data['master_url']}}:8888</a>
+                <a target="_blank" href="http://{{data['master_url']}}:8888">http://{{data['master_url']}}:8888</a>
                 (If cannot open, try refresh this page.)</p>
             <p><b>Notebook Password:</b> {{data['password']}}</p>
-            <p><b>Spark UI:</b>
-                <a href="http://{{data['master_url']}}:8080">http://{{data['master_url']}}:8080</a></p>
+            <p><b>YARN ResourceManager:</b>
+                <a target="_blank" href="http://{{data['master_url']}}:8088">http://{{data['master_url']}}:8088</a></p>
+            <p><b>Spark HistoryServer:</b>
+                <a target="_blank" href="http://{{data['master_url']}}:18080">http://{{data['master_url']}}:18080</a></p>
             <p><b>SSH access:</b>
             <pre>{{data["aws_access"]}}</pre></p>
 
