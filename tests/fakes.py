@@ -6,7 +6,7 @@ class FakeBotoClient(object):
     def __init__(self, *args, **kwargs):
         if args[0] == "sts":
             if not kwargs["aws_access_key_id"] == "access_key_id" or \
-                            not kwargs["aws_secret_access_key"] == "secret_access_key":
+                    not kwargs["aws_secret_access_key"] == "secret_access_key":
                 error_response = {'Error': {'Code': 'AuthFailure'}}
                 raise botocore.exceptions.ClientError(error_response, "sts")
 
@@ -82,4 +82,3 @@ class FakeBotoClient(object):
                 'MasterPublicDnsName': 'test.cluster.com',
             }
         }
-

@@ -34,5 +34,6 @@ class SparkNotebookTestCase(unittest.TestCase):
                                             url_for('select_account')) in \
                    rv.data.decode('utf-8')
 
+
 if __name__ == '__main__':
     unittest.main()

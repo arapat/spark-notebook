@@ -31,7 +31,7 @@ default_config = {
         "name": "demo-cluster",
         "num-slaves": 1,
         "install-hdfs": True,
-        "install-spark":  True,
+        "install-spark": True,
         "password": "change-me-321"
     }
 }

@@ -45,5 +45,6 @@ class SparkNotebookTestCase(unittest.TestCase):
 
             # TODO: Test that cluster-1 is in the cluster list
 
+
 if __name__ == '__main__':
     unittest.main()

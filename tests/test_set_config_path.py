@@ -58,5 +58,6 @@ class SparkNotebookTestCase(unittest.TestCase):
 
             self.assertEqual(test_config_yaml, good_config)
 
+
 if __name__ == '__main__':
     unittest.main()

@@ -29,7 +29,7 @@ class AWS:
                          region_name=self.region_name).get_caller_identity()['Arn']
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure" or \
-                            e.response["Error"]["Code"] == "InvalidClientTokenId":
+                    e.response["Error"]["Code"] == "InvalidClientTokenId":
                 error_message = "Invalid AWS access key id or aws secret access key"
         except Exception as e:
             error_message = e
@@ -153,7 +153,7 @@ class AWS:
                     'Ec2KeyName': key_name,
                     'KeepJobFlowAliveWhenNoSteps': True,
                     'TerminationProtected': False,
-                    #'Ec2SubnetId': '<Your Subnet ID>',
+                    # 'Ec2SubnetId': '<Your Subnet ID>',
                     'InstanceGroups': [
                         {
                             'Name': "Master nodes",

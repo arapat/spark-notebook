@@ -112,7 +112,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   identity_file="./tests/test_files/identity_file.pem"),
                         follow_redirects=True)
 
-            # Verify account added message is displayed and the test-3 & test-4 accounts are in account list
+            # Verify account added message is displayed and the test-3 & test-4 accounts are in
+            # account list
             assert '<div class="flash">Account test-4 added</div>' in rv.data.decode('utf-8')
             assert '<li><a href="/g/test-3">test-3</a></li>' in rv.data.decode('utf-8')
             assert '<li><a href="/g/test-4">test-4</a></li>' in rv.data.decode('utf-8')
@@ -131,6 +132,7 @@ class SparkNotebookTestCase(unittest.TestCase):
                 self.fail("Missing: %s " % self.good_credentials_file)
 
             self.assertEqual(temp_credentials_yaml, good_credentials_yaml)
+
 
 if __name__ == '__main__':
     unittest.main()
