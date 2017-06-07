@@ -14,7 +14,7 @@ def _run_command(command, detail=False):
             line = proc.stdout.readline()
             if not line:
                 break
-            print line,
+            print(line),
     return proc.communicate()
 
 
@@ -22,23 +22,23 @@ def _list_hdfs(path):
     command = "/usr/bin/hdfs dfs -ls %s" % path
     out, err = _run_command(command)
     if out:
-        print out
+        print(out)
 
 
 def _s3_to_hdfs(files, tgt):
     out, err1 = _run_command("/usr/bin/hdfs dfs -mkdir -p %s" % tgt)
     if err1:
-        print err1
+        print(err1)
         return
     out, err2 = _run_command("/usr/bin/hdfs dfs -cp %s %s" % (files, tgt))
     if err2:
-        print err2
+        print(err2)
 
 
 def _hdfs_to_s3(files, tgt):
     out, err = _run_command("/usr/bin/hadoop distcp %s %s" % (files, tgt), True)
     if err:
-        print err
+        print(err)
 
 
 def _local_to_hdfs(src, tgt):
@@ -46,12 +46,12 @@ def _local_to_hdfs(src, tgt):
         tgt = '/' + tgt
     out, err1 = _run_command("/usr/bin/hdfs dfs -mkdir -p %s" % tgt)
     if err1:
-        print err1
+        print(err1)
         return
     out, err2 = _run_command("/usr/bin/hdfs dfs -cp %s %s" % ("file://" + os.path.join(src, '*'),
                                                               tgt))
     if err2:
-        print err2
+        print(err2)
 
 
 class S3Helper:
@@ -63,7 +63,7 @@ class S3Helper:
 
     @staticmethod
     def help():
-        print '''
+        print('''
         s3helper is a helper object to move files and directory between
         local filesystem, AWS S3 and local HDFS.
 
@@ -103,7 +103,7 @@ class S3Helper:
           a. To get the URLs of S3 files under a directory, please call
                 s3helper.get_path(<s3_directory_path>)
           Note this method do nothing on your local HDFS.
-        '''
+        ''')
 
     def open_bucket(self, bucket_name):
         """Open a S3 bucket.
@@ -124,8 +124,8 @@ class S3Helper:
         try:
             self.bucket = self.conn.get_bucket(self.bucket_name)
         except S3ResponseError as e:
-            print ('Open S3 bucket "%s" failed.\nError code %d: '
-                   % (bucket_name, e.status) + e.reason)
+            print('Open S3 bucket "%s" failed.\nError code %d: '
+                  % (bucket_name, e.status) + e.reason)
 
     def ls(self, path=''):
         """same as ls_s3"""
@@ -224,9 +224,9 @@ class S3Helper:
         if len(tgt) and tgt[0] == '/':
             tgt = tgt[1:]
         tgt = "s3n://%s/" % self.bucket_name + tgt
-        print ("*NOTE*\n"
-               "This method will create a MapReudce job to upload the content "
-               "in HDFS to S3. The process may take a while.\n\n")
+        print("*NOTE*\n"
+              "This method will create a MapReudce job to upload the content "
+              "in HDFS to S3. The process may take a while.\n\n")
         _hdfs_to_s3(src, tgt)
 
     def local_to_s3(self, filename, tgt):
