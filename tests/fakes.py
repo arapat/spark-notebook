@@ -36,7 +36,7 @@ class FakeBotoClient(object):
                     'VisibleToAllUsers': True,
                     'JobFlowRole': 'EMR_EC2_DefaultRole',
                     'ServiceRole': 'EMR_DefaultRole',
-                    'Applications': [{'Name': 'Spark'}],
+                    'Applications': [{'Name': 'Hadoop'}, {'Name': 'Spark'}],
                     'Instances': {'KeepJobFlowAliveWhenNoSteps': True,
                                   'TerminationProtected': False,
                                   'Ec2KeyName': 'key_name',

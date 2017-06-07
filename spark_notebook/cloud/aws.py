@@ -146,8 +146,11 @@ class AWS:
                 ServiceRole='EMR_DefaultRole',
                 Applications=[
                     {
-                        'Name': 'Spark'
+                        'Name': 'Hadoop'
                     },
+                    {
+                        'Name': 'Spark'
+                    }
                 ],
                 Instances={
                     'Ec2KeyName': key_name,
