@@ -43,7 +43,7 @@ EOF
     echo 'c.InteractiveShellApp.exec_files = ["/home/hadoop/s3helper.py"]' >> ~/.ipython/profile_default/ipython_config.py
 
     # Download s3helper.py TODO: URL needs to be updated
-    curl -o /home/hadoop/s3helper.py https://raw.githubusercontent.com/kevincoakley/spark-notebook/klc/spark_notebook/remote/s3helper.py
+    curl -o /home/hadoop/s3helper.py https://raw.githubusercontent.com/kevincoakley/spark-notebook/klc/provision/remote/s3helper.py
 
     # Download the FileIO notebook to the workspace TODO: URL needs to be updated
     curl -o /mnt/workspace/FilesIO.ipynb https://raw.githubusercontent.com/kevincoakley/spark-notebook/klc/provision/workspace/FilesIO.ipynb
