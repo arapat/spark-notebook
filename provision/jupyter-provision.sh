@@ -27,7 +27,7 @@ then
     # Generate the Jupyter notebook password
     NOTEBOOK_PASSWORD="$( bash <<EOF
 python -c 'from notebook.auth import passwd
-print passwd("$1")'
+print(passwd("$1"))'
 EOF
     )"
 
