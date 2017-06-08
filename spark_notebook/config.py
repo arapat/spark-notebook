@@ -8,30 +8,14 @@ default_config = {
     "credentials": {
         "path": "./credential.yaml"
     },
-    "providers": {
-        "ec2": {
-            "region": "us-east-1",
-            "availability-zone": "us-east-1b",
-            "instance-type": "r3.2xlarge",
-            "instance-initiated-shutdown-behavior": "terminate",
-            "ami": "ami-e12ac3f7",
-            "user": "ec2-user",
-            "spot-price": 1.0
-        }
-    },
-    "services": {
-        "spark": {
-            "version": "2.1.0"
-        },
-        "hdfs": {
-            "version": "2.7.2"
-        }
-    },
-    "launch": {
+    "emr": {
         "name": "demo-cluster",
-        "num-slaves": 1,
-        "install-hdfs": True,
-        "install-spark": True,
+        "worker-count": 1,
+        "region": "us-east-1",
+        "instance-type": "r3.2xlarge",
+        "spot-price": 1.0
+    },
+    "jupyter": {
         "password": "change-me-321"
     }
 }

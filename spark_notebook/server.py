@@ -62,7 +62,7 @@ def accounts():
         if "identity_file" in request.form:
             identity_file = request.form["identity_file"].encode('utf8').decode()
 
-        region_name = config.config["providers"]["ec2"]["region"]
+        region_name = config.config["emr"]["region"]
 
         cloud_account = AWS(access_key_id, secret_access_key, region_name)
 
@@ -118,7 +118,7 @@ def save_config_location():
 def cluster_list_create(account):
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
-                        config.config["providers"]["ec2"]["region"])
+                        config.config["emr"]["region"])
 
     error = cloud_account.list_clusters()
 
@@ -135,22 +135,22 @@ def cluster_list_create(account):
             if request.form["name"].encode('utf8').decode() != "":
                 name = request.form["name"].encode('utf8').decode()
             else:
-                name = config.config['launch']['name']
+                name = config.config['emr']['name']
         if "password" in request.form:
             if request.form["password"].encode('utf8').decode() != "":
                 password = request.form["password"].encode('utf8').decode()
             else:
-                password = config.config['launch']['password']
+                password = config.config['jupyter']['password']
         if "worker_count" in request.form:
             if request.form["worker_count"].encode('utf8').decode() != "":
                 worker_count = request.form["worker_count"].encode('utf8').decode()
             else:
-                worker_count = int(config.config['launch']['num-slaves'])
+                worker_count = int(config.config['emr']['worker-count'])
         if "instance_type" in request.form:
             if request.form["instance_type"].encode('utf8').decode() != "":
                 instance_type = request.form["instance_type"].encode('utf8').decode()
             else:
-                instance_type = config.config['providers']['ec2']['instance-type']
+                instance_type = config.config['emr']['instance-type']
         if "use_spot" in request.form:
             if request.form["use_spot"].encode('utf8').decode() == "true":
                 use_spot = True
@@ -160,7 +160,7 @@ def cluster_list_create(account):
             if request.form["spot_price"].encode('utf8').decode() != "":
                 spot_price = request.form["spot_price"].encode('utf8').decode()
             else:
-                spot_price = config.config['providers']['ec2']['spot-price']
+                spot_price = config.config['emr']['spot-price']
 
         error = cloud_account.create_cluster(name, credentials.credentials[account]["key_name"],
                                              instance_type, worker_count, use_spot, spot_price,
@@ -171,15 +171,14 @@ def cluster_list_create(account):
             return redirect(url_for('cluster_details', account=account,
                                     cluster_id=cloud_account.cluster_id))
 
-    # TODO: clean up config.config (config.py)
     data = {
         'account': account,
         'account_name': account,
-        'cluster_name': config.config['launch']['name'],
-        'worker_count': str(config.config['launch']['num-slaves']),
-        'spot_price': "%.2f" % config.config['providers']['ec2']['spot-price'],
-        'instance_type': config.config['providers']['ec2']['instance-type'],
-        'password': config.config['launch']['password'],
+        'cluster_name': config.config['emr']['name'],
+        'worker_count': str(config.config['emr']['worker-count']),
+        'spot_price': "%.2f" % config.config['emr']['spot-price'],
+        'instance_type': config.config['emr']['instance-type'],
+        'password': config.config['jupyter']['password'],
     }
 
     return render_template('emr-list-create.html',
@@ -192,7 +191,7 @@ def cluster_list_create(account):
 def cluster_details(account, cluster_id):
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
-                        config.config["providers"]["ec2"]["region"])
+                        config.config["emr"]["region"])
 
     error = cloud_account.describe_cluster(cluster_id)
 
@@ -220,7 +219,7 @@ def cluster_details(account, cluster_id):
 def destroy_cluster(account, cluster_id):
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
-                        config.config["providers"]["ec2"]["region"])
+                        config.config["emr"]["region"])
 
     error = cloud_account.terminate_cluster(cluster_id)
 
