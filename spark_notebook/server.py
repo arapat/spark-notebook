@@ -29,67 +29,64 @@ def main():
         flash("Using config file: %s" % config.file_path)
 
     if os.path.isfile(config.config["credentials"]["path"]):
-        return redirect(url_for('select_account'))
+        return redirect(url_for('add_account'))
     else:
         return redirect(url_for('save_config_location'))
 
 
-@app.route('/accounts', methods=['GET'])
-def select_account():
-
-    return render_template('accounts.html',
-                           accounts=credentials.credentials,
-                           credential_file=config.config["credentials"]["path"])
-
-
-@app.route('/accounts', methods=['POST'])
+@app.route('/accounts', methods=['GET', 'POST'])
 def add_account():
-    name = None
-    email_address = None
-    access_key_id = None
-    secret_access_key = None
-    ssh_key = None
-    key_name = None
-    identity_file = None
+    error = None
 
-    if "name" in request.form:
-        name = request.form["name"].encode('utf8').decode()
-    if "email_address" in request.form:
-        email_address = request.form["email_address"].encode('utf8').decode()
-    if "access_key_id" in request.form:
-        access_key_id = request.form["access_key_id"].encode('utf8').decode()
-    if "secret_access_key" in request.form:
-        secret_access_key = request.form["secret_access_key"].encode('utf8').decode()
-    if "ssh_key" in request.form:
-        ssh_key = request.form["ssh_key"].encode('utf8').decode()
-    if "key_name" in request.form:
-        key_name = request.form["key_name"].encode('utf8').decode()
-    if "identity_file" in request.form:
-        identity_file = request.form["identity_file"].encode('utf8').decode()
+    if request.method == 'POST':
+        name = None
+        email_address = None
+        access_key_id = None
+        secret_access_key = None
+        ssh_key = None
+        key_name = None
+        identity_file = None
 
-    region_name = config.config["providers"]["ec2"]["region"]
+        if "name" in request.form:
+            name = request.form["name"].encode('utf8').decode()
+        if "email_address" in request.form:
+            email_address = request.form["email_address"].encode('utf8').decode()
+        if "access_key_id" in request.form:
+            access_key_id = request.form["access_key_id"].encode('utf8').decode()
+        if "secret_access_key" in request.form:
+            secret_access_key = request.form["secret_access_key"].encode('utf8').decode()
+        if "ssh_key" in request.form:
+            ssh_key = request.form["ssh_key"].encode('utf8').decode()
+        if "key_name" in request.form:
+            key_name = request.form["key_name"].encode('utf8').decode()
+        if "identity_file" in request.form:
+            identity_file = request.form["identity_file"].encode('utf8').decode()
 
-    cloud_account = AWS(access_key_id, secret_access_key, region_name)
+        region_name = config.config["providers"]["ec2"]["region"]
 
-    error = cloud_account.test_credentials()
+        cloud_account = AWS(access_key_id, secret_access_key, region_name)
 
-    if error is None and ssh_key == "generate":
-        error = cloud_account.create_ssh_key(email_address, os.path.dirname(credentials.file_path))
-        key_name = cloud_account.key_name
-        identity_file = cloud_account.identity_file
+        error = cloud_account.test_credentials()
 
-    if error is None:
-        error = cloud_account.test_ssh_key(key_name, identity_file)
+        if error is None and ssh_key == "generate":
+            error = cloud_account.create_ssh_key(email_address,
+                                                 os.path.dirname(credentials.file_path))
+            key_name = cloud_account.key_name
+            identity_file = cloud_account.identity_file
 
-    if error is None:
-        error = credentials.add(name, email_address, access_key_id, secret_access_key, key_name,
-                                identity_file)
+        if error is None:
+            error = cloud_account.test_ssh_key(key_name, identity_file)
 
-    if error is None:
-        flash("Account %s added" % name)
+        if error is None:
+            error = credentials.add(name, email_address, access_key_id, secret_access_key, key_name,
+                                    identity_file)
+
+        if error is None:
+            flash("Account %s added" % name)
 
     return render_template('accounts.html',
                            accounts=credentials.credentials,
+                           credential_file=config.config["credentials"]["path"],
                            error=error)
 
 
@@ -110,7 +107,7 @@ def save_config_location():
             config.config["credentials"]["path"] = path
             config.save()
             flash("Credentials saved to %s" % path)
-            return redirect(url_for('select_account'))
+            return redirect(url_for('add_account'))
 
     return render_template('config.html',
                            cred_path=config.config["credentials"]["path"],
