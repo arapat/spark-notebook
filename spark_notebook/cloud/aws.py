@@ -38,6 +38,7 @@ class AWS:
 
     def test_ssh_key(self, key_name, identity_file):
         error_message = None
+        client = None
 
         self.key_name = key_name
         self.identity_file = identity_file
