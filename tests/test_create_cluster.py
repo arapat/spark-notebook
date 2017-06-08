@@ -23,15 +23,15 @@ class SparkNotebookTestCase(unittest.TestCase):
             c.get('/?config_path=%s' % self.test_config_file)
 
             # Verifying the correct credentials file is being used from the self.test_config_file
-            rv = c.get(url_for('add_account'))
+            rv = c.get(url_for('accounts'))
             assert '<!-- ./tests/test_files/test_credentials.yaml -->' in rv.data.decode('utf-8')
 
             # Verifying that there are currently not clusters running
-            rv = c.get(url_for('open_account', account="test-4"))
+            rv = c.get(url_for('cluster_list_create', account="test-4"))
             assert '<p>No clusters are running.</p>' in rv.data.decode('utf-8')
 
             # Test invalid AWS credentials
-            rv = c.post(url_for('open_account', account="test-4"),
+            rv = c.post(url_for('cluster_list_create', account="test-4"),
                         data=dict(name="cluster-1",
                                   password="password",
                                   worker_count="1",

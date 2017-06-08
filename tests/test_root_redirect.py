@@ -30,8 +30,8 @@ class SparkNotebookTestCase(unittest.TestCase):
 
             # Test the root redirect for a config file that does exist
             rv = c.get('/?config_path=./tests/test_files/test_config.yaml')
-            assert '<a href="%s">%s</a>' % (url_for('add_account'),
-                                            url_for('add_account')) in \
+            assert '<a href="%s">%s</a>' % (url_for('accounts'),
+                                            url_for('accounts')) in \
                    rv.data.decode('utf-8')
 
 

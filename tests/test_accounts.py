@@ -32,19 +32,19 @@ class SparkNotebookTestCase(unittest.TestCase):
     @patch('boto3.client', fakes.FakeBotoClient)
     @patch('socket.gethostname')
     @patch('time.time')
-    def test_account_add(self, mock_time, mock_get_hostname):
+    def test_accounts(self, mock_time, mock_get_hostname):
         with app.test_client() as c:
             c.get('/?config_path=%s' % self.test_config_file)
 
             # Test that no AWS accounts are present and that test_config_file was read properly
             # by verifying the temp credentials file is /tmp/temp_credentials.yaml
-            rv = c.get(url_for('add_account'))
+            rv = c.get(url_for('accounts'))
 
             assert '<p>No AWS accounts found.</p>' in rv.data.decode('utf-8')
             assert '<!-- /tmp/temp_credentials.yaml -->' in rv.data.decode('utf-8')
 
             # Test invalid AWS credentials
-            rv = c.post(url_for('add_account'),
+            rv = c.post(url_for('accounts'),
                         data=dict(name="bad-credentials",
                                   email_address="bad@email",
                                   access_key_id="bad_access_key_id",
@@ -58,7 +58,7 @@ class SparkNotebookTestCase(unittest.TestCase):
                    'secret access key' in rv.data.decode('utf-8')
 
             # Test valid AWS credentials but invalid ssh key_name
-            rv = c.post(url_for('add_account'),
+            rv = c.post(url_for('accounts'),
                         data=dict(name="test-1",
                                   email_address="test-1@email",
                                   access_key_id="access_key_id",
@@ -72,7 +72,7 @@ class SparkNotebookTestCase(unittest.TestCase):
                    in rv.data.decode('utf-8')
 
             # Test valid AWS credentials but invalid ssh_key file
-            rv = c.post(url_for('add_account'),
+            rv = c.post(url_for('accounts'),
                         data=dict(name="test-2",
                                   email_address="test-2@email",
                                   access_key_id="access_key_id",
@@ -89,7 +89,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             mock_get_hostname.return_value = "hostname"
             mock_time.return_value = "0"
 
-            rv = c.post(url_for('add_account'),
+            rv = c.post(url_for('accounts'),
                         data=dict(name="test-3",
                                   email_address="test-3@email",
                                   access_key_id="access_key_id",
@@ -102,7 +102,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             assert '<li><a href="/g/test-3">test-3</a></li>' in rv.data.decode('utf-8')
 
             # Test valid AWS credentials and valid SSH key
-            rv = c.post(url_for('add_account'),
+            rv = c.post(url_for('accounts'),
                         data=dict(name="test-4",
                                   email_address="test-4@email",
                                   access_key_id="access_key_id",

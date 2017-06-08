@@ -29,13 +29,13 @@ def main():
         flash("Using config file: %s" % config.file_path)
 
     if os.path.isfile(config.config["credentials"]["path"]):
-        return redirect(url_for('add_account'))
+        return redirect(url_for('accounts'))
     else:
         return redirect(url_for('save_config_location'))
 
 
 @app.route('/accounts', methods=['GET', 'POST'])
-def add_account():
+def accounts():
     error = None
 
     if request.method == 'POST':
@@ -107,7 +107,7 @@ def save_config_location():
             config.config["credentials"]["path"] = path
             config.save()
             flash("Credentials saved to %s" % path)
-            return redirect(url_for('add_account'))
+            return redirect(url_for('accounts'))
 
     return render_template('config.html',
                            cred_path=config.config["credentials"]["path"],
@@ -115,7 +115,7 @@ def save_config_location():
 
 
 @app.route('/g/<account>', methods=['GET', 'POST'])
-def open_account(account):
+def cluster_list_create(account):
     error = None
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
@@ -170,7 +170,7 @@ def open_account(account):
 
         if error is None:
             flash("Cluster launched: %s" % name)
-            return redirect(url_for('open_cluster', account=account,
+            return redirect(url_for('cluster_details', account=account,
                                     cluster_id=cloud_account.cluster_id))
 
     # TODO: clean up config.config (config.py)
@@ -191,7 +191,7 @@ def open_account(account):
 
 
 @app.route('/g/<account>/<cluster_id>', methods=["GET", "POST"])
-def open_cluster(account, cluster_id):
+def cluster_details(account, cluster_id):
     error = None
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
@@ -231,7 +231,7 @@ def destroy_cluster(account, cluster_id):
     error = cloud_account.terminate_cluster(cluster_id)
 
     if error is None:
-        return redirect(url_for('open_account', account=account))
+        return redirect(url_for('cluster_list_create', account=account))
     else:
         data = {}
         return render_template("emr-details.html", data=data, error=error)
