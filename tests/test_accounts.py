@@ -14,9 +14,9 @@ class SparkNotebookTestCase(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
-        self.test_config_file = "./tests/test_files/test_account_add_config.yaml"
+        self.test_config_file = "./tests/test_files/test_accounts_config.yaml"
         self.temp_credentials_file = "/tmp/temp_credentials.yaml"
-        self.good_credentials_file = "./tests/test_files/test_account_add_credentials.yaml"
+        self.good_credentials_file = "./tests/test_files/test_accounts_credentials.yaml"
 
         # Delete the tests credentials file
         if os.path.exists(self.temp_credentials_file):
