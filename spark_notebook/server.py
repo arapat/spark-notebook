@@ -116,8 +116,6 @@ def save_config_location():
 
 @app.route('/g/<account>', methods=['GET', 'POST'])
 def cluster_list_create(account):
-    error = None
-
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
                         config.config["providers"]["ec2"]["region"])
@@ -192,8 +190,6 @@ def cluster_list_create(account):
 
 @app.route('/g/<account>/<cluster_id>', methods=["GET", "POST"])
 def cluster_details(account, cluster_id):
-    error = None
-
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
                         config.config["providers"]["ec2"]["region"])
@@ -222,8 +218,6 @@ def cluster_details(account, cluster_id):
 
 @app.route('/destroy/<account>/<cluster_id>', methods=["POST"])
 def destroy_cluster(account, cluster_id):
-    error = None
-
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
                         config.config["providers"]["ec2"]["region"])
