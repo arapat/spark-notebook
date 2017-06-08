@@ -3,8 +3,8 @@
 # AWS EMR bootstrap script for installing Jupyter notebooks using Anaconda
 # 2017-06-06 - Tested with EMR 5.6.0
 
-ANACONDA_VERSION="4.3.1"
-ANACONDA_PYTHON_VERSION="2"
+ANACONDA_VERSION="4.4.0"
+ANACONDA_PYTHON_VERSION="3"
 
 # check for master node
 if grep isMaster /mnt/var/lib/info/instance.json | grep true;
@@ -48,9 +48,11 @@ EOF
     # Download the FileIO notebook to the workspace TODO: URL needs to be updated
     curl -o /mnt/workspace/FilesIO.ipynb https://raw.githubusercontent.com/kevincoakley/spark-notebook/klc/provision/workspace/FilesIO.ipynb
 
-    # Install Python 3 kernel
-    #conda install nb_conda_kernels -y
-    #conda create -n py36 python=3.6 ipykernel -y
+    # Install Python 2 kernel
+    conda create -n ipykernel_py2 python=2 anaconda ipykernel -y
+    source activate ipykernel_py2
+    python -m ipykernel install --user
+    source deactivate ipykernel_py2
 
     # Install additional Python modules
     conda install -c conda-forge jupyter_nbextensions_configurator -y
