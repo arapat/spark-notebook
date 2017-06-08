@@ -184,7 +184,7 @@ def open_account(account):
         'password': config.config['launch']['password'],
     }
 
-    return render_template('clusters.html',
+    return render_template('emr-list-create.html',
                            cluster_list=cloud_account.cluster_list,
                            data=data,
                            error=error)
@@ -217,7 +217,7 @@ def open_cluster(account, cluster_id):
         'aws_access': ("ssh -i %s hadoop@%s" % ("UPDATE", master_public_dns_name))
     }
 
-    return render_template("cluster-settings.html", data=data, error=error)
+    return render_template("emr-details.html", data=data, error=error)
 
 
 @app.route('/destroy/<account>/<cluster_id>', methods=["POST"])
@@ -234,4 +234,4 @@ def destroy_cluster(account, cluster_id):
         return redirect(url_for('open_account', account=account))
     else:
         data = {}
-        return render_template("cluster-settings.html", data=data, error=error)
+        return render_template("emr-details.html", data=data, error=error)
