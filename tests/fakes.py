@@ -29,6 +29,13 @@ class FakeBotoClient(object):
             raise botocore.exceptions.ClientError(error_response, "ec2")
 
     @staticmethod
+    def describe_subnets(Filters=None):
+        return {'Subnets': [{'SubnetId': 'subnet-12345678', 'AvailabilityZone': 'us-east-1a'},
+                            {'SubnetId': 'subnet-abcdefgh', 'AvailabilityZone': 'us-east-1b'},
+                            {'SubnetId': 'subnet-a1b2c3d4', 'AvailabilityZone': 'us-east-1c'}]
+                }
+
+    @staticmethod
     def run_job_flow(*args, **kwargs):
         expected = {'Name': u'cluster-1',
                     'LogUri': 's3://aws-logs-846273844940-us-east-1/elasticmapreduce/',
@@ -39,6 +46,7 @@ class FakeBotoClient(object):
                     'Applications': [{'Name': 'Hadoop'}, {'Name': 'Spark'}],
                     'Instances': {'KeepJobFlowAliveWhenNoSteps': True,
                                   'TerminationProtected': False,
+                                  'Ec2SubnetId': 'subnet-12345678',
                                   'Ec2KeyName': 'key_name',
                                   'InstanceGroups': [{'InstanceCount': 1,
                                                       'Name': 'Master nodes',

@@ -14,6 +14,7 @@ class AWS:
         self.region_name = region_name
         self.key_name = None
         self.identity_file = None
+        self.subnets = None
         self.cluster_id = None
         self.cluster_info = None
         self.cluster_list = None
@@ -111,13 +112,43 @@ class AWS:
 
         return error_message
 
-    def create_cluster(self, cluster_name, key_name, instance_type, worker_count, instance_market,
-                       bid_price, jupyter_password):
+    def get_subnets(self):
+        error_message = None
+
+        try:
+            client = boto3.client('ec2',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            error_message = "There was an error connecting to EC2: %s" % e
+            return error_message
+
+        # Search EC2 for the VPC subnets
+        try:
+            # TODO: Add search filter or limit access to subnets via IAM Policy
+            # subnet_filter = [{"Name": "vpc-id", "Values": [vpc_id]}]
+            # self.subnets = client.describe_subnets(Filters=subnet_filter)
+            self.subnets = client.describe_subnets()
+        except botocore.exceptions.ClientError as e:
+            error_message = "There was an error describing the VPC Subnets: %s" % \
+                            e.response["Error"]["Message"]
+        except botocore.exceptions.ParamValidationError as e:
+            error_message = "There was an error describing the VPC Subnets: %s" % e
+
+        return error_message
+
+    def create_cluster(self, cluster_name, key_name, instance_type, worker_count, ec2_subnet_id,
+                       instance_market, bid_price, jupyter_password):
         error_message = None
 
         # TODO: Temp Vars
         log_uri = "s3://aws-logs-846273844940-us-east-1/elasticmapreduce/"
         version = "emr-5.6.0"
+
+        if ec2_subnet_id is None:
+            error_message = "Subnet not specified"
+            return error_message
 
         if instance_market:
             market = "SPOT"
@@ -133,7 +164,6 @@ class AWS:
             error_message = "There was an error connecting to EMR: %s" % e
             return error_message
 
-        # TODO: Add VPC (Ec2SubnetId) so m4 gen EC2 instances work
         # TODO: Make Core instance roles optional so a cluster can be launched with only a master
         # TODO: Add Tags
         # TODO: Remove BidPrice when not using spot instances
@@ -157,7 +187,7 @@ class AWS:
                     'Ec2KeyName': key_name,
                     'KeepJobFlowAliveWhenNoSteps': True,
                     'TerminationProtected': False,
-                    # 'Ec2SubnetId': '<Your Subnet ID>',
+                    'Ec2SubnetId': ec2_subnet_id,
                     'InstanceGroups': [
                         {
                             'Name': "Master nodes",

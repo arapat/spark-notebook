@@ -42,6 +42,12 @@
             <label>Number of worker nodes (1 master node will also be created)</label>
             <input id="worker_count" class="form-control" name="worker_count"
                    placeholder="{{"Default: " + data["worker_count"]}}">
+            <label>Subnet and Availability Zone</label>
+            <select id="subnet_id" class="form-control" name="subnet_id">
+                {% for subnet in data["subnets"] %}
+                    <option value="{{ subnet["SubnetId"] }}">{{ subnet["SubnetId"] }} - {{ subnet["AvailabilityZone"] }}</option>
+                {% endfor %}
+            </select>
             <label>Instance type</label>
             <input id="instance_type" class="form-control" name="instance_type"
                    placeholder="{{"Default: " + data["instance_type"]}}">

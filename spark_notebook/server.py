@@ -120,6 +120,8 @@ def cluster_list_create(account):
                         credentials.credentials[account]["secret_access_key"],
                         config.config["emr"]["region"])
 
+    error = cloud_account.get_subnets()
+
     error = cloud_account.list_clusters()
 
     # if request method is post then create the cluster
@@ -127,6 +129,7 @@ def cluster_list_create(account):
         name = None
         password = None
         worker_count = None
+        subnet_id = None
         instance_type = None
         use_spot = None
         spot_price = None
@@ -146,6 +149,9 @@ def cluster_list_create(account):
                 worker_count = request.form["worker_count"].encode('utf8').decode()
             else:
                 worker_count = int(config.config['emr']['worker-count'])
+        if "subnet_id" in request.form:
+            if request.form["worker_count"].encode('utf8').decode() != "":
+                subnet_id = request.form["subnet_id"].encode('utf8').decode()
         if "instance_type" in request.form:
             if request.form["instance_type"].encode('utf8').decode() != "":
                 instance_type = request.form["instance_type"].encode('utf8').decode()
@@ -163,8 +169,8 @@ def cluster_list_create(account):
                 spot_price = config.config['emr']['spot-price']
 
         error = cloud_account.create_cluster(name, credentials.credentials[account]["key_name"],
-                                             instance_type, worker_count, use_spot, spot_price,
-                                             password)
+                                             instance_type, worker_count, subnet_id, use_spot,
+                                             spot_price, password)
 
         if error is None:
             flash("Cluster launched: %s" % name)
@@ -179,6 +185,7 @@ def cluster_list_create(account):
         'spot_price': "%.2f" % config.config['emr']['spot-price'],
         'instance_type': config.config['emr']['instance-type'],
         'password': config.config['jupyter']['password'],
+        'subnets': sorted(cloud_account.subnets["Subnets"], key=lambda k: k["AvailabilityZone"])
     }
 
     return render_template('emr-list-create.html',

@@ -35,6 +35,7 @@ class SparkNotebookTestCase(unittest.TestCase):
                         data=dict(name="cluster-1",
                                   password="password",
                                   worker_count="1",
+                                  subnet_id="subnet-12345678",
                                   instance_type="r3.xlarge",
                                   use_spot="true",
                                   spot_price="1.0"),
