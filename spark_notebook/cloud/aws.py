@@ -4,6 +4,7 @@ import botocore.exceptions
 import os
 import socket
 import time
+from spark_notebook.exceptions import AWSException
 
 
 class AWS:
@@ -14,15 +15,8 @@ class AWS:
         self.region_name = region_name
         self.key_name = None
         self.identity_file = None
-        self.subnets = None
-        self.cluster_id = None
-        self.cluster_info = None
-        self.cluster_list = None
 
     def test_credentials(self):
-
-        error_message = None
-
         try:
             boto3.client('sts',
                          aws_access_key_id=self.access_key_id,
@@ -31,14 +25,11 @@ class AWS:
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure" or \
                     e.response["Error"]["Code"] == "InvalidClientTokenId":
-                error_message = "Invalid AWS access key id or aws secret access key"
+                raise AWSException("Invalid AWS access key id or aws secret access key")
         except Exception as e:
-            error_message = e
-
-        return error_message
+            raise AWSException(str(e))
 
     def test_ssh_key(self, key_name, identity_file):
-        error_message = None
         client = None
 
         self.key_name = key_name
@@ -51,40 +42,34 @@ class AWS:
                                   region_name=self.region_name)
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure":
-                error_message = "Invalid AWS access key id or aws secret access key"
+                raise AWSException("Invalid AWS access key id or aws secret access key")
         except Exception as e:
-            error_message = "There was an error connecting to EC2: %s" % e
-            return error_message
+            raise AWSException("There was an error connecting to EC2: %s" % e)
 
         # Search EC2 for the key-name
         try:
             client.describe_key_pairs(KeyNames=[self.key_name])
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure":
-                error_message = "Invalid AWS access key id or aws secret access key"
+                raise AWSException("Invalid AWS access key id or aws secret access key")
             elif e.response["Error"]["Code"] == "InvalidKeyPair.NotFound":
-                error_message = "Key %s not found on AWS" % self.key_name
+                raise AWSException("Key %s not found on AWS" % self.key_name)
             else:
-                error_message = "There was an error describing the SSH key pairs: %s" % \
-                                e.response["Error"]["Message"]
+                raise AWSException("There was an error describing the SSH key pairs: %s" %
+                                   e.response["Error"]["Message"])
 
         # Verify the identity file exists
         if not os.path.isfile(self.identity_file):
-            error_message = "Key identity file %s not found" % self.identity_file
-
-        return error_message
+            raise AWSException("Key identity file %s not found" % self.identity_file)
 
     def create_ssh_key(self, email_address, file_path):
-        error_message = None
-
         try:
             client = boto3.client('ec2',
                                   aws_access_key_id=self.access_key_id,
                                   aws_secret_access_key=self.secret_access_key,
                                   region_name=self.region_name)
         except Exception as e:
-            error_message = "There was an error connecting to EC2: %s" % e
-            return error_message
+            raise AWSException("There was an error connecting to EC2: %s" % e)
 
         self.key_name = "%s_%s_%s" % (str(email_address.split("@")[0]),
                                       str(socket.gethostname()),
@@ -99,56 +84,46 @@ class AWS:
                 out.write(key['KeyMaterial'] + '\n')
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure":
-                error_message = "Invalid AWS access key id or aws secret access key"
+                raise AWSException("Invalid AWS access key id or aws secret access key")
             else:
-                error_message = "There was an error creating a new SSH key pair: %s" % \
-                                e.response["Error"]["Message"]
+                raise AWSException("There was an error creating a new SSH key pair: %s" %
+                                   e.response["Error"]["Message"])
         except Exception as e:
-            error_message = "Unknown Error: %s" % e
+            raise AWSException("Unknown Error: %s" % e)
 
         # Verify the key pair was saved locally
         if not os.path.isfile(self.identity_file):
-            error_message = "SSH key %s not saved" % self.identity_file
-
-        return error_message
+            raise AWSException("SSH key %s not saved" % self.identity_file)
 
     def get_subnets(self):
-        error_message = None
-
         try:
             client = boto3.client('ec2',
                                   aws_access_key_id=self.access_key_id,
                                   aws_secret_access_key=self.secret_access_key,
                                   region_name=self.region_name)
         except Exception as e:
-            error_message = "There was an error connecting to EC2: %s" % e
-            return error_message
+            raise AWSException("There was an error connecting to EC2: %s" % e)
 
         # Search EC2 for the VPC subnets
         try:
             # TODO: Add search filter or limit access to subnets via IAM Policy
             # subnet_filter = [{"Name": "vpc-id", "Values": [vpc_id]}]
             # self.subnets = client.describe_subnets(Filters=subnet_filter)
-            self.subnets = client.describe_subnets()
+            return client.describe_subnets()
         except botocore.exceptions.ClientError as e:
-            error_message = "There was an error describing the VPC Subnets: %s" % \
-                            e.response["Error"]["Message"]
+            raise AWSException("There was an error describing the VPC Subnets: %s" %
+                               e.response["Error"]["Message"])
         except botocore.exceptions.ParamValidationError as e:
-            error_message = "There was an error describing the VPC Subnets: %s" % e
-
-        return error_message
+            raise AWSException("There was an error describing the VPC Subnets: %s" % e)
 
     def create_cluster(self, cluster_name, key_name, instance_type, worker_count, ec2_subnet_id,
                        instance_market, bid_price, jupyter_password):
-        error_message = None
-
         # TODO: Temp Vars
         log_uri = "s3://aws-logs-846273844940-us-east-1/elasticmapreduce/"
         version = "emr-5.6.0"
 
         if ec2_subnet_id is None:
-            error_message = "Subnet not specified"
-            return error_message
+            raise AWSException("Subnet not specified")
 
         if instance_market:
             market = "SPOT"
@@ -161,8 +136,7 @@ class AWS:
                                   aws_secret_access_key=self.secret_access_key,
                                   region_name=self.region_name)
         except Exception as e:
-            error_message = "There was an error connecting to EMR: %s" % e
-            return error_message
+            raise AWSException("There was an error connecting to EMR: %s" % e)
 
         # TODO: Make Core instance roles optional so a cluster can be launched with only a master
         # TODO: Add Tags
@@ -231,90 +205,75 @@ class AWS:
                 ],
             )
 
-            self.cluster_id = response['JobFlowId']
+            return response['JobFlowId']
 
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure":
-                error_message = "Invalid AWS access key id or aws secret access key"
+                raise AWSException("Invalid AWS access key id or aws secret access key")
             else:
-                error_message = "There was an error creating a new EMR cluster: %s" % \
-                                e.response["Error"]["Message"]
+                raise AWSException("There was an error creating a new EMR cluster: %s" %
+                                   e.response["Error"]["Message"])
         except Exception as e:
-            error_message = "Unknown Error: %s" % e
-
-        return error_message
+            raise AWSException("Unknown Error: %s" % e)
 
     def list_clusters(self):
-        error_message = None
-
         try:
             client = boto3.client('emr',
                                   aws_access_key_id=self.access_key_id,
                                   aws_secret_access_key=self.secret_access_key,
                                   region_name=self.region_name)
         except Exception as e:
-            error_message = "There was an error connecting to EMR: %s" % e
-            return error_message
+            raise AWSException("There was an error connecting to EMR: %s" % e)
 
         try:
-            self.cluster_list = client.list_clusters()
+            cluster_list = client.list_clusters()
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure":
-                error_message = "Invalid AWS access key id or aws secret access key"
+                raise AWSException("Invalid AWS access key id or aws secret access key")
             else:
-                error_message = "There was an error creating a new EMR cluster: %s" % \
-                                e.response["Error"]["Message"]
+                raise AWSException("There was an error creating a new EMR cluster: %s" %
+                                   e.response["Error"]["Message"])
         except Exception as e:
-            error_message = "Unknown Error: %s" % e
+            raise AWSException("Unknown Error: %s" % e)
 
-        return error_message
+        return cluster_list
 
     def describe_cluster(self, cluster_id):
-        error_message = None
-
         try:
             client = boto3.client('emr',
                                   aws_access_key_id=self.access_key_id,
                                   aws_secret_access_key=self.secret_access_key,
                                   region_name=self.region_name)
         except Exception as e:
-            error_message = "There was an error connecting to EMR: %s" % e
-            return error_message
+            raise AWSException("There was an error connecting to EMR: %s" % e)
 
         try:
-            self.cluster_info = client.describe_cluster(ClusterId=cluster_id)
+            return client.describe_cluster(ClusterId=cluster_id)
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure":
-                error_message = "Invalid AWS access key id or aws secret access key"
+                raise AWSException("Invalid AWS access key id or aws secret access key")
             else:
-                error_message = "There was an error describing the EMR cluster: %s" % \
-                                e.response["Error"]["Message"]
+                raise AWSException("There was an error describing the EMR cluster: %s" %
+                                   e.response["Error"]["Message"])
         except Exception as e:
-            error_message = "Unknown Error: %s" % e
-
-        return error_message
+            raise AWSException("Unknown Error: %s" % e)
 
     def terminate_cluster(self, cluster_id):
-        error_message = None
-
         try:
             client = boto3.client('emr',
                                   aws_access_key_id=self.access_key_id,
                                   aws_secret_access_key=self.secret_access_key,
                                   region_name=self.region_name)
         except Exception as e:
-            error_message = "There was an error connecting to EMR: %s" % e
-            return error_message
+            raise AWSException("There was an error connecting to EMR: %s" % e)
 
         try:
-            self.cluster_info = client.terminate_job_flows(JobFlowIds=[cluster_id])
+            client.terminate_job_flows(JobFlowIds=[cluster_id])
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == "AuthFailure":
-                error_message = "Invalid AWS access key id or aws secret access key"
+                raise AWSException("Invalid AWS access key id or aws secret access key")
             else:
-                error_message = "There was an error terminating the EMR cluster: %s" % \
-                                e.response["Error"]["Message"]
+                raise AWSException("There was an error terminating the EMR cluster: %s" %
+                                   e.response["Error"]["Message"])
         except Exception as e:
-            error_message = "Unknown Error: %s" % e
-
-        return error_message
+            raise AWSException("Unknown Error: %s" % e)

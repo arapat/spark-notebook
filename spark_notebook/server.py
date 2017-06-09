@@ -12,6 +12,8 @@ from flask import render_template
 from flask import url_for
 from flask import flash
 
+import botocore.exceptions
+from spark_notebook.exceptions import AWSException
 from spark_notebook.exceptions import CredentialsException
 
 app = Flask(__name__)
@@ -68,16 +70,24 @@ def accounts():
 
         cloud_account = AWS(access_key_id, secret_access_key, region_name)
 
-        error = cloud_account.test_credentials()
+        try:
+            error = cloud_account.test_credentials()
+        except AWSException as e:
+            error = e.msg
 
         if error is None and ssh_key == "generate":
-            error = cloud_account.create_ssh_key(email_address,
-                                                 os.path.dirname(credentials.file_path))
-            key_name = cloud_account.key_name
-            identity_file = cloud_account.identity_file
+            try:
+                cloud_account.create_ssh_key(email_address, os.path.dirname(credentials.file_path))
+                key_name = cloud_account.key_name
+                identity_file = cloud_account.identity_file
+            except AWSException as e:
+                error = e.msg
 
         if error is None:
-            error = cloud_account.test_ssh_key(key_name, identity_file)
+            try:
+                cloud_account.test_ssh_key(key_name, identity_file)
+            except AWSException as e:
+                error = e.msg
 
         if error is None:
             try:
@@ -124,13 +134,13 @@ def save_config_location():
 
 @app.route('/g/<account>', methods=['GET', 'POST'])
 def cluster_list_create(account):
+    error = None
+    subnets = None
+    cluster_list = None
+
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
                         config.config["emr"]["region"])
-
-    error = cloud_account.get_subnets()
-
-    error = cloud_account.list_clusters()
 
     # if request method is post then create the cluster
     if request.method == "POST":
@@ -176,14 +186,26 @@ def cluster_list_create(account):
             else:
                 spot_price = config.config['emr']['spot-price']
 
-        error = cloud_account.create_cluster(name, credentials.credentials[account]["key_name"],
-                                             instance_type, worker_count, subnet_id, use_spot,
-                                             spot_price, password)
-
-        if error is None:
+        try:
+            cluster_id = cloud_account.create_cluster(name,
+                                                      credentials.credentials[account]["key_name"],
+                                                      instance_type, worker_count, subnet_id,
+                                                      use_spot, spot_price, password)
             flash("Cluster launched: %s" % name)
             return redirect(url_for('cluster_details', account=account,
-                                    cluster_id=cloud_account.cluster_id))
+                                    cluster_id=cluster_id))
+        except AWSException as e:
+            error = e.args
+
+    try:
+        cluster_list = cloud_account.list_clusters()
+    except AWSException as e:
+        error = e.msg
+
+    try:
+        subnets = cloud_account.get_subnets()
+    except AWSException as e:
+        error = e.msg
 
     data = {
         'account': account,
@@ -193,36 +215,42 @@ def cluster_list_create(account):
         'spot_price': "%.2f" % config.config['emr']['spot-price'],
         'instance_type': config.config['emr']['instance-type'],
         'password': config.config['jupyter']['password'],
-        'subnets': sorted(cloud_account.subnets["Subnets"], key=lambda k: k["AvailabilityZone"])
+        'subnets': sorted(subnets["Subnets"], key=lambda k: k["AvailabilityZone"])
     }
 
     return render_template('emr-list-create.html',
-                           cluster_list=cloud_account.cluster_list,
+                           cluster_list=cluster_list,
                            data=data,
                            error=error)
 
 
 @app.route('/g/<account>/<cluster_id>', methods=["GET", "POST"])
 def cluster_details(account, cluster_id):
+    error = None
+    cluster_info = dict()
+
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
                         config.config["emr"]["region"])
 
-    error = cloud_account.describe_cluster(cluster_id)
+    try:
+        cluster_info = cloud_account.describe_cluster(cluster_id)["Cluster"]
+    except AWSException as e:
+        error = e.msg
 
     master_public_dns_name = None
 
-    if "MasterPublicDnsName" in cloud_account.cluster_info["Cluster"]:
-        master_public_dns_name = cloud_account.cluster_info["Cluster"]["MasterPublicDnsName"]
+    if "MasterPublicDnsName" in cluster_info:
+        master_public_dns_name = cluster_info["MasterPublicDnsName"]
 
     # TODO: Added Juypter notebook password and ssh key path (replace UPDATE)
     # TODO: Print EMR error message when status is TERMINATED_WITH_ERRORS
     data = {
         'account': account,
-        'cluster_name': cloud_account.cluster_info['Cluster']['Name'],
+        'cluster_name': cluster_info['Name'],
         'cluster_id': cluster_id,
         'master_url': master_public_dns_name,
-        'status': cloud_account.cluster_info['Cluster']['Status']['State'],
+        'status': cluster_info['Status']['State'],
         'password': "UPDATE",
         'aws_access': ("ssh -i %s hadoop@%s" % ("UPDATE", master_public_dns_name))
     }
@@ -236,15 +264,21 @@ def destroy_cluster(account, cluster_id):
                         credentials.credentials[account]["secret_access_key"],
                         config.config["emr"]["region"])
 
-    error = cloud_account.terminate_cluster(cluster_id)
+    try:
+        cloud_account.terminate_cluster(cluster_id)
 
-    if error is None:
         return redirect(url_for('cluster_list_create', account=account))
-    else:
+    except AWSException as e:
         data = {}
-        return render_template("emr-details.html", data=data, error=error)
+        return render_template("emr-details.html", data=data, error=e.msg)
 
 
 @app.errorhandler(IOError)
 def handle_ioerror(e):
+    return str(e)
+
+
+@app.errorhandler(botocore.exceptions.PartialCredentialsError)
+@app.errorhandler(botocore.exceptions.EndpointConnectionError)
+def handle_aws_client_connect(e):
     return str(e)
