@@ -235,3 +235,8 @@ def destroy_cluster(account, cluster_id):
     else:
         data = {}
         return render_template("emr-details.html", data=data, error=error)
+
+
+@app.errorhandler(IOError)
+def handle_ioerror(e):
+    return str(e)

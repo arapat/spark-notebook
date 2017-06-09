@@ -30,17 +30,11 @@ class Config:
 
     def load(self):
         if os.path.isfile(self.file_path):
-            try:
-                with open(self.file_path, 'r') as stream:
-                    self.config = yaml.load(stream)
-            except IOError as e:
-                print(e)
+            with open(self.file_path, 'r') as stream:
+                self.config = yaml.load(stream)
         else:
             self.config = copy.deepcopy(default_config)
 
     def save(self):
-        try:
-            with open(self.file_path, 'w') as stream:
-                stream.write(yaml.safe_dump(self.config, default_flow_style=False))
-        except IOError as e:
-            print(e)
+        with open(self.file_path, 'w') as stream:
+            stream.write(yaml.safe_dump(self.config, default_flow_style=False))

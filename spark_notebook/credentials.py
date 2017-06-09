@@ -11,18 +11,9 @@ class Credentials:
         self.load()
 
     def load(self):
-        error_message = None
-
         if os.path.isfile(self.file_path):
-            try:
-                with open(self.file_path, 'r') as stream:
-                    self.credentials = yaml.load(stream)
-            except IOError as e:
-                error_message = e
-        if self.credentials is None:
-            self.credentials = dict()
-
-        return error_message
+            with open(self.file_path, 'r') as stream:
+                self.credentials = yaml.load(stream)
 
     def add(self, name, email_address, access_key_id, secret_access_key, key_name, ssh_key):
         new_credentials = dict()
@@ -45,11 +36,8 @@ class Credentials:
 
         # Check if the base directory exists
         if os.path.exists(os.path.dirname(self.file_path)):
-            try:
-                with open(self.file_path, 'w') as stream:
-                    stream.write(yaml.safe_dump(self.credentials, default_flow_style=False))
-            except IOError as e:
-                error_message = e
+            with open(self.file_path, 'w') as stream:
+                stream.write(yaml.safe_dump(self.credentials, default_flow_style=False))
         else:
             error_message = "Base directory %s does not exist." % \
                             os.path.dirname(self.file_path)
