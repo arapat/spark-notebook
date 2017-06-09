@@ -12,6 +12,8 @@ from flask import render_template
 from flask import url_for
 from flask import flash
 
+from spark_notebook.exceptions import CredentialsException
+
 app = Flask(__name__)
 app.secret_key = 'some_secret'
 config = Config()
@@ -78,8 +80,11 @@ def accounts():
             error = cloud_account.test_ssh_key(key_name, identity_file)
 
         if error is None:
-            error = credentials.add(name, email_address, access_key_id, secret_access_key, key_name,
-                                    identity_file)
+            try:
+                credentials.add(name, email_address, access_key_id, secret_access_key, key_name,
+                                identity_file)
+            except CredentialsException as e:
+                error = e.msg
 
         if error is None:
             flash("Account %s added" % name)
@@ -99,7 +104,10 @@ def save_config_location():
 
         global credentials
         credentials = Credentials(path)
-        error = credentials.save()
+        try:
+            credentials.save()
+        except CredentialsException as e:
+            error = e.msg
 
         # If there were no errors saving the credentials file then update the credentials path in
         # the config file

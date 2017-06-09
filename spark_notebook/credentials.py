@@ -1,6 +1,7 @@
 import os
 # noinspection PyPackageRequirements
 import yaml
+from spark_notebook.exceptions import CredentialsException
 
 
 class Credentials:
@@ -27,19 +28,13 @@ class Credentials:
         temp_credentials.update(new_credentials)
 
         self.credentials = temp_credentials
-        error_message = self.save()
-
-        return error_message
+        self.save()
 
     def save(self):
-        error_message = None
-
         # Check if the base directory exists
         if os.path.exists(os.path.dirname(self.file_path)):
             with open(self.file_path, 'w') as stream:
                 stream.write(yaml.safe_dump(self.credentials, default_flow_style=False))
         else:
-            error_message = "Base directory %s does not exist." % \
-                            os.path.dirname(self.file_path)
-
-        return error_message
+            raise CredentialsException("Base directory %s does not exist." %
+                                       os.path.dirname(self.file_path))
