@@ -4,6 +4,8 @@ import botocore.exceptions
 class FakeBotoClient(object):
 
     def __init__(self, *args, **kwargs):
+        self.cluster_list = {}
+
         if args[0] == "sts":
             if not kwargs["aws_access_key_id"] == "access_key_id" or \
                     not kwargs["aws_secret_access_key"] == "secret_access_key":
@@ -35,8 +37,7 @@ class FakeBotoClient(object):
                             {'SubnetId': 'subnet-a1b2c3d4', 'AvailabilityZone': 'us-east-1c'}]
                 }
 
-    @staticmethod
-    def run_job_flow(*args, **kwargs):
+    def run_job_flow(self, *args, **kwargs):
         expected = {'Name': u'cluster-1',
                     'LogUri': 's3://aws-logs-846273844940-us-east-1/elasticmapreduce/',
                     'ReleaseLabel': 'emr-5.6.0',
@@ -74,6 +75,17 @@ class FakeBotoClient(object):
             error_response = {'Error': {'Code': 'Failed'}}
             raise botocore.exceptions.ClientError(error_response, "emr")
 
+        self.cluster_list = {
+            'Clusters': [{
+                'Id': 'J-ABC123ABC123',
+                'Name': 'cluster-1',
+                'Status': {
+                    'State': 'STARTING',
+                },
+                'MasterPublicDnsName': 'test.cluster.com',
+            }]
+        }
+
         return {'JobFlowId': 'J-ABC123ABC123'}
 
     @staticmethod
@@ -88,3 +100,6 @@ class FakeBotoClient(object):
                 'MasterPublicDnsName': 'test.cluster.com',
             }
         }
+
+    def list_clusters(self):
+        return self.cluster_list
