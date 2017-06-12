@@ -117,7 +117,7 @@ class AWS:
             raise AWSException("There was an error describing the VPC Subnets: %s" % e)
 
     def create_cluster(self, cluster_name, key_name, instance_type, worker_count, ec2_subnet_id,
-                       instance_market, bid_price, jupyter_password):
+                       instance_market, bid_price, tags, jupyter_password):
         # TODO: Temp Vars
         log_uri = "s3://aws-logs-846273844940-us-east-1/elasticmapreduce/"
         version = "emr-5.6.0"
@@ -139,7 +139,6 @@ class AWS:
             raise AWSException("There was an error connecting to EMR: %s" % e)
 
         # TODO: Make Core instance roles optional so a cluster can be launched with only a master
-        # TODO: Add Tags
         # TODO: Remove BidPrice when not using spot instances
         try:
             response = client.run_job_flow(
@@ -193,16 +192,7 @@ class AWS:
                         }
                     },
                 ],
-                Tags=[
-                    {
-                        'Key': 'tag_name_1',
-                        'Value': 'tab_value_1',
-                    },
-                    {
-                        'Key': 'tag_name_2',
-                        'Value': 'tag_value_2',
-                    },
-                ],
+                Tags=tags
             )
 
             return response['JobFlowId']

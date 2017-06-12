@@ -186,11 +186,13 @@ def cluster_list_create(account):
             else:
                 spot_price = config.config['emr']['spot-price']
 
+        tags = [{"Key": "cluster", "Value": credentials.credentials[account]["email_address"]}]
+
         try:
             cluster_id = cloud_account.create_cluster(name,
                                                       credentials.credentials[account]["key_name"],
                                                       instance_type, worker_count, subnet_id,
-                                                      use_spot, spot_price, password)
+                                                      use_spot, spot_price, tags, password)
             flash("Cluster launched: %s" % name)
             return redirect(url_for('cluster_details', account=account,
                                     cluster_id=cluster_id))

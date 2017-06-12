@@ -67,10 +67,8 @@ class FakeBotoClient(object):
                                           },
                                          ],
                     'Steps': [],
-                    'Tags': [{'Key': 'tag_name_1',
-                              'Value': 'tab_value_1'},
-                             {'Key': 'tag_name_2',
-                              'Value': 'tag_value_2'}]}
+                    'Tags': [{"Key": "cluster", "Value": "test-4@email"}]
+                    }
 
         if kwargs != expected:
             error_response = {'Error': {'Code': 'Failed'}}
