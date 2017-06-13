@@ -4,7 +4,7 @@ import botocore.exceptions
 class FakeBotoClient(object):
 
     def __init__(self, *args, **kwargs):
-        self.cluster_list = {}
+        self.cluster_list = None
 
         if args[0] == "sts":
             if not kwargs["aws_access_key_id"] == "access_key_id" or \
@@ -37,62 +37,44 @@ class FakeBotoClient(object):
                             {'SubnetId': 'subnet-a1b2c3d4', 'AvailabilityZone': 'us-east-1c'}]
                 }
 
+    @staticmethod
+    def set_run_job_flow_expected():
+        return {'Name': u'expected-cluster'}
+
     def run_job_flow(self, *args, **kwargs):
-        expected = {'Name': u'cluster-1',
-                    'LogUri': 's3://aws-logs-846273844940-us-east-1/elasticmapreduce/',
-                    'ReleaseLabel': 'emr-5.6.0',
-                    'VisibleToAllUsers': True,
-                    'JobFlowRole': 'EMR_EC2_DefaultRole',
-                    'ServiceRole': 'EMR_DefaultRole',
-                    'Applications': [{'Name': 'Hadoop'}, {'Name': 'Spark'}],
-                    'Instances': {'KeepJobFlowAliveWhenNoSteps': True,
-                                  'TerminationProtected': False,
-                                  'Ec2SubnetId': 'subnet-12345678',
-                                  'Ec2KeyName': 'key_name',
-                                  'InstanceGroups': [{'InstanceCount': 1,
-                                                      'Name': 'Master nodes',
-                                                      'InstanceRole': 'MASTER',
-                                                      'BidPrice': '1.0',
-                                                      'InstanceType': u'r3.xlarge',
-                                                      'Market': 'SPOT'},
-                                                     {'InstanceCount': 1,
-                                                      'Name': 'Slave nodes',
-                                                      'InstanceRole': 'CORE',
-                                                      'BidPrice': '1.0',
-                                                      'InstanceType': u'r3.xlarge',
-                                                      'Market': 'SPOT'}]},
-                    'BootstrapActions': [{'Name': 'jupyter-provision',
-                                          'ScriptBootstrapAction': {
-                                              'Path': 's3://mas-dse-emr/jupyter-provision.sh',
-                                              'Args': ["password"]}
-                                          },
-                                         ],
-                    'Steps': [],
-                    'Tags': [{"Key": "cluster", "Value": "test-4@email"}]
-                    }
+        # set_run_job_flow_expected return value should be set from the test mock
+        expected = self.set_run_job_flow_expected()
 
         if kwargs != expected:
             error_response = {'Error': {'Code': 'Failed'}}
             raise botocore.exceptions.ClientError(error_response, "emr")
 
-        self.cluster_list = {
-            'Clusters': [{
-                'Id': 'J-ABC123ABC123',
-                'Name': 'cluster-1',
+        if self.cluster_list is None:
+            self.cluster_list = {
+                'Clusters': [{
+                    'Id': 'J-' + expected["Name"],
+                    'Name': expected["Name"],
+                    'Status': {
+                        'State': 'STARTING',
+                    },
+                }]
+            }
+        else:
+            self.cluster_list["Clusters"].append({
+                'Id': 'J-' + expected["Name"],
+                'Name': expected["Name"],
                 'Status': {
                     'State': 'STARTING',
                 },
-                'MasterPublicDnsName': 'test.cluster.com',
-            }]
-        }
+            })
 
-        return {'JobFlowId': 'J-ABC123ABC123'}
+        return {'JobFlowId': 'J-' + expected["Name"]}
 
     @staticmethod
     def describe_cluster(ClusterId):
         return {
             'Cluster': {
-                'Id': 'J-ABC123ABC123',
+                'Id': 'J-cluster-1',
                 'Name': 'cluster-1',
                 'Status': {
                     'State': 'STARTING',
