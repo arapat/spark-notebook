@@ -197,7 +197,7 @@ def cluster_list_create(account):
             return redirect(url_for('cluster_details', account=account,
                                     cluster_id=cluster_id))
         except AWSException as e:
-            error = e.args
+            error = e.msg
 
     try:
         cluster_list = cloud_account.list_clusters()
