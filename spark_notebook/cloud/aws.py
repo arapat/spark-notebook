@@ -122,13 +122,35 @@ class AWS:
         log_uri = "s3://aws-logs-846273844940-us-east-1/elasticmapreduce/"
         version = "emr-5.6.0"
 
+        # Fail if an ec2_subnet_id is not specified
         if ec2_subnet_id is None:
             raise AWSException("Subnet not specified")
 
+        # Describe the compute instance groups
         if instance_market:
             market = "SPOT"
         else:
             market = "ON_DEMAND"
+
+        master_instance_group = {'Name': "Master nodes",
+                                 'Market': market,
+                                 'InstanceRole': 'MASTER',
+                                 'InstanceType': instance_type,
+                                 'InstanceCount': 1,
+                                 }
+
+        core_instance_group = {'Name': "Core nodes",
+                               'Market': market,
+                               'InstanceRole': 'CORE',
+                               'InstanceType': instance_type,
+                               'InstanceCount': int(worker_count),
+                               }
+
+        if instance_market:
+            master_instance_group["BidPrice"] = str(bid_price)
+            core_instance_group["BidPrice"] = str(bid_price)
+
+        instance_groups = [master_instance_group, core_instance_group]
 
         try:
             client = boto3.client('emr',
@@ -139,7 +161,7 @@ class AWS:
             raise AWSException("There was an error connecting to EMR: %s" % e)
 
         # TODO: Make Core instance roles optional so a cluster can be launched with only a master
-        # TODO: Remove BidPrice when not using spot instances
+        # TODO: Add option to set EBS volume size
         try:
             response = client.run_job_flow(
                 Name=cluster_name,
@@ -161,24 +183,7 @@ class AWS:
                     'KeepJobFlowAliveWhenNoSteps': True,
                     'TerminationProtected': False,
                     'Ec2SubnetId': ec2_subnet_id,
-                    'InstanceGroups': [
-                        {
-                            'Name': "Master nodes",
-                            'Market': market,
-                            'BidPrice': str(bid_price),
-                            'InstanceRole': 'MASTER',
-                            'InstanceType': instance_type,
-                            'InstanceCount': 1,
-                        },
-                        {
-                            'Name': "Slave nodes",
-                            'Market': market,
-                            'BidPrice': str(bid_price),
-                            'InstanceRole': 'CORE',
-                            'InstanceType': instance_type,
-                            'InstanceCount': int(worker_count),
-                        }
-                    ],
+                    'InstanceGroups': instance_groups,
                 },
                 Steps=[],
                 BootstrapActions=[
