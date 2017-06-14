@@ -22,11 +22,3 @@ sc = SparkContext(conf=conf)
 A helper variable `s3helper` is initialized when Jupyter Notebook is launched.
 [spark_notebook/remote/examples/FilesIO.ipynb](https://github.com/arapat/spark-notebook/blob/master/spark_notebook/remote/examples/FilesIO.ipynb)
 contains examples of using `s3helper`. Alternatively, you can try to call `s3helper.help()`.
-
-### Set up your S3 credentials
-
-By default, `s3helper` uses the credentials of the AWS account that used for creating the cluster.
-In the cluster details page, you can change the S3 credentials of the `s3helper` by clicking on
-a different credential's name under the "Set up S3" section.
-
-![s3setup](images/s3setup.png)
