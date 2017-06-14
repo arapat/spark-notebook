@@ -168,7 +168,7 @@ def cluster_list_create(account):
             else:
                 worker_count = int(config.config['emr']['worker-count'])
         if "subnet_id" in request.form:
-            if request.form["worker_count"].encode('utf8').decode() != "":
+            if request.form["subnet_id"].encode('utf8').decode() != "":
                 subnet_id = request.form["subnet_id"].encode('utf8').decode()
         if "instance_type" in request.form:
             if request.form["instance_type"].encode('utf8').decode() != "":
