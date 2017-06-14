@@ -12,7 +12,7 @@ default_config = {
         "name": "demo-cluster",
         "worker-count": 1,
         "region": "us-east-1",
-        "instance-type": "r3.2xlarge",
+        "instance-type": "r4.2xlarge",
         "spot-price": 1.0
     },
     "jupyter": {
