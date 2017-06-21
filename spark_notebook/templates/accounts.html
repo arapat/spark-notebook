@@ -43,11 +43,15 @@
                                    placeholder="Enter your @eng.ucsd.edu email address"
                                    required>
 
-                            <label>AWS Access Key ID</label>
+                            <label>AWS Access Key ID
+                                [<a data-toggle="tooltip" title="AWS access key ids are 20 characters and usually start with AKI.">?</a>]
+                            </label>
                             <input id="access_key_id" class="form-control"
                                    name="access_key_id" required>
 
-                            <label>AWS Secret Access Key</label>
+                            <label>AWS Secret Access Key
+                                [<a data-toggle="tooltip" title="AWS secret access keys are 40 character random strings.">?</a>]
+                            </label>
                             <input id="secret_access_key" class="form-control"
                                    name="secret_access_key" required>
 
@@ -62,14 +66,22 @@
                                            name="ssh_key" value="existing"> Use an Existing SSH Key
                                 </label>
                             </div>
+                            <label>[<a data-toggle="tooltip" title="Select <b>Generate a New SSH Key</b> if you would like to generate and download a new SSH key.
+                            New SSH keys are saved to the same directory that you selected to save your credentials file to. Select <b>Use an Existing SSH Key</b>
+                            if you would like to use an SSH key (.pem file) that you already have downloaded and has been registered on AWS's servers. Select
+                            <b>Generate a New SSH Key</b> if you are unsure which option to select.">?</a>]</label>
 
                             <br/>
                             <div id="existing-key" style="display: none">
                                 <br/>
-                                <label>Key Name</label>
+                                <label>Key Name
+                                    [<a data-toggle="tooltip" title="The name of the key as defined on the on AWS's EC2 console.">?</a>]
+                                </label>
                                 <input id="key_name" class="form-control" name="key_name">
 
-                                <label>Key Identity File Path</label>
+                                <label>Key Identity File Path
+                                    [<a data-toggle="tooltip" title="Enter the full path of the key identity file, usually a .pem file, on your computer.">?</a>]
+                                </label>
                                 <input id="identity_file" class="form-control"
                                        name="identity_file">
                             </div>
@@ -96,6 +108,12 @@
             $("#key_name").removeAttr("required");
             $("#identity_file").removeAttr("required");
         }
+    });
+    $('a[data-toggle="tooltip"]').tooltip({
+        animated: 'fade',
+        placement: 'bottom',
+        trigger: 'click',
+        html: true,
     });
 </script>
 {% endblock %}

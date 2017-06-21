@@ -42,13 +42,22 @@
             <label>Number of worker nodes (1 master node will also be created)</label>
             <input id="worker_count" class="form-control" name="worker_count"
                    placeholder="{{"Default: " + data["worker_count"]}}">
-            <label>Subnet and Availability Zone</label>
+            <label>Subnet - Availability Zone
+                [<a data-toggle="tooltip" title="The availability zone (AZ) determines which rate you pay when you select spot instances.
+                Each AZ has its own fluctuating rate. It does not matter which AZ you select if you will only be using on-demand instances.">?</a>]
+            </label>
             <select id="subnet_id" class="form-control" name="subnet_id">
                 {% for subnet in data["subnets"] %}
                     <option value="{{ subnet["SubnetId"] }}">{{ subnet["SubnetId"] }} - {{ subnet["AvailabilityZone"] }}</option>
                 {% endfor %}
             </select>
-            <label>Instance type</label>
+            <label>Instance type
+                [<a data-toggle="tooltip" title="See <a target='_blank' href='https://aws.amazon.com/ec2/pricing/on-demand/'>AWS's EC2 pricing</a>
+                page for more information about instance type, include the CPU, memory and on-demand pricing. There is also an <a target='_blank'
+                href='https://aws.amazon.com/emr/pricing/'>additional cost</a> per instance for using Elastic Map Reduce (EMR). If you are unsure
+                which instance type to select, then choose r4.2xlarge (8 CPUs, 61 GB Ram, $0.532 per hr on-demand + $0.133 per hr EMR) then select
+                the appropriate number of workers.">?</a>]
+            </label>
             <select id="instance_type" class="form-control" name="instance_type">
                 <optgroup label="General Purpose">
                     <option value="m3.xlarge" {% if data["instance_type"] == "m3.xlarge" %}selected{% endif %}>m3.xlarge</option>
@@ -101,9 +110,19 @@
             <input type="checkbox" name="use_spot" id="use_spot" value="true" checked/>
             <label style="margin-top: 10px;">
                 Use spot instances (uncheck for on-demand instances)
+                [<a data-toggle="tooltip" title="Spot instances allow you to bid on spare EC2 computing capacity. Since spot instances are
+                often available at a discount compared to on-demand pricing (typically 15%-20% of the on-demand price), you can significantly
+                reduce the cost of running your clusters. See <a target='_blank' href='https://aws.amazon.com/ec2/spot/'>AWS's documentation</a>
+                for more information.">?</a>]
             </label>
             <div id="spot-price">
-                <label>Maximum price per hour</label>
+                <label>Maximum price per hour
+                    [<a data-toggle="tooltip" title="Spot instances are charged the current rate, not the maximum price per hour. However, if the
+                    current rate exceeds the maximum price per hour then your cluster could be terminated with out warning. See the
+                    <a target='_blank' href='https://aws.amazon.com/ec2/spot/bid-advisor/'>Spot Bid Advisor</a> if you want to customize the price.
+                    Otherwise if you don't know what to enter then use the <a target='_blank' href='https://aws.amazon.com/ec2/pricing/on-demand/'>
+                    on-demand price</a> or 1.00.">?</a>]
+                </label>
                 <input class="form-control" name="spot_price"
                        placeholder="{{"Default: $" + data["spot_price"]}}">
             </div>
@@ -119,6 +138,12 @@ $(document).ready(function() {
     $('#use_spot').change(function() {
         $('#spot-price').toggle();
     });
+});
+$('a[data-toggle="tooltip"]').tooltip({
+    animated: 'fade',
+    placement: 'bottom',
+    trigger: 'click',
+    html: true,
 });
 </script>
 {% endblock %}
