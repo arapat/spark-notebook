@@ -46,6 +46,9 @@ class SparkNotebookTestCase(unittest.TestCase):
             rv = c.post(url_for('save_config_location'), data=dict(path=self.temp_credentials_file),
                         follow_redirects=True)
 
+            # Make sure there were no errors
+            assert '<p class="error"><strong>Error:</strong>' not in rv.data.decode('utf-8')
+
             assert '<div class="flash">Credentials saved to %s</div>' % \
                    self.temp_credentials_file in rv.data.decode('utf-8')
 

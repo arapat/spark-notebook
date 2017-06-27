@@ -97,6 +97,9 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   ssh_key="generate"),
                         follow_redirects=True)
 
+            # Make sure there were no errors
+            assert '<p class="error"><strong>Error:</strong>' not in rv.data.decode('utf-8')
+
             # Verify account added message is displayed and the test-3 account is in account list
             assert '<div class="flash">Account test-3 added</div>' in rv.data.decode('utf-8')
             assert '<li><a href="/g/test-3">test-3</a></li>' in rv.data.decode('utf-8')
@@ -111,6 +114,9 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   key_name="key_name",
                                   identity_file="./tests/test_files/identity_file.pem"),
                         follow_redirects=True)
+
+            # Make sure there were no errors
+            assert '<p class="error"><strong>Error:</strong>' not in rv.data.decode('utf-8')
 
             # Verify account added message is displayed and the test-3 & test-4 accounts are in
             # account list

@@ -84,6 +84,9 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   spot_price="1.0"),
                         follow_redirects=True)
 
+            # Make sure there were no errors
+            assert '<p class="error"><strong>Error:</strong>' not in rv.data.decode('utf-8')
+
             assert '<div class="flash">Cluster launched: cluster-1</div>' in rv.data.decode('utf-8')
             assert '<p>Launching. Please refresh again later.' in rv.data.decode('utf-8')
 
@@ -116,6 +119,9 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   subnet_id="subnet-12345678",
                                   instance_type="r3.xlarge"),
                         follow_redirects=True)
+
+            # Make sure there were no errors
+            assert '<p class="error"><strong>Error:</strong>' not in rv.data.decode('utf-8')
 
             assert '<div class="flash">Cluster launched: cluster-2</div>' in rv.data.decode('utf-8')
             assert '<p>Launching. Please refresh again later.' in rv.data.decode('utf-8')
