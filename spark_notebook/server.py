@@ -261,7 +261,7 @@ def cluster_details(account, cluster_id):
     if "MasterPublicDnsName" in cluster_info:
         master_public_dns_name = cluster_info["MasterPublicDnsName"]
 
-    # TODO: Added Juypter notebook password and ssh key path (replace UPDATE)
+    # TODO: ssh key path (replace UPDATE)
     # TODO: Print EMR error message when status is TERMINATED_WITH_ERRORS
     data = {
         'account': account,
