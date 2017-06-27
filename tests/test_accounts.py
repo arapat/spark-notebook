@@ -6,7 +6,7 @@ import yaml
 from flask import url_for
 from mock import patch
 from spark_notebook.server import app
-from tests import fakes
+from tests import fake_boto
 
 
 class SparkNotebookTestCase(unittest.TestCase):
@@ -29,7 +29,7 @@ class SparkNotebookTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @patch('boto3.client', fakes.FakeBotoClient)
+    @patch('boto3.client', fake_boto.FakeBotoClient)
     @patch('socket.gethostname')
     @patch('time.time')
     def test_accounts(self, mock_time, mock_get_hostname):

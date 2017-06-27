@@ -4,7 +4,7 @@ import unittest
 from flask import url_for
 from mock import patch
 from spark_notebook.server import app
-from tests import fakes
+from tests import fake_boto
 
 
 class SparkNotebookTestCase(unittest.TestCase):
@@ -17,9 +17,9 @@ class SparkNotebookTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @patch('boto3.client', fakes.FakeBotoClient)
-    @patch.object(fakes.FakeBotoClient, 'describe_cluster')
-    @patch.object(fakes.FakeBotoClient, 'list_bootstrap_actions')
+    @patch('boto3.client', fake_boto.FakeBotoClient)
+    @patch.object(fake_boto.FakeBotoClient, 'describe_cluster')
+    @patch.object(fake_boto.FakeBotoClient, 'list_bootstrap_actions')
     def test_emr_details(self, mock_bootstrap_actions, mock_describe_cluster):
         with app.test_client() as c:
             c.get('/?config_path=%s' % self.test_config_file)

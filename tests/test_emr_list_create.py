@@ -4,7 +4,7 @@ import unittest
 from flask import url_for
 from mock import patch
 from spark_notebook.server import app
-from tests import fakes
+from tests import fake_boto
 
 
 class SparkNotebookTestCase(unittest.TestCase):
@@ -39,8 +39,8 @@ class SparkNotebookTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @patch('boto3.client', fakes.FakeBotoClient)
-    @patch.object(fakes.FakeBotoClient, 'set_run_job_flow_expected')
+    @patch('boto3.client', fake_boto.FakeBotoClient)
+    @patch.object(fake_boto.FakeBotoClient, 'set_run_job_flow_expected')
     def test_emr_list_create(self, mock_run_job_flow_expected):
         with app.test_client() as c:
             c.get('/?config_path=%s' % self.test_config_file)
