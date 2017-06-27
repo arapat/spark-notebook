@@ -41,7 +41,7 @@ class SparkNotebookTestCase(unittest.TestCase):
 
     @patch('boto3.client', fakes.FakeBotoClient)
     @patch.object(fakes.FakeBotoClient, 'set_run_job_flow_expected')
-    def test_create_cluster(self, mock_run_job_flow_expected):
+    def test_emr_list_create(self, mock_run_job_flow_expected):
         with app.test_client() as c:
             c.get('/?config_path=%s' % self.test_config_file)
 
