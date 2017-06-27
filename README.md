@@ -1,5 +1,7 @@
 # Spark Notebook (Launcher)
 
+[![Build Status](https://travis-ci.org/mas-dse/spark-notebook.svg?branch=master)](https://travis-ci.org/mas-dse/spark-notebook)
+
 Spark Notebook (Launcher) is a web-based interface to install and start
 Apache Spark and Jupyter Notebook on Amazon Web Services' Elastic Map Reduce (EMR).
 
