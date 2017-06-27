@@ -42,11 +42,11 @@ EOF
     echo "c = get_config()" > ~/.ipython/profile_default/ipython_config.py
     echo 'c.InteractiveShellApp.exec_files = ["/home/hadoop/s3helper.py"]' >> ~/.ipython/profile_default/ipython_config.py
 
-    # Download s3helper.py TODO: URL needs to be updated
-    curl -o /home/hadoop/s3helper.py https://raw.githubusercontent.com/kevincoakley/spark-notebook/klc/provision/remote/s3helper.py
+    # Download s3helper.py 
+    curl -o /home/hadoop/s3helper.py https://github.com/mas-dse/spark-notebook/blob/master/provision/remote/s3helper.py
 
-    # Download the FileIO notebook to the workspace TODO: URL needs to be updated
-    curl -o /mnt/workspace/FilesIO.ipynb https://raw.githubusercontent.com/kevincoakley/spark-notebook/klc/provision/workspace/FilesIO.ipynb
+    # Download the FileIO notebook to the workspace
+    curl -o /mnt/workspace/FilesIO.ipynb https://raw.githubusercontent.com/mas-dse/spark-notebook/master/provision/workspace/FilesIO.ipynb
 
     # Install Python 2 kernel
     conda create -n ipykernel_py2 python=2 anaconda ipykernel -y
