@@ -230,6 +230,9 @@ def cluster_list_create(account):
 def cluster_details(account, cluster_id):
     error = None
     cluster_info = dict()
+    bootstrap_actions = None
+    state = None
+    password = "UNKNOWN"
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
@@ -237,8 +240,21 @@ def cluster_details(account, cluster_id):
 
     try:
         cluster_info = cloud_account.describe_cluster(cluster_id)["Cluster"]
+        state = cluster_info['Status']['State']
     except AWSException as e:
         error = e.msg
+
+    # Only get the bootstrap information from running or waiting clusters
+    if state == "RUNNING" or state == "WAITING":
+        try:
+            bootstrap_actions = cloud_account.list_bootstrap_actions(cluster_id)["BootstrapActions"]
+        except AWSException as e:
+            error = e.msg
+
+        if error is None:
+            for action in bootstrap_actions:
+                if action["Name"] == "jupyter-provision":
+                    password = action["Args"][0]
 
     master_public_dns_name = None
 
@@ -253,7 +269,7 @@ def cluster_details(account, cluster_id):
         'cluster_id': cluster_id,
         'master_url': master_public_dns_name,
         'status': cluster_info['Status']['State'],
-        'password': "UPDATE",
+        'password': password,
         'aws_access': ("ssh -i %s hadoop@%s" % ("UPDATE", master_public_dns_name))
     }
 

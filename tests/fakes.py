@@ -74,14 +74,18 @@ class FakeBotoClient(object):
     def describe_cluster(ClusterId):
         return {
             'Cluster': {
-                'Id': 'J-cluster-1',
-                'Name': 'cluster-1',
+                'Id': 'J-expected-cluster',
+                'Name': 'expected-cluster',
                 'Status': {
                     'State': 'STARTING',
                 },
-                'MasterPublicDnsName': 'test.cluster.com',
+                'MasterPublicDnsName': 'expected.cluster',
             }
         }
+
+    @staticmethod
+    def list_bootstrap_actions(ClusterId):
+        return {}
 
     def list_clusters(self):
         return self.cluster_list

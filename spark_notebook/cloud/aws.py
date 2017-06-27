@@ -253,6 +253,26 @@ class AWS:
         except Exception as e:
             raise AWSException("Unknown Error: %s" % e)
 
+    def list_bootstrap_actions(self, cluster_id):
+        try:
+            client = boto3.client('emr',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            raise AWSException("There was an error connecting to EMR: %s" % e)
+
+        try:
+            return client.list_bootstrap_actions(ClusterId=cluster_id)
+        except botocore.exceptions.ClientError as e:
+            if e.response["Error"]["Code"] == "AuthFailure":
+                raise AWSException("Invalid AWS access key id or aws secret access key")
+            else:
+                raise AWSException("There was an error describing the EMR cluster: %s" %
+                                   e.response["Error"]["Message"])
+        except Exception as e:
+            raise AWSException("Unknown Error: %s" % e)
+
     def terminate_cluster(self, cluster_id):
         try:
             client = boto3.client('emr',
