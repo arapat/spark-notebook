@@ -1,0 +1,10 @@
+credentials:
+  path: ./tests/test_files/test_credentials.yaml
+emr:
+  instance-type: r3.2xlarge
+  name: demo-cluster
+  region: us-east-1
+  spot-price: 1.0
+  worker-count: 1
+jupyter:
+  password: change-me-321

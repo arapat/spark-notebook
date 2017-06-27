@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+
+    {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
+
+<div class="row-fluid">
+    <div class="span12">
+        <h4>Set the AWS credential file location</h4>
+        <form action="{{ url_for('save_config_location') }}" method="post">
+            <p>The AWS credential file will contain sensitive account information about your course AWS accounts,
+                do <b>NOT</b> upload this file to any GitHub repository for the security of your accounts.</p>
+            <input name="path" class="form-control"
+                   placeholder="{{"Current path: " + cred_path}}"
+                   required>
+            <button type="submit" class="btn btn-primary btn-form">
+                Set path
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

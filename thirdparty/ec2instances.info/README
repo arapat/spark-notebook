@@ -1,6 +1,0 @@
-The specs of Amazon EC2 instances is parsed from [ec2instances.info](http://www.ec2instances.info/).
-
-Data source: https://raw.githubusercontent.com/powdahound/ec2instances.info/master/www/instances.json
-
-Last updated: 2016-06-29 22:31:26 UTC.
-

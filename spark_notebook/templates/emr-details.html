@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block body %}
+
+    {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
+
+    <div class="masthead">
+        <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
+    </div>
+
+<hr>
+
+<div class="row-fluid marketing">
+    <div class="span12">
+        <h3>
+            Account: <a href="/g/{{data['account']}}">{{data["account"]}}</a>
+            <br/>
+            Cluster: {{data["cluster_name"]}}
+            <br/>
+            Status: {{data["status"]}}
+        </h3>
+
+        <hr>
+
+        {% if data["status"] == "RUNNING" or data["status"] == "WAITING" %}
+
+            <p><b>Jupyter notebook:</b>
+                <a target="_blank" href="http://{{data['master_url']}}:8888">http://{{data['master_url']}}:8888</a>
+                (If cannot open, try refresh this page.)</p>
+            <p><b>Notebook Password:</b> {{data['password']}}</p>
+            <p><b>YARN ResourceManager:</b>
+                <a target="_blank" href="http://{{data['master_url']}}:8088">http://{{data['master_url']}}:8088</a></p>
+            <p><b>Spark HistoryServer:</b>
+                <a target="_blank" href="http://{{data['master_url']}}:18080">http://{{data['master_url']}}:18080</a></p>
+            <p><b>SSH access:</b>
+            <pre>{{data["aws_access"]}}</pre></p>
+
+            <hr>
+
+            <!-- Button trigger destroy modal -->
+            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#destroyModal">
+                Destroy this cluster
+            </button>
+
+        {% elif data["status"] == "STARTING" or data["status"] == "BOOTSTRAPPING" %}
+            <p>Launching. Please refresh again later.
+            <button class="btn btn-default" onclick="window.location.href=window.location.href;">
+                refresh
+            </button></p>
+
+            <hr>
+
+            <!-- Button trigger destroy modal -->
+            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#destroyModal">
+                Destroy this cluster
+            </button>
+
+        {% endif %}
+
+        <!-- Destroy modal -->
+        <div class="modal fade" id="destroyModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p><b>ALL DATA ON ALL NODES WILL BE LOST!!</b></p>
+                        <p>Are you sure you want to destroy the cluster {{data["cluster_name"]}}?</p>
+                    </div>
+
+                    <form class="form-destroy" action="/destroy/{{data['account']}}/{{data['cluster_id']}}" method="POST">
+                        <button type="submit" class="btn btn-danger">Destroy it</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
