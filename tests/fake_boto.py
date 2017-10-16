@@ -80,6 +80,9 @@ class FakeBotoClient(object):
                     'State': 'STARTING',
                 },
                 'MasterPublicDnsName': 'expected.cluster',
+                'Ec2InstanceAttributes': {
+                    'EmrManagedMasterSecurityGroup': 'sg-1234567a'
+                }
             }
         }
 
@@ -89,3 +92,30 @@ class FakeBotoClient(object):
 
     def list_clusters(self):
         return self.cluster_list
+
+    @staticmethod
+    def describe_security_groups(*args, **kwargs):
+        return {
+            "SecurityGroups": [
+                {
+                    "IpPermissions": [
+                        {
+                            "FromPort": 22,
+                            "ToPort": 22,
+                        },
+                        {
+                            "FromPort": 8088,
+                            "ToPort": 8088,
+                        },
+                        {
+                            "FromPort": 8888,
+                            "ToPort": 8888,
+                        },
+                    ]
+                }
+            ]
+        }
+
+    @staticmethod
+    def authorize_security_group_ingress(*args, **kwargs):
+        pass

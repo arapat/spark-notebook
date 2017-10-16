@@ -292,3 +292,49 @@ class AWS:
                                    e.response["Error"]["Message"])
         except Exception as e:
             raise AWSException("Unknown Error: %s" % e)
+
+    def get_security_group_port_open(self, security_group_id, port):
+        try:
+            client = boto3.client('ec2',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            raise AWSException("There was an error connecting to EC2: %s" % e)
+
+        try:
+            response = client.describe_security_groups(GroupIds=[security_group_id])
+
+            # Loop through all of the security group permissions and if the port
+            for ip_permission in response["SecurityGroups"][0]["IpPermissions"]:
+                if ip_permission["FromPort"] == port and ip_permission["ToPort"] == port:
+                    return True
+            return False
+        except botocore.exceptions.ClientError as e:
+            raise AWSException("There was an error describing the security group: %s" %
+                               e.response["Error"]["Message"])
+
+    def authorize_security_group_ingress(self, security_group_id, port, description):
+        try:
+            client = boto3.client('ec2',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            raise AWSException("There was an error connecting to EC2: %s" % e)
+
+        try:
+            client.authorize_security_group_ingress(
+                GroupId=security_group_id,
+                IpPermissions=[
+                    {'IpProtocol': 'tcp',
+                     'FromPort': port,
+                     'ToPort': port,
+                     'IpRanges': [{'CidrIp': '0.0.0.0/0',
+                                   'Description': description}]}
+                ]
+            )
+
+        except botocore.exceptions.ClientError as e:
+            raise AWSException("There was an error updating the security group: %s" %
+                               e.response["Error"]["Message"])
