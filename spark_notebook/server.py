@@ -261,6 +261,26 @@ def cluster_details(account, cluster_id):
     if "MasterPublicDnsName" in cluster_info:
         master_public_dns_name = cluster_info["MasterPublicDnsName"]
 
+    if "Ec2InstanceAttributes" in cluster_info:
+        if "EmrManagedMasterSecurityGroup" in cluster_info["Ec2InstanceAttributes"]:
+            master_security_group = cluster_info["Ec2InstanceAttributes"][
+                "EmrManagedMasterSecurityGroup"]
+            # Check and open SSH port
+            if not cloud_account.get_security_group_port_open(master_security_group, 22):
+                cloud_account.authorize_security_group_ingress(master_security_group, 22, "SSH")
+            # Check and open YARN ResourceManager port
+            if not cloud_account.get_security_group_port_open(master_security_group, 8088):
+                cloud_account.authorize_security_group_ingress(master_security_group, 8088,
+                                                               "YARN ResourceManager")
+            # Check and open Jupyter Notebook port
+            if not cloud_account.get_security_group_port_open(master_security_group, 8888):
+                cloud_account.authorize_security_group_ingress(master_security_group, 8888,
+                                                               "Jupyter Notebook")
+            # Check and open Spark HistoryServer port
+            if not cloud_account.get_security_group_port_open(master_security_group, 18080):
+                cloud_account.authorize_security_group_ingress(master_security_group, 18080,
+                                                               "Spark HistoryServer")
+
     # TODO: ssh key path (replace UPDATE)
     # TODO: Print EMR error message when status is TERMINATED_WITH_ERRORS
     data = {
