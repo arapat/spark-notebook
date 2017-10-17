@@ -106,9 +106,6 @@ class AWS:
 
         # Search EC2 for the VPC subnets
         try:
-            # TODO: Add search filter or limit access to subnets via IAM Policy
-            # subnet_filter = [{"Name": "vpc-id", "Values": [vpc_id]}]
-            # self.subnets = client.describe_subnets(Filters=subnet_filter)
             return client.describe_subnets()
         except botocore.exceptions.ClientError as e:
             raise AWSException("There was an error describing the VPC Subnets: %s" %
