@@ -1,3 +1,4 @@
+import re
 import botocore.exceptions
 
 
@@ -14,7 +15,7 @@ class FakeBotoClient(object):
 
     @staticmethod
     def get_caller_identity():
-        return {"Arn": "arn"}
+        return {"Arn": "arn", 'Account': '123456789012'}
 
     @staticmethod
     def create_key_pair(KeyName=""):
@@ -119,3 +120,12 @@ class FakeBotoClient(object):
     @staticmethod
     def authorize_security_group_ingress(*args, **kwargs):
         pass
+
+    @staticmethod
+    def head_bucket(*args, **kwargs):
+        if re.match("^[a-zA-Z0-9.\-_]{1,255}$", kwargs["Bucket"]):
+            return
+        else:
+            report = "Invalid bucket name \"%s\": Bucket name must match the regex " \
+                     "\"^[a-zA-Z0-9.\-_]{1,255}$\"" % kwargs["Bucket"]
+            raise botocore.exceptions.ParamValidationError(report=report)
