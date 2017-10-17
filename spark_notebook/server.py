@@ -136,6 +136,7 @@ def save_config_location():
 def cluster_list_create(account):
     error = None
     subnets = None
+    logs_bucket_name = None
     cluster_list = None
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
@@ -199,13 +200,23 @@ def cluster_list_create(account):
         except AWSException as e:
             error = e.msg
 
+    # Populate the cluster list
     try:
         cluster_list = cloud_account.list_clusters()
     except AWSException as e:
         error = e.msg
 
+    # Populate the subnets dropdownlist
     try:
         subnets = cloud_account.get_subnets()
+    except AWSException as e:
+        error = e.msg
+
+    # Check if the EMR logs bucket exists and is accessible to the user
+    try:
+        logs_bucket_name = "aws-logs-%s-%s" % (cloud_account.get_account_id(),
+                                               cloud_account.region_name)
+        cloud_account.head_s3_bucket(logs_bucket_name)
     except AWSException as e:
         error = e.msg
 
@@ -217,7 +228,8 @@ def cluster_list_create(account):
         'spot_price': "%.2f" % config.config['emr']['spot-price'],
         'instance_type': config.config['emr']['instance-type'],
         'password': config.config['jupyter']['password'],
-        'subnets': sorted(subnets["Subnets"], key=lambda k: k["AvailabilityZone"])
+        'subnets': sorted(subnets["Subnets"], key=lambda k: k["AvailabilityZone"]),
+        'logs_bucket_name': logs_bucket_name
     }
 
     return render_template('emr-list-create.html',

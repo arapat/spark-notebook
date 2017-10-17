@@ -113,11 +113,44 @@ class AWS:
         except botocore.exceptions.ParamValidationError as e:
             raise AWSException("There was an error describing the VPC Subnets: %s" % e)
 
+    def get_account_id(self):
+        try:
+            client = boto3.client('sts',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            raise AWSException("There was an error connecting to EC2: %s" % e)
+
+        try:
+            return client.get_caller_identity()["Account"]
+        except botocore.exceptions.ClientError as e:
+            raise AWSException("There was an error getting the Account ID: %s" %
+                               e.response["Error"]["Message"])
+
+    def head_s3_bucket(self, bucket_name):
+        try:
+            client = boto3.client('s3',
+                                  aws_access_key_id=self.access_key_id,
+                                  aws_secret_access_key=self.secret_access_key,
+                                  region_name=self.region_name)
+        except Exception as e:
+            raise AWSException("There was an error connecting to S3: %s" % e)
+
+        try:
+            client.head_bucket(Bucket=bucket_name)
+        except botocore.exceptions.ClientError as e:
+            raise AWSException("There was an error getting the S3 bucket information (%s): %s" %
+                               (bucket_name, e.response["Error"]["Message"]))
+
     def create_cluster(self, cluster_name, key_name, instance_type, worker_count, ec2_subnet_id,
                        instance_market, bid_price, tags, jupyter_password):
-        # TODO: Temp Vars
-        log_uri = "s3://aws-logs-846273844940-us-east-1/elasticmapreduce/"
+        # Latest known working version of EMR
         version = "emr-5.6.0"
+
+        # Create the log_uri from the AWS account id and region_name
+        log_uri = "s3://aws-logs-%s-%s/elasticmapreduce/" % \
+                  (self.get_account_id(), self.region_name)
 
         # Fail if an ec2_subnet_id is not specified
         if ec2_subnet_id is None:
