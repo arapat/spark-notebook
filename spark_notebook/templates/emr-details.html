@@ -31,14 +31,27 @@
             <p><b>Jupyter notebook:</b>
                 <a target="_blank" href="http://{{data['master_url']}}:8888">http://{{data['master_url']}}:8888</a>
                 (If cannot open, try refresh this page.)</p>
-            <p><b>Notebook Password:</b> {{data['password']}}</p>
-            <p><b>YARN ResourceManager:</b>
+            {% if data["password"] == "None" %}
+                <p><b>Notebook Password:</b> Unable to determine the password. Please contact the person who created
+                    the cluster.</p>
+            {% else %}
+                <p><b>Notebook Password:</b> {{data['password']}}</p>
+                <p style="text-indent: 50px;">If the password is incorrect then contact whoever created the cluster
+                    for the correct password.</p>
+            {% endif %}
+                <p><b>YARN ResourceManager:</b>
                 <a target="_blank" href="http://{{data['master_url']}}:8088">http://{{data['master_url']}}:8088</a></p>
             <p><b>Spark HistoryServer:</b>
                 <a target="_blank" href="http://{{data['master_url']}}:18080">http://{{data['master_url']}}:18080</a></p>
-            <p><b>SSH access:</b>
-            <pre>{{data["aws_access"]}}</pre></p>
-
+            {% if data["ssh_key"] == "None" %}
+                <p><b>SSH access:</b>
+                <pre>ssh -i <i>INSERT_PATH_TO_SSH_KEY</i> hadoop@{{data["master_public_dns_name"]}}</pre></p>
+            {% else %}
+                <p><b>SSH access:</b>
+                <pre>ssh -i {{data["ssh_key"]}} hadoop@{{data["master_public_dns_name"]}}</pre></p>
+                <p style="text-indent: 50px;">If you receive a <i>"Permission denied (publickey)"</i> error then contact
+                    whoever created the cluster for the correct SSH public key.</p>
+            {% endif %}
             <hr>
 
             <!-- Button trigger destroy modal -->

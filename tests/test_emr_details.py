@@ -95,7 +95,8 @@ class SparkNotebookTestCase(unittest.TestCase):
             # Test that the password is returned from bootstrap_actions
             assert '<p><b>Notebook Password:</b> running-password</p>' in rv.data.decode('utf-8')
             # Test that the SSH command correct
-            assert '<pre>ssh -i UPDATE hadoop@running.cluster</pre></p>' in rv.data.decode('utf-8')
+            assert '<pre>ssh -i ./tests/test_files/identity_file.pem hadoop@running.cluster' \
+                   '</pre></p>' in rv.data.decode('utf-8')
 
             #
             # Test a Terminated Cluster

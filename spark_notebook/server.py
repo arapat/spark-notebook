@@ -245,7 +245,8 @@ def cluster_details(account, cluster_id):
     bootstrap_actions = None
     state = None
     state_message = None
-    password = "UNKNOWN"
+    password = None
+    ssh_key = None
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
@@ -299,6 +300,11 @@ def cluster_details(account, cluster_id):
                 cloud_account.authorize_security_group_ingress(master_security_group, 18080,
                                                                "Spark HistoryServer")
 
+    if "ssh_key" in credentials.credentials[account]:
+        # Check if the file exists
+        if os.path.isfile(credentials.credentials[account]["ssh_key"]):
+            ssh_key = credentials.credentials[account]["ssh_key"]
+
     # TODO: ssh key path (replace UPDATE)
     data = {
         'account': account,
@@ -308,7 +314,8 @@ def cluster_details(account, cluster_id):
         'state': state,
         'state_message': state_message,
         'password': password,
-        'aws_access': ("ssh -i %s hadoop@%s" % ("UPDATE", master_public_dns_name))
+        'ssh_key': ssh_key,
+        'master_public_dns_name': master_public_dns_name
     }
 
     return render_template("emr-details.html", data=data, error=error)
