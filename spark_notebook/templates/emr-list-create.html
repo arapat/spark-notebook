@@ -14,11 +14,12 @@
         <h1>account: {{data["account_name"]}}</h1>
         <hr>
         <h2>Running Clusters</h2>
+        <input type="checkbox" id="show_terminated"/> Show Terminated Clusters<br/>
 
         {% if cluster_list %}
         <ul>
           {% for cluster in cluster_list["Clusters"] %}
-          <li>
+          <li class="{{cluster["Status"]["State"]}}">
             <a href="/g/{{data['account']}}/{{cluster["Id"]}}">
               {{cluster["Name"]}}
             </a> - {{cluster["Status"]["State"]}}
@@ -142,6 +143,8 @@ $(document).ready(function() {
     $('#use_spot').change(function() {
         $('#spot-price').toggle();
     });
+    $(".TERMINATED").hide();
+    $(".TERMINATED_WITH_ERRORS").hide();
 });
 $('a[data-toggle="tooltip"]').tooltip({
     animated: 'fade',
@@ -149,5 +152,15 @@ $('a[data-toggle="tooltip"]').tooltip({
     trigger: 'click',
     html: true,
 });
+$("#show_terminated").change(function () {
+    if($(this).is(":checked")) {
+        $(".TERMINATED").show();
+        $(".TERMINATED_WITH_ERRORS").show();
+    }
+    else {
+        $(".TERMINATED").hide();
+        $(".TERMINATED_WITH_ERRORS").hide();
+    }
+})
 </script>
 {% endblock %}

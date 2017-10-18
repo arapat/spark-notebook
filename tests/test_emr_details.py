@@ -49,7 +49,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             # Test the cluster information is correct
             assert 'Account: <a href="/g/test-4">test-4</a>' in rv.data.decode('utf-8')
             assert 'Cluster: starting-cluster' in rv.data.decode('utf-8')
-            assert 'Status: STARTING' in rv.data.decode('utf-8')
+            assert 'State: STARTING' in rv.data.decode('utf-8')
 
             # Test that the launching message is displayed
             assert '<p>Launching. Please refresh again later.' in rv.data.decode('utf-8')
@@ -87,7 +87,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             # Test the cluster information is correct
             assert 'Account: <a href="/g/test-4">test-4</a>' in rv.data.decode('utf-8')
             assert 'Cluster: running-cluster' in rv.data.decode('utf-8')
-            assert 'Status: RUNNING' in rv.data.decode('utf-8')
+            assert 'State: RUNNING' in rv.data.decode('utf-8')
 
             # Test that the MasterPublicDnsName is returned from cluster_details
             assert '<a target="_blank" href="http://running.cluster:8888">' \
@@ -122,7 +122,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             # Test the cluster information is correct
             assert 'Account: <a href="/g/test-4">test-4</a>' in rv.data.decode('utf-8')
             assert 'Cluster: terminated-cluster' in rv.data.decode('utf-8')
-            assert 'Status: TERMINATED' in rv.data.decode('utf-8')
+            assert 'State: TERMINATED' in rv.data.decode('utf-8')
 
 
 if __name__ == '__main__':
