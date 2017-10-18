@@ -305,7 +305,6 @@ def cluster_details(account, cluster_id):
         if os.path.isfile(credentials.credentials[account]["ssh_key"]):
             ssh_key = credentials.credentials[account]["ssh_key"]
 
-    # TODO: ssh key path (replace UPDATE)
     data = {
         'account': account,
         'cluster_name': cluster_info['Name'],
