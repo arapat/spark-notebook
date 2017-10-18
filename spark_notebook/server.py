@@ -300,7 +300,6 @@ def cluster_details(account, cluster_id):
                                                                "Spark HistoryServer")
 
     # TODO: ssh key path (replace UPDATE)
-    # TODO: Print EMR error message when status is TERMINATED_WITH_ERRORS
     data = {
         'account': account,
         'cluster_name': cluster_info['Name'],
