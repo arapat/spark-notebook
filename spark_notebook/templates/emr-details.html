@@ -13,15 +13,20 @@
     <div class="span12">
         <h3>
             Account: <a href="/g/{{data['account']}}">{{data["account"]}}</a>
-            <br/>
-            Cluster: {{data["cluster_name"]}}
-            <br/>
-            Status: {{data["status"]}}
         </h3>
+        <h3>
+            Cluster: {{data["cluster_name"]}}
+        </h3>
+        <h3>
+            State: {{data["state"]}}
+        </h3>
+        <p>
+            <b>State Message:</b> {{data["state_message"]}}
+        </p>
 
         <hr>
 
-        {% if data["status"] == "RUNNING" or data["status"] == "WAITING" %}
+        {% if data["state"] == "RUNNING" or data["state"] == "WAITING" %}
 
             <p><b>Jupyter notebook:</b>
                 <a target="_blank" href="http://{{data['master_url']}}:8888">http://{{data['master_url']}}:8888</a>
@@ -41,7 +46,7 @@
                 Destroy this cluster
             </button>
 
-        {% elif data["status"] == "STARTING" or data["status"] == "BOOTSTRAPPING" %}
+        {% elif data["state"] == "STARTING" or data["state"] == "BOOTSTRAPPING" %}
             <p>Launching. Please refresh again later.
             <button class="btn btn-default" onclick="window.location.href=window.location.href;">
                 refresh

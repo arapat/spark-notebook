@@ -244,6 +244,7 @@ def cluster_details(account, cluster_id):
     cluster_info = dict()
     bootstrap_actions = None
     state = None
+    state_message = None
     password = "UNKNOWN"
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
@@ -252,7 +253,12 @@ def cluster_details(account, cluster_id):
 
     try:
         cluster_info = cloud_account.describe_cluster(cluster_id)["Cluster"]
-        state = cluster_info['Status']['State']
+        if "Status" in cluster_info:
+            if "State" in cluster_info['Status']:
+                state = cluster_info['Status']['State']
+            if "StateChangeReason" in cluster_info['Status']:
+                if "Message" in cluster_info['Status']['StateChangeReason']:
+                    state_message = cluster_info['Status']['StateChangeReason']['Message']
     except AWSException as e:
         error = e.msg
 
@@ -300,7 +306,8 @@ def cluster_details(account, cluster_id):
         'cluster_name': cluster_info['Name'],
         'cluster_id': cluster_id,
         'master_url': master_public_dns_name,
-        'status': cluster_info['Status']['State'],
+        'state': state,
+        'state_message': state_message,
         'password': password,
         'aws_access': ("ssh -i %s hadoop@%s" % ("UPDATE", master_public_dns_name))
     }
