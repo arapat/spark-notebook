@@ -92,6 +92,7 @@ class SparkHelper:
         logger.info("Starting a new cluster: %s" % self.name)
 
         # Launch a Spark cluster
+        self.delete_default_security_group()
         prog_path = (subprocess.Popen("which flintrock", stdout=subprocess.PIPE, shell=True)
                                .communicate()[0].decode().strip())
         logger.info("Flintrock path: " + prog_path)
@@ -312,6 +313,21 @@ class SparkHelper:
         self.ssh = ["ssh"] + options
         self.scp = ["scp", "-r"] + options
         self.check_security_groups()
+
+    def delete_default_security_group(self):
+        '''
+        Add current IP address to the security group.
+        '''
+        security_group_name = "flintrock"
+
+        # Delete the default security group if it exists
+        found = False
+        for sg in self.conn.get_all_security_groups():
+            if sg.name == security_group_name:
+                found = True
+                break
+        if found:
+            sg.delete()
 
     def check_security_groups(self):
         '''

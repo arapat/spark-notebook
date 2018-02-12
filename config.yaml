@@ -17,6 +17,6 @@ providers:
     user: ec2-user
 services:
   hdfs:
-    version: 2.7.2
+    version: 2.7.4
   spark:
     version: 2.1.0

@@ -13,8 +13,8 @@ default_config = {
             "region": "us-east-1",
             "availability-zone": "us-east-1b",
             "instance-type": "r3.2xlarge",
-            "ami": "ami-6869aa05",
-            "user": "ec2-user",
+            "ami": "ami-d61201ac",
+            "user": "ubuntu",
             "spot-price": 1.0
         }
     },
