@@ -15,7 +15,7 @@ class SparkNotebookTestCase(unittest.TestCase):
         self.test_config_file = "./tests/test_files/test_config.yaml"
         self.expected = {"Name": "",
                          'LogUri': 's3://aws-logs-123456789012-us-east-1/elasticmapreduce/',
-                         'ReleaseLabel': 'emr-5.6.0',
+                         'ReleaseLabel': 'emr-5.11.1',
                          'VisibleToAllUsers': True,
                          'JobFlowRole': 'EMR_EC2_DefaultRole',
                          'ServiceRole': 'EMR_DefaultRole',
