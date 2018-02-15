@@ -31,6 +31,9 @@ print(passwd("$1"))'
 EOF
     )"
 
+    # Install yum packages
+    sudo yum install git -y
+
     # Write the jupyter_notebook_config
     echo "c = get_config()" > ~/.jupyter/jupyter_notebook_config.py
     echo "c.NotebookApp.ip = '*'" >> ~/.jupyter/jupyter_notebook_config.py
