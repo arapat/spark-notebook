@@ -32,6 +32,11 @@ class SparkNotebookTestCase(unittest.TestCase):
                                                        's3://mas-dse-emr/jupyter-provision-v0.4.sh',
                                                    'Args': ["password"]}
                                                },
+                                              {'Name': 'user-bootstrap-01',
+                                               'ScriptBootstrapAction': {
+                                                   'Path': 's3://test_bucket/test_script.sh',
+                                                   'Args': []}
+                                               }
                                               ],
                          'Steps': [],
                          'Tags': [{"Key": "cluster", "Value": "test-4@email"}]
@@ -82,7 +87,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   subnet_id="subnet-12345678",
                                   instance_type="r3.xlarge",
                                   use_spot="true",
-                                  spot_price="1.0"),
+                                  spot_price="1.0",
+                                  bootstrap_path="s3://test_bucket/test_script.sh"),
                         follow_redirects=True)
 
             # Make sure there were no errors
@@ -118,7 +124,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   password="password",
                                   worker_count="1",
                                   subnet_id="subnet-12345678",
-                                  instance_type="r3.xlarge"),
+                                  instance_type="r3.xlarge",
+                                  bootstrap_path="s3://test_bucket/test_script.sh"),
                         follow_redirects=True)
 
             # Make sure there were no errors

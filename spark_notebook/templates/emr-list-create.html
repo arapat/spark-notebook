@@ -137,6 +137,21 @@
                 <input class="form-control" name="spot_price"
                        placeholder="{{"Default: $" + data["spot_price"]}}">
             </div>
+            <input type="checkbox" id="show_advanced"/>
+            <label style="margin-top: 10px;">
+                Advanced Options
+            </label>
+            <div id="advanced-options" style="display: none">
+                <br/>
+                <label>Additional Bootstrap Script Path
+                    [<a data-toggle="tooltip" title="S3 path to bootstrap script to install additional software when the EMR cluster is created.
+                    The S3 bucket and script should be public or accessible to the AWS account's EMR roles. See <a target='_blank'
+                    href='https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-bootstrap.html'>AWS's documentation</a>
+                    for more information.">?</a>]
+                </label>
+                <input id="bootstrap_path" class="form-control" name="bootstrap_path"
+                       placeholder="s3://bucket_name/script.sh">
+            </div><br/>
             <label>EMR Logs S3 Bucket
                 [<a data-toggle="tooltip" title="S3 Bucket name where all of the EMR logs are stored. The S3 bucket can be accessed from the AWS
                 console.">?</a>]</label>
@@ -170,6 +185,14 @@ $("#show_terminated").change(function () {
     else {
         $(".TERMINATED").hide();
         $(".TERMINATED_WITH_ERRORS").hide();
+    }
+})
+$("#show_advanced").change(function () {
+    if($(this).is(":checked")) {
+        $("#advanced-options").css("display", "inline");
+    }
+    else {
+        $("#advanced-options").css("display", "none");
     }
 })
 </script>
