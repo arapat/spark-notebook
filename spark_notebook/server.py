@@ -152,6 +152,7 @@ def cluster_list_create(account):
         instance_type = None
         use_spot = None
         spot_price = None
+        bootstrap_path = None
 
         if "name" in request.form:
             if request.form["name"].encode('utf8').decode() != "":
@@ -186,6 +187,9 @@ def cluster_list_create(account):
                 spot_price = request.form["spot_price"].encode('utf8').decode()
             else:
                 spot_price = config.config['emr']['spot-price']
+        if "bootstrap_path" in request.form:
+            if request.form["bootstrap_path"].encode('utf8').decode() != "":
+                bootstrap_path = request.form["bootstrap_path"].encode('utf8').decode()
 
         tags = [{"Key": "cluster", "Value": credentials.credentials[account]["email_address"]}]
 
@@ -193,7 +197,8 @@ def cluster_list_create(account):
             cluster_id = cloud_account.create_cluster(name,
                                                       credentials.credentials[account]["key_name"],
                                                       instance_type, worker_count, subnet_id,
-                                                      use_spot, spot_price, tags, password)
+                                                      use_spot, spot_price, bootstrap_path, tags,
+                                                      password)
             flash("Cluster launched: %s" % name)
             return redirect(url_for('cluster_details', account=account,
                                     cluster_id=cluster_id))

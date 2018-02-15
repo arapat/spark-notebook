@@ -144,9 +144,9 @@ class AWS:
                                (bucket_name, e.response["Error"]["Message"]))
 
     def create_cluster(self, cluster_name, key_name, instance_type, worker_count, ec2_subnet_id,
-                       instance_market, bid_price, tags, jupyter_password):
+                       instance_market, bid_price, user_bootstrap_path, tags, jupyter_password):
         # Latest known working version of EMR
-        version = "emr-5.6.0"
+        version = "emr-5.11.1"
 
         # Create the log_uri from the AWS account id and region_name
         log_uri = "s3://aws-logs-%s-%s/elasticmapreduce/" % \
@@ -182,6 +182,32 @@ class AWS:
 
         instance_groups = [master_instance_group, core_instance_group]
 
+        # Describe the bootstrap actions
+        bootstrap_actions = []
+
+        # Default bootstrap action that is always used
+        juypter_bootstrap_action = {
+            'Name': 'jupyter-provision',
+            'ScriptBootstrapAction': {
+                'Path': 's3://mas-dse-emr/jupyter-provision-v0.4.sh',
+                'Args': [
+                    jupyter_password,
+                ]
+            }
+        }
+        bootstrap_actions.append(juypter_bootstrap_action)
+
+        # User provided bootstrap actions
+        if user_bootstrap_path is not None:
+            user_bootstrap_action = {
+                'Name': 'user-bootstrap-01',
+                'ScriptBootstrapAction': {
+                    'Path': user_bootstrap_path,
+                    'Args': []
+                }
+            }
+            bootstrap_actions.append(user_bootstrap_action)
+
         try:
             client = boto3.client('emr',
                                   aws_access_key_id=self.access_key_id,
@@ -216,17 +242,7 @@ class AWS:
                     'InstanceGroups': instance_groups,
                 },
                 Steps=[],
-                BootstrapActions=[
-                    {
-                        'Name': 'jupyter-provision',
-                        'ScriptBootstrapAction': {
-                            'Path': 's3://mas-dse-emr/jupyter-provision.sh',
-                            'Args': [
-                                jupyter_password,
-                            ]
-                        }
-                    },
-                ],
+                BootstrapActions=bootstrap_actions,
                 Tags=tags
             )
 

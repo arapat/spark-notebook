@@ -15,7 +15,7 @@ class SparkNotebookTestCase(unittest.TestCase):
         self.test_config_file = "./tests/test_files/test_config.yaml"
         self.expected = {"Name": "",
                          'LogUri': 's3://aws-logs-123456789012-us-east-1/elasticmapreduce/',
-                         'ReleaseLabel': 'emr-5.6.0',
+                         'ReleaseLabel': 'emr-5.11.1',
                          'VisibleToAllUsers': True,
                          'JobFlowRole': 'EMR_EC2_DefaultRole',
                          'ServiceRole': 'EMR_DefaultRole',
@@ -28,9 +28,15 @@ class SparkNotebookTestCase(unittest.TestCase):
                                        },
                          'BootstrapActions': [{'Name': 'jupyter-provision',
                                                'ScriptBootstrapAction': {
-                                                   'Path': 's3://mas-dse-emr/jupyter-provision.sh',
+                                                   'Path':
+                                                       's3://mas-dse-emr/jupyter-provision-v0.4.sh',
                                                    'Args': ["password"]}
                                                },
+                                              {'Name': 'user-bootstrap-01',
+                                               'ScriptBootstrapAction': {
+                                                   'Path': 's3://test_bucket/test_script.sh',
+                                                   'Args': []}
+                                               }
                                               ],
                          'Steps': [],
                          'Tags': [{"Key": "cluster", "Value": "test-4@email"}]
@@ -81,7 +87,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   subnet_id="subnet-12345678",
                                   instance_type="r3.xlarge",
                                   use_spot="true",
-                                  spot_price="1.0"),
+                                  spot_price="1.0",
+                                  bootstrap_path="s3://test_bucket/test_script.sh"),
                         follow_redirects=True)
 
             # Make sure there were no errors
@@ -117,7 +124,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   password="password",
                                   worker_count="1",
                                   subnet_id="subnet-12345678",
-                                  instance_type="r3.xlarge"),
+                                  instance_type="r3.xlarge",
+                                  bootstrap_path="s3://test_bucket/test_script.sh"),
                         follow_redirects=True)
 
             # Make sure there were no errors

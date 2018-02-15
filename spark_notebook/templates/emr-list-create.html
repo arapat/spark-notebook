@@ -98,12 +98,22 @@
                     <option value="d2.4xlarge" {% if data["instance_type"] == "d2.4xlarge" %}selected{% endif %}>d2.4xlarge</option>
                     <option value="d2.8xlarge" {% if data["instance_type"] == "d2.8xlarge" %}selected{% endif %}>d2.8xlarge</option>
                     <option value="hs1.8xlarge" {% if data["instance_type"] == "hs1.8xlarge" %}selected{% endif %}>hs1.8xlarge</option>
-                    <option value="i2.xlarge" {% if data["instance_type"] == "i2.xlarge" %}selected{% endif %}>i2.xlarge</option>
-                    <option value="i2.2xlarge" {% if data["instance_type"] == "i2.2xlarge" %}selected{% endif %}>i2.2xlarge</option>
-                    <option value="i2.4xlarge" {% if data["instance_type"] == "i2.4xlarge" %}selected{% endif %}>i2.4xlarge</option>
-                    <option value="i2.8xlarge" {% if data["instance_type"] == "i2.8xlarge" %}selected{% endif %}>i2.8xlarge</option>
+                    <option value="i3.xlarge" {% if data["instance_type"] == "i3.xlarge" %}selected{% endif %}>i3.xlarge</option>
+                    <option value="i3.2xlarge" {% if data["instance_type"] == "i3.2xlarge" %}selected{% endif %}>i3.2xlarge</option>
+                    <option value="i3.4xlarge" {% if data["instance_type"] == "i3.4xlarge" %}selected{% endif %}>i3.4xlarge</option>
+                    <option value="i3.8xlarge" {% if data["instance_type"] == "i3.8xlarge" %}selected{% endif %}>i3.8xlarge</option>
+                    <option value="i3.16xlarge" {% if data["instance_type"] == "i3.16xlarge" %}selected{% endif %}>i3.16xlarge</option>
                 </optgroup>
                 <optgroup label="GPU Instances">
+                    <option value="p2.xlarge" {% if data["instance_type"] == "p2.xlarge" %}selected{% endif %}>p2.xlarge</option>
+                    <option value="p2.8xlarge" {% if data["instance_type"] == "p2.8xlarge" %}selected{% endif %}>p2.8xlarge</option>
+                    <option value="p2.16xlarge" {% if data["instance_type"] == "p2.16xlarge" %}selected{% endif %}>p2.16xlarge</option>
+                    <option value="p3.2xlarge" {% if data["instance_type"] == "p3.2xlarge" %}selected{% endif %}>p3.2xlarge</option>
+                    <option value="p3.8xlarge" {% if data["instance_type"] == "p3.8xlarge" %}selected{% endif %}>p3.8xlarge</option>
+                    <option value="p3.16xlarge" {% if data["instance_type"] == "p3.16xlarge" %}selected{% endif %}>p3.16xlarge</option>
+                </optgroup>
+                <optgroup label="GPU Instances (Previous Generation)">
+                    <option value="cg1.4xlarge" {% if data["instance_type"] == "cg1.4xlarge" %}selected{% endif %}>cg1.4xlarge</option>
                     <option value="g2.2xlarge" {% if data["instance_type"] == "g2.2xlarge" %}selected{% endif %}>g2.2xlarge</option>
                 </optgroup>
             </select>
@@ -127,6 +137,21 @@
                 <input class="form-control" name="spot_price"
                        placeholder="{{"Default: $" + data["spot_price"]}}">
             </div>
+            <input type="checkbox" id="show_advanced"/>
+            <label style="margin-top: 10px;">
+                Advanced Options
+            </label>
+            <div id="advanced-options" style="display: none">
+                <br/>
+                <label>Additional Bootstrap Script Path
+                    [<a data-toggle="tooltip" title="S3 path to bootstrap script to install additional software when the EMR cluster is created.
+                    The S3 bucket and script should be public or accessible to the AWS account's EMR roles. See <a target='_blank'
+                    href='https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-bootstrap.html'>AWS's documentation</a>
+                    for more information.">?</a>]
+                </label>
+                <input id="bootstrap_path" class="form-control" name="bootstrap_path"
+                       placeholder="s3://bucket_name/script.sh">
+            </div><br/>
             <label>EMR Logs S3 Bucket
                 [<a data-toggle="tooltip" title="S3 Bucket name where all of the EMR logs are stored. The S3 bucket can be accessed from the AWS
                 console.">?</a>]</label>
@@ -160,6 +185,14 @@ $("#show_terminated").change(function () {
     else {
         $(".TERMINATED").hide();
         $(".TERMINATED_WITH_ERRORS").hide();
+    }
+})
+$("#show_advanced").change(function () {
+    if($(this).is(":checked")) {
+        $("#advanced-options").css("display", "inline");
+    }
+    else {
+        $("#advanced-options").css("display", "none");
     }
 })
 </script>
