@@ -98,12 +98,22 @@
                     <option value="d2.4xlarge" {% if data["instance_type"] == "d2.4xlarge" %}selected{% endif %}>d2.4xlarge</option>
                     <option value="d2.8xlarge" {% if data["instance_type"] == "d2.8xlarge" %}selected{% endif %}>d2.8xlarge</option>
                     <option value="hs1.8xlarge" {% if data["instance_type"] == "hs1.8xlarge" %}selected{% endif %}>hs1.8xlarge</option>
-                    <option value="i2.xlarge" {% if data["instance_type"] == "i2.xlarge" %}selected{% endif %}>i2.xlarge</option>
-                    <option value="i2.2xlarge" {% if data["instance_type"] == "i2.2xlarge" %}selected{% endif %}>i2.2xlarge</option>
-                    <option value="i2.4xlarge" {% if data["instance_type"] == "i2.4xlarge" %}selected{% endif %}>i2.4xlarge</option>
-                    <option value="i2.8xlarge" {% if data["instance_type"] == "i2.8xlarge" %}selected{% endif %}>i2.8xlarge</option>
+                    <option value="i3.xlarge" {% if data["instance_type"] == "i3.xlarge" %}selected{% endif %}>i3.xlarge</option>
+                    <option value="i3.2xlarge" {% if data["instance_type"] == "i3.2xlarge" %}selected{% endif %}>i3.2xlarge</option>
+                    <option value="i3.4xlarge" {% if data["instance_type"] == "i3.4xlarge" %}selected{% endif %}>i3.4xlarge</option>
+                    <option value="i3.8xlarge" {% if data["instance_type"] == "i3.8xlarge" %}selected{% endif %}>i3.8xlarge</option>
+                    <option value="i3.16xlarge" {% if data["instance_type"] == "i3.16xlarge" %}selected{% endif %}>i3.16xlarge</option>
                 </optgroup>
                 <optgroup label="GPU Instances">
+                    <option value="p2.xlarge" {% if data["instance_type"] == "p2.xlarge" %}selected{% endif %}>p2.xlarge</option>
+                    <option value="p2.8xlarge" {% if data["instance_type"] == "p2.8xlarge" %}selected{% endif %}>p2.8xlarge</option>
+                    <option value="p2.16xlarge" {% if data["instance_type"] == "p2.16xlarge" %}selected{% endif %}>p2.16xlarge</option>
+                    <option value="p3.2xlarge" {% if data["instance_type"] == "p3.2xlarge" %}selected{% endif %}>p3.2xlarge</option>
+                    <option value="p3.8xlarge" {% if data["instance_type"] == "p3.8xlarge" %}selected{% endif %}>p3.8xlarge</option>
+                    <option value="p3.16xlarge" {% if data["instance_type"] == "p3.16xlarge" %}selected{% endif %}>p3.16xlarge</option>
+                </optgroup>
+                <optgroup label="GPU Instances (Previous Generation)">
+                    <option value="cg1.4xlarge" {% if data["instance_type"] == "cg1.4xlarge" %}selected{% endif %}>cg1.4xlarge</option>
                     <option value="g2.2xlarge" {% if data["instance_type"] == "g2.2xlarge" %}selected{% endif %}>g2.2xlarge</option>
                 </optgroup>
             </select>
