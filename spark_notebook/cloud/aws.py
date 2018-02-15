@@ -146,7 +146,7 @@ class AWS:
     def create_cluster(self, cluster_name, key_name, instance_type, worker_count, ec2_subnet_id,
                        instance_market, bid_price, tags, jupyter_password):
         # Latest known working version of EMR
-        version = "emr-5.6.0"
+        version = "emr-5.11.1"
 
         # Create the log_uri from the AWS account id and region_name
         log_uri = "s3://aws-logs-%s-%s/elasticmapreduce/" % \
