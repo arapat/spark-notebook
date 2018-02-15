@@ -28,7 +28,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                                        },
                          'BootstrapActions': [{'Name': 'jupyter-provision',
                                                'ScriptBootstrapAction': {
-                                                   'Path': 's3://mas-dse-emr/jupyter-provision.sh',
+                                                   'Path':
+                                                       's3://mas-dse-emr/jupyter-provision-v0.4.sh',
                                                    'Args': ["password"]}
                                                },
                                               ],
