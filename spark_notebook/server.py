@@ -136,7 +136,6 @@ def save_config_location():
 def cluster_list_create(account):
     error = None
     subnets = None
-    logs_bucket_name = None
     cluster_list = None
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
@@ -217,14 +216,6 @@ def cluster_list_create(account):
     except AWSException as e:
         error = e.msg
 
-    # Check if the EMR logs bucket exists and is accessible to the user
-    try:
-        logs_bucket_name = "aws-logs-%s-%s" % (cloud_account.get_account_id(),
-                                               cloud_account.region_name)
-        cloud_account.head_s3_bucket(logs_bucket_name)
-    except AWSException as e:
-        error = e.msg
-
     data = {
         'account': account,
         'account_name': account,
@@ -234,7 +225,6 @@ def cluster_list_create(account):
         'instance_type': config.config['emr']['instance-type'],
         'password': config.config['jupyter']['password'],
         'subnets': sorted(subnets["Subnets"], key=lambda k: k["AvailabilityZone"]),
-        'logs_bucket_name': logs_bucket_name
     }
 
     return render_template('emr-list-create.html',
@@ -252,6 +242,7 @@ def cluster_details(account, cluster_id):
     state_message = None
     password = None
     ssh_key = None
+    logs_bucket_name = None
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
@@ -265,6 +256,14 @@ def cluster_details(account, cluster_id):
             if "StateChangeReason" in cluster_info['Status']:
                 if "Message" in cluster_info['Status']['StateChangeReason']:
                     state_message = cluster_info['Status']['StateChangeReason']['Message']
+    except AWSException as e:
+        error = e.msg
+
+    # Check if the EMR logs bucket exists and is accessible to the user
+    try:
+        logs_bucket_name = "aws-logs-%s-%s" % (cloud_account.get_account_id(),
+                                               cloud_account.region_name)
+        cloud_account.head_s3_bucket(logs_bucket_name)
     except AWSException as e:
         error = e.msg
 
@@ -319,7 +318,8 @@ def cluster_details(account, cluster_id):
         'state_message': state_message,
         'password': password,
         'ssh_key': ssh_key,
-        'master_public_dns_name': master_public_dns_name
+        'master_public_dns_name': master_public_dns_name,
+        'logs_bucket_name': logs_bucket_name
     }
 
     return render_template("emr-details.html", data=data, error=error)
