@@ -152,6 +152,7 @@ def cluster_list_create(account):
         use_spot = None
         spot_price = None
         bootstrap_path = None
+        pyspark_python_version = None
 
         if "name" in request.form:
             if request.form["name"].encode('utf8').decode() != "":
@@ -189,6 +190,10 @@ def cluster_list_create(account):
         if "bootstrap_path" in request.form:
             if request.form["bootstrap_path"].encode('utf8').decode() != "":
                 bootstrap_path = request.form["bootstrap_path"].encode('utf8').decode()
+        if "pyspark_python_version" in request.form:
+            if request.form["pyspark_python_version"].encode('utf8').decode() != "":
+                pyspark_python_version = request.form["pyspark_python_version"].encode('utf8')\
+                    .decode()
 
         tags = [{"Key": "cluster", "Value": credentials.credentials[account]["email_address"]}]
 
@@ -196,7 +201,8 @@ def cluster_list_create(account):
             cluster_id = cloud_account.create_cluster(name,
                                                       credentials.credentials[account]["key_name"],
                                                       instance_type, worker_count, subnet_id,
-                                                      use_spot, spot_price, bootstrap_path, tags,
+                                                      use_spot, spot_price, bootstrap_path,
+                                                      pyspark_python_version, tags,
                                                       password)
             flash("Cluster launched: %s" % name)
             return redirect(url_for('cluster_details', account=account,
