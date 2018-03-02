@@ -144,7 +144,8 @@ class AWS:
                                (bucket_name, e.response["Error"]["Message"]))
 
     def create_cluster(self, cluster_name, key_name, instance_type, worker_count, ec2_subnet_id,
-                       instance_market, bid_price, user_bootstrap_path, tags, jupyter_password):
+                       instance_market, bid_price, user_bootstrap_path, pyspark_python_version,
+                       tags, jupyter_password):
         # Latest known working version of EMR
         version = "emr-5.11.1"
 
@@ -179,6 +180,24 @@ class AWS:
         if instance_market:
             master_instance_group["BidPrice"] = str(bid_price)
             core_instance_group["BidPrice"] = str(bid_price)
+
+        if pyspark_python_version == "3":
+            pyspark_python_3 = [
+                {
+                    "Classification": "spark-env",
+                    "Configurations": [
+                        {
+                            "Classification": "export",
+                            "Properties": {
+                                "PYSPARK_PYTHON": "/usr/bin/python3"
+                            }
+                        }
+                    ]
+                }
+            ]
+
+            master_instance_group["Configurations"] = pyspark_python_3
+            core_instance_group["Configurations"] = pyspark_python_3
 
         instance_groups = [master_instance_group, core_instance_group]
 

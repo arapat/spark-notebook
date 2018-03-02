@@ -136,7 +136,6 @@ def save_config_location():
 def cluster_list_create(account):
     error = None
     subnets = None
-    logs_bucket_name = None
     cluster_list = None
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
@@ -153,6 +152,7 @@ def cluster_list_create(account):
         use_spot = None
         spot_price = None
         bootstrap_path = None
+        pyspark_python_version = None
 
         if "name" in request.form:
             if request.form["name"].encode('utf8').decode() != "":
@@ -190,6 +190,10 @@ def cluster_list_create(account):
         if "bootstrap_path" in request.form:
             if request.form["bootstrap_path"].encode('utf8').decode() != "":
                 bootstrap_path = request.form["bootstrap_path"].encode('utf8').decode()
+        if "pyspark_python_version" in request.form:
+            if request.form["pyspark_python_version"].encode('utf8').decode() != "":
+                pyspark_python_version = request.form["pyspark_python_version"].encode('utf8')\
+                    .decode()
 
         tags = [{"Key": "cluster", "Value": credentials.credentials[account]["email_address"]}]
 
@@ -197,7 +201,8 @@ def cluster_list_create(account):
             cluster_id = cloud_account.create_cluster(name,
                                                       credentials.credentials[account]["key_name"],
                                                       instance_type, worker_count, subnet_id,
-                                                      use_spot, spot_price, bootstrap_path, tags,
+                                                      use_spot, spot_price, bootstrap_path,
+                                                      pyspark_python_version, tags,
                                                       password)
             flash("Cluster launched: %s" % name)
             return redirect(url_for('cluster_details', account=account,
@@ -217,14 +222,6 @@ def cluster_list_create(account):
     except AWSException as e:
         error = e.msg
 
-    # Check if the EMR logs bucket exists and is accessible to the user
-    try:
-        logs_bucket_name = "aws-logs-%s-%s" % (cloud_account.get_account_id(),
-                                               cloud_account.region_name)
-        cloud_account.head_s3_bucket(logs_bucket_name)
-    except AWSException as e:
-        error = e.msg
-
     data = {
         'account': account,
         'account_name': account,
@@ -234,7 +231,6 @@ def cluster_list_create(account):
         'instance_type': config.config['emr']['instance-type'],
         'password': config.config['jupyter']['password'],
         'subnets': sorted(subnets["Subnets"], key=lambda k: k["AvailabilityZone"]),
-        'logs_bucket_name': logs_bucket_name
     }
 
     return render_template('emr-list-create.html',
@@ -252,6 +248,7 @@ def cluster_details(account, cluster_id):
     state_message = None
     password = None
     ssh_key = None
+    logs_bucket_name = None
 
     cloud_account = AWS(credentials.credentials[account]["access_key_id"],
                         credentials.credentials[account]["secret_access_key"],
@@ -265,6 +262,14 @@ def cluster_details(account, cluster_id):
             if "StateChangeReason" in cluster_info['Status']:
                 if "Message" in cluster_info['Status']['StateChangeReason']:
                     state_message = cluster_info['Status']['StateChangeReason']['Message']
+    except AWSException as e:
+        error = e.msg
+
+    # Check if the EMR logs bucket exists and is accessible to the user
+    try:
+        logs_bucket_name = "aws-logs-%s-%s" % (cloud_account.get_account_id(),
+                                               cloud_account.region_name)
+        cloud_account.head_s3_bucket(logs_bucket_name)
     except AWSException as e:
         error = e.msg
 
@@ -319,7 +324,8 @@ def cluster_details(account, cluster_id):
         'state_message': state_message,
         'password': password,
         'ssh_key': ssh_key,
-        'master_public_dns_name': master_public_dns_name
+        'master_public_dns_name': master_public_dns_name,
+        'logs_bucket_name': logs_bucket_name
     }
 
     return render_template("emr-details.html", data=data, error=error)

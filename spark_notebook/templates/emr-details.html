@@ -23,7 +23,9 @@
         <p>
             <b>State Message:</b> {{data["state_message"]}}
         </p>
-
+        <p>
+            <b>EMR Logs S3 Bucket:</b> s3://{{data["logs_bucket_name"]}}/elasticmapreduce/{{data["cluster_id"]}}/node
+        </p>
         <hr>
 
         {% if data["state"] == "RUNNING" or data["state"] == "WAITING" %}

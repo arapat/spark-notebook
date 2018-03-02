@@ -41,6 +41,18 @@ class SparkNotebookTestCase(unittest.TestCase):
                          'Steps': [],
                          'Tags': [{"Key": "cluster", "Value": "test-4@email"}]
                          }
+        self.pyspark_python_3 = [
+            {
+                "Classification": "spark-env",
+                "Configurations": [
+                    {
+                        "Classification": "export",
+                        "Properties": {
+                            "PYSPARK_PYTHON": "/usr/bin/python3"
+                        }
+                    }
+                ]
+            }]
 
     def tearDown(self):
         pass
@@ -60,7 +72,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             assert '<p>No clusters are running.</p>' in rv.data.decode('utf-8')
 
             #
-            # Test launching a spot cluster
+            # Test launching a spot cluster with pyspark python 3
             #
             expected = dict(self.expected).copy()
 
@@ -70,13 +82,15 @@ class SparkNotebookTestCase(unittest.TestCase):
                                                         'InstanceRole': 'MASTER',
                                                         'BidPrice': '1.0',
                                                         'InstanceType': u'r3.xlarge',
-                                                        'Market': 'SPOT'},
+                                                        'Market': 'SPOT',
+                                                        'Configurations': self.pyspark_python_3},
                                                        {'InstanceCount': 1,
                                                         'Name': 'Core nodes',
                                                         'InstanceRole': 'CORE',
                                                         'BidPrice': '1.0',
                                                         'InstanceType': u'r3.xlarge',
-                                                        'Market': 'SPOT'}]
+                                                        'Market': 'SPOT',
+                                                        'Configurations': self.pyspark_python_3}]
 
             mock_run_job_flow_expected.return_value = expected
 
@@ -88,7 +102,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   instance_type="r3.xlarge",
                                   use_spot="true",
                                   spot_price="1.0",
-                                  bootstrap_path="s3://test_bucket/test_script.sh"),
+                                  bootstrap_path="s3://test_bucket/test_script.sh",
+                                  pyspark_python_version="3"),
                         follow_redirects=True)
 
             # Make sure there were no errors
@@ -101,7 +116,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             assert 'Cluster: cluster-1'
 
             #
-            # Test launching an on-demand cluster
+            # Test launching an on-demand cluster with pyspark python 2
             #
             expected = dict(self.expected).copy()
 
@@ -125,7 +140,9 @@ class SparkNotebookTestCase(unittest.TestCase):
                                   worker_count="1",
                                   subnet_id="subnet-12345678",
                                   instance_type="r3.xlarge",
-                                  bootstrap_path="s3://test_bucket/test_script.sh"),
+                                  bootstrap_path="s3://test_bucket/test_script.sh",
+                                  pyspark_python_version="2"
+                                  ),
                         follow_redirects=True)
 
             # Make sure there were no errors
