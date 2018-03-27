@@ -189,7 +189,8 @@ class AWS:
                         {
                             "Classification": "export",
                             "Properties": {
-                                "PYSPARK_PYTHON": "/usr/bin/python3"
+                                "PYSPARK_PYTHON": "/usr/bin/python3",
+                                "PYSPARK_DRIVER_PYTHON": "/usr/bin/python3"
                             }
                         }
                     ]
