@@ -147,7 +147,7 @@ class AWS:
                        instance_market, bid_price, user_bootstrap_path, pyspark_python_version,
                        tags, jupyter_password):
         # Latest known working version of EMR
-        version = "emr-5.11.1"
+        version = "emr-5.12.0"
 
         # Create the log_uri from the AWS account id and region_name
         log_uri = "s3://aws-logs-%s-%s/elasticmapreduce/" % \
