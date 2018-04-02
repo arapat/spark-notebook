@@ -194,9 +194,15 @@ class AWS:
                             }
                         }
                     ]
+                },
+                {
+                    "Classification": "spark-defaults",
+                    "Properties": {
+                        "spark.yarn.appMasterEnv.PYSPARK_PYTHON": "/usr/bin/python3",
+                        "spark.executorEnv.PYSPARK_PYTHON": "/usr/bin/python3"
+                    }
                 }
             ]
-
             master_instance_group["Configurations"] = pyspark_python_3
             core_instance_group["Configurations"] = pyspark_python_3
 
@@ -209,7 +215,7 @@ class AWS:
         juypter_bootstrap_action = {
             'Name': 'jupyter-provision',
             'ScriptBootstrapAction': {
-                'Path': 's3://mas-dse-emr/jupyter-provision-v0.4.sh',
+                'Path': 's3://mas-dse-open/emr/jupyter-provision-v0.4.1.sh',
                 'Args': [
                     jupyter_password,
                 ]
