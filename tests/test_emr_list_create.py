@@ -29,7 +29,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                          'BootstrapActions': [{'Name': 'jupyter-provision',
                                                'ScriptBootstrapAction': {
                                                    'Path':
-                                                       's3://mas-dse-emr/jupyter-provision-v0.4.sh',
+                                                       's3://mas-dse-emr/'
+                                                       'jupyter-provision-v0.4.3.sh',
                                                    'Args': ["password"]}
                                                },
                                               {'Name': 'user-bootstrap-01',
@@ -53,7 +54,6 @@ class SparkNotebookTestCase(unittest.TestCase):
                         }
                     }
                 ]
-            }]
             },
             {
                 "Classification": "spark-defaults",
