@@ -54,6 +54,15 @@ class SparkNotebookTestCase(unittest.TestCase):
                     }
                 ]
             }]
+            },
+            {
+                "Classification": "spark-defaults",
+                "Properties": {
+                    "spark.yarn.appMasterEnv.PYSPARK_PYTHON": "/usr/bin/python3",
+                    "spark.executorEnv.PYSPARK_PYTHON": "/usr/bin/python3"
+                }
+            }
+        ]
 
     def tearDown(self):
         pass
