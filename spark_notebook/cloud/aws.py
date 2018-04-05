@@ -218,6 +218,7 @@ class AWS:
                 'Path': 's3://mas-dse-emr/jupyter-provision-v0.4.3.sh',
                 'Args': [
                     jupyter_password,
+                    pyspark_python_version,
                 ]
             }
         }
