@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import copy
 import unittest
 from flask import url_for
 from mock import patch
@@ -29,7 +30,8 @@ class SparkNotebookTestCase(unittest.TestCase):
                          'BootstrapActions': [{'Name': 'jupyter-provision',
                                                'ScriptBootstrapAction': {
                                                    'Path':
-                                                       's3://mas-dse-emr/jupyter-provision-v0.4.sh',
+                                                       's3://mas-dse-emr/'
+                                                       'jupyter-provision-v0.4.3.sh',
                                                    'Args': ["password"]}
                                                },
                                               {'Name': 'user-bootstrap-01',
@@ -53,7 +55,15 @@ class SparkNotebookTestCase(unittest.TestCase):
                         }
                     }
                 ]
-            }]
+            },
+            {
+                "Classification": "spark-defaults",
+                "Properties": {
+                    "spark.yarn.appMasterEnv.PYSPARK_PYTHON": "/usr/bin/python3",
+                    "spark.executorEnv.PYSPARK_PYTHON": "/usr/bin/python3"
+                }
+            }
+        ]
 
     def tearDown(self):
         pass
@@ -75,7 +85,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             #
             # Test launching a spot cluster with pyspark python 3
             #
-            expected = dict(self.expected).copy()
+            expected = copy.deepcopy(self.expected)
 
             expected["Name"] = u"cluster-1"
             expected["Instances"]["InstanceGroups"] = [{'InstanceCount': 1,
@@ -92,6 +102,9 @@ class SparkNotebookTestCase(unittest.TestCase):
                                                         'InstanceType': u'r3.xlarge',
                                                         'Market': 'SPOT',
                                                         'Configurations': self.pyspark_python_3}]
+
+            # Append bootstrap arg to specify Python 3
+            expected["BootstrapActions"][0]["ScriptBootstrapAction"]["Args"].append("3")
 
             mock_run_job_flow_expected.return_value = expected
 
@@ -119,7 +132,7 @@ class SparkNotebookTestCase(unittest.TestCase):
             #
             # Test launching an on-demand cluster with pyspark python 2
             #
-            expected = dict(self.expected).copy()
+            expected = copy.deepcopy(self.expected)
 
             expected["Name"] = u"cluster-2"
             expected["Instances"]["InstanceGroups"] = [{'InstanceCount': 1,
@@ -132,6 +145,9 @@ class SparkNotebookTestCase(unittest.TestCase):
                                                         'InstanceRole': 'CORE',
                                                         'InstanceType': u'r3.xlarge',
                                                         'Market': 'ON_DEMAND'}]
+
+            # Append bootstrap arg to specify Python 2
+            expected["BootstrapActions"][0]["ScriptBootstrapAction"]["Args"].append("2")
 
             mock_run_job_flow_expected.return_value = expected
 
