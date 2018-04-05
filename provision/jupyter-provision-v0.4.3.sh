@@ -2,10 +2,14 @@
 
 # AWS EMR bootstrap script for installing Jupyter notebooks using Anaconda
 # 2018-02-15 - Tested with EMR 5.11.1
-# 2018-04-02 - Julaiti added Python3.4
+# 2018-03-27 - Tested with EMR 5.12
+# 2018-04-02 - Julaiti added Python 3.4
 
 ANACONDA_VERSION="5.0.1"
 ANACONDA_PYTHON_VERSION="3"
+
+PASSWORD=$1
+PYTHON_VERSION=$2
 
 # check for master node
 if grep isMaster /mnt/var/lib/info/instance.json | grep true;
@@ -17,8 +21,13 @@ then
     echo 'export PATH="/mnt/anaconda/bin:$PATH"' >> /home/hadoop/.bashrc
     echo 'export SPARK_HOME=/usr/lib/spark' >> /home/hadoop/.bashrc
     echo 'export PYTHONPATH=$SPARK_HOME/python/:$SPARK_HOME/python/lib/py4j-src.zip:$PYTHONPATH' >> /home/hadoop/.bashrc
-    echo 'export PYSPARK_PYTHON=/usr/bin/python3' >> /home/hadoop/.bashrc
-    echo 'export PYSPARK_DRIVER_PYTHON=/usr/bin/python3' >> /home/hadoop/.bashrc
+
+    if [ ${PYTHON_VERSION} = "3" ];
+    then
+        echo 'export PYSPARK_PYTHON=/usr/bin/python3' >> /home/hadoop/.bashrc
+        echo 'export PYSPARK_DRIVER_PYTHON=/usr/bin/python3' >> /home/hadoop/.bashrc
+    fi
+
     source /home/hadoop/.bashrc
     python --version
 
@@ -30,7 +39,7 @@ then
     # Generate the Jupyter notebook password
     NOTEBOOK_PASSWORD="$( bash <<EOF
 python -c 'from notebook.auth import passwd
-print(passwd("$1"))'
+print(passwd("$PASSWORD"))'
 EOF
     )"
 
