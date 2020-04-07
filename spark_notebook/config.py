@@ -13,7 +13,8 @@ default_config = {
         "worker-count": 1,
         "region": "us-east-1",
         "instance-type": "r4.2xlarge",
-        "spot-price": 1.0
+        "spot-price": 1.0,
+        "open-firewall": True
     },
     "jupyter": {
         "password": "change-me-321"
