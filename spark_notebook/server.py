@@ -1,5 +1,6 @@
 import os
 import os.path
+import distutils.util
 
 from .cloud.aws import AWS
 from .config import Config
@@ -297,18 +298,20 @@ def cluster_details(account, cluster_id):
             # Check and open SSH port
             if not cloud_account.get_security_group_port_open(master_security_group, 22):
                 cloud_account.authorize_security_group_ingress(master_security_group, 22, "SSH")
-            # Check and open YARN ResourceManager port
-            if not cloud_account.get_security_group_port_open(master_security_group, 8088):
-                cloud_account.authorize_security_group_ingress(master_security_group, 8088,
-                                                               "YARN ResourceManager")
-            # Check and open Jupyter Notebook port
-            if not cloud_account.get_security_group_port_open(master_security_group, 8888):
-                cloud_account.authorize_security_group_ingress(master_security_group, 8888,
-                                                               "Jupyter Notebook")
-            # Check and open Spark HistoryServer port
-            if not cloud_account.get_security_group_port_open(master_security_group, 18080):
-                cloud_account.authorize_security_group_ingress(master_security_group, 18080,
-                                                               "Spark HistoryServer")
+            # If emr:open-firewall in config.yml is True then open the extra ports in the firewall
+            if bool(distutils.util.strtobool(str(config.config['emr']['open-firewall']))):
+                # Check and open YARN ResourceManager port
+                if not cloud_account.get_security_group_port_open(master_security_group, 8088):
+                    cloud_account.authorize_security_group_ingress(master_security_group, 8088,
+                                                                   "YARN ResourceManager")
+                # Check and open Jupyter Notebook port
+                if not cloud_account.get_security_group_port_open(master_security_group, 8888):
+                    cloud_account.authorize_security_group_ingress(master_security_group, 8888,
+                                                                   "Jupyter Notebook")
+                # Check and open Spark HistoryServer port
+                if not cloud_account.get_security_group_port_open(master_security_group, 18080):
+                    cloud_account.authorize_security_group_ingress(master_security_group, 18080,
+                                                                   "Spark HistoryServer")
 
     if "ssh_key" in credentials.credentials[account]:
         # Check if the file exists

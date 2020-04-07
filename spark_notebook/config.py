@@ -13,7 +13,8 @@ default_config = {
         "worker-count": 1,
         "region": "us-east-1",
         "instance-type": "r4.2xlarge",
-        "spot-price": 1.0
+        "spot-price": 1.0,
+        "open-firewall": True
     },
     "jupyter": {
         "password": "change-me-321"
@@ -29,11 +30,14 @@ class Config:
         self.load()
 
     def load(self):
+        self.config = copy.deepcopy(default_config)
+
         if os.path.isfile(self.file_path):
             with open(self.file_path, 'r') as stream:
-                self.config = yaml.load(stream)
-        else:
-            self.config = copy.deepcopy(default_config)
+                file_yaml = yaml.load(stream)
+                self.config["credentials"].update(file_yaml["credentials"])
+                self.config["emr"].update(file_yaml["emr"])
+                self.config["jupyter"].update(file_yaml["jupyter"])
 
     def save(self):
         with open(self.file_path, 'w') as stream:
