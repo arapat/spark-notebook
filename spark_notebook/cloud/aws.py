@@ -215,7 +215,7 @@ class AWS:
         juypter_bootstrap_action = {
             'Name': 'jupyter-provision',
             'ScriptBootstrapAction': {
-                'Path': 's3://mas-dse-emr/jupyter-provision-v0.4.3.sh',
+                'Path': 's3://mas-dse-emr/jupyter-provision-v0.4.5.sh',
                 'Args': [
                     jupyter_password,
                     pyspark_python_version,
