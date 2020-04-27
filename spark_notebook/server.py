@@ -1,184 +1,360 @@
 import os
-import time
+import os.path
+import distutils.util
 
+from .cloud.aws import AWS
 from .config import Config
-from .spark_helper import SparkHelper
-from .spark_helper import IN_PROCESS
-from .spark_helper import SUCCEED
-from .spark_helper import FAILED
+from .credentials import Credentials
 
 from flask import Flask
 from flask import redirect
 from flask import request
 from flask import render_template
 from flask import url_for
+from flask import flash
+
+import botocore.exceptions
+from spark_notebook.exceptions import AWSException
+from spark_notebook.exceptions import CredentialsException
 
 app = Flask(__name__)
+app.secret_key = 'some_secret'
 config = Config()
-spark = SparkHelper(config)
+credentials = Credentials(config.config["credentials"]["path"])
 
 
-def launch_new_cluster():
-    if spark.get_setup_status() is not None:
-        return ("Error: There is already one cluster in "
-                "the launching process.")
+@app.route('/', methods=['GET'])
+def main():
 
-    name, password, workers, instance, spot_price = (
-        config['launch']['name'], config['launch']['password'],
-        config['launch']['num-slaves'], config['providers']['ec2']['instance-type'],
-        config['providers']['ec2']['spot-price'])
+    if "config_path" in request.args:
+        global config
+        global credentials
+        config = Config(file_path=request.args.get('config_path'))
+        credentials = Credentials(config.config["credentials"]["path"])
+        flash("Using config file: %s" % config.file_path)
 
-    # Cluster name
-    if request.form["name"]:
-        name = request.form["name"]
-    if len(name.strip().split()) > 1:
-        return ("Error: The cluster name cannot contain whitespaces.")
+    if os.path.isfile(config.config["credentials"]["path"]):
+        return redirect(url_for('accounts'))
+    else:
+        return redirect(url_for('save_config_location'))
 
-    # Cluster password
-    if request.form["password"]:
-        password = request.form["password"]
 
-    # Number of workers
-    if request.form["workers"]:
+@app.route('/accounts', methods=['GET', 'POST'])
+def accounts():
+    error = None
+
+    if request.method == 'POST':
+        name = None
+        email_address = None
+        access_key_id = None
+        secret_access_key = None
+        ssh_key = None
+        key_name = None
+        identity_file = None
+
+        if "name" in request.form:
+            name = request.form["name"].encode('utf8').decode()
+        if "email_address" in request.form:
+            email_address = request.form["email_address"].encode('utf8').decode()
+        if "access_key_id" in request.form:
+            access_key_id = request.form["access_key_id"].encode('utf8').decode()
+        if "secret_access_key" in request.form:
+            secret_access_key = request.form["secret_access_key"].encode('utf8').decode()
+        if "ssh_key" in request.form:
+            ssh_key = request.form["ssh_key"].encode('utf8').decode()
+        if "key_name" in request.form:
+            key_name = request.form["key_name"].encode('utf8').decode()
+        if "identity_file" in request.form:
+            identity_file = request.form["identity_file"].encode('utf8').decode()
+
+        region_name = config.config["emr"]["region"]
+
+        cloud_account = AWS(access_key_id, secret_access_key, region_name)
+
         try:
-            workers = int(request.form["workers"])
-        except ValueError:
-            return "Error: Number of workers must be a numeric value."
+            error = cloud_account.test_credentials()
+        except AWSException as e:
+            error = e.msg
 
-    # Instance type
-    if request.form["instances"]:
-        instance = request.form["instances"]
-    if not spark.is_valid_ec2_instance(instance):
-        return ('"Error: EC2 Instance type "' + instance + '" ' +
-                "is invalid or not supported.")
+        if error is None and ssh_key == "generate":
+            try:
+                cloud_account.create_ssh_key(email_address, os.path.dirname(credentials.file_path))
+                key_name = cloud_account.key_name
+                identity_file = cloud_account.identity_file
+            except AWSException as e:
+                error = e.msg
 
-    # Spot price: spot or on-demand
-    if "spot" not in request.form or request.form["spot"] != "yes":
-        spot_price = None
-    elif request.form["spot-price"]:
-        try:
-            spot_price = float(request.form["spot-price"])
-        except ValueError:
-            return "Error: Spot price must be a numeric value."
+        if error is None:
+            try:
+                cloud_account.test_ssh_key(key_name, identity_file)
+            except AWSException as e:
+                error = e.msg
 
-    spark.setup_cluster(name, num_of_workers=workers, instance=instance,
-                        spot_price=spot_price, passwd=password)
+        if error is None:
+            try:
+                credentials.add(name, email_address, access_key_id, secret_access_key, key_name,
+                                identity_file)
+            except CredentialsException as e:
+                error = e.msg
 
-
-@app.route('/', methods=['GET', 'POST'])
-def select_account():
-    credentials_status = []
-    '''Show all available AWS accounts.'''
-    if request.method == "POST":
-        # Set a new config file path
-        if request.form["type"] == "set-path":
-            credentials_status = config.set_credentials_file_path(str(request.form["path"]))
-        # Add a new AWS account
-        elif request.form["type"] == "add-account":
-            data = {key: str(request.form[key])
-                    for key in config.credentials.ec2_keys}
-            data['name'] = str(request.form['name'])
-            data['identity-file'] = os.path.expanduser(data['identity-file'])
-            credentials_status = config.credentials.add(data, 'ec2')
-        # Invalid parameter
-        else:
-            pass
+        if error is None:
+            flash("Account %s added" % name)
 
     return render_template('accounts.html',
-                           clusters=config.credentials.credentials,
-                           cred_path=config.credentials.file_path,
-                           credentials_status=credentials_status)
+                           accounts=credentials.credentials,
+                           credential_file=config.config["credentials"]["path"],
+                           error=error)
+
+
+@app.route('/config', methods=['GET', 'POST'])
+def save_config_location():
+    error = None
+
+    if request.method == 'POST':
+        path = request.form['path'].encode('utf8').decode()
+
+        global credentials
+        credentials = Credentials(path)
+        try:
+            credentials.save()
+        except CredentialsException as e:
+            error = e.msg
+
+        # If there were no errors saving the credentials file then update the credentials path in
+        # the config file
+        if error is None:
+            config.config["credentials"]["path"] = path
+            config.save()
+            flash("Credentials saved to %s" % path)
+            return redirect(url_for('accounts'))
+
+    return render_template('config.html',
+                           cred_path=config.config["credentials"]["path"],
+                           error=error)
 
 
 @app.route('/g/<account>', methods=['GET', 'POST'])
-def open_account(account):
-    '''Open AWS account info page'''
-    spark.init_account(account)
+def cluster_list_create(account):
+    error = None
+    subnets = None
+    cluster_list = None
 
+    cloud_account = AWS(credentials.credentials[account]["access_key_id"],
+                        credentials.credentials[account]["secret_access_key"],
+                        config.config["emr"]["region"])
+
+    # if request method is post then create the cluster
     if request.method == "POST":
-        msg = launch_new_cluster()
-        # Should return None if nothing is wrong
-        if msg:
-            return msg
-        return redirect(url_for('open_account', account=account))
+        name = None
+        password = None
+        worker_count = None
+        subnet_id = None
+        instance_type = None
+        use_spot = None
+        spot_price = None
+        bootstrap_path = None
+        pyspark_python_version = None
 
-    data = {
-        'account': account,
-        'account_name': account,
-        'cluster_name': config['launch']['name'],
-        'num_of_workers': str(config['launch']['num-slaves']),
-        'spot_price': "%.2f" % config['providers']['ec2']['spot-price'],
-        'instances_type': config['providers']['ec2']['instance-type'],
-        'password': config['launch']['password']
-    }
+        if "name" in request.form:
+            if request.form["name"].encode('utf8').decode() != "":
+                name = request.form["name"].encode('utf8').decode()
+            else:
+                name = config.config['emr']['name']
+        if "password" in request.form:
+            if request.form["password"].encode('utf8').decode() != "":
+                password = request.form["password"].encode('utf8').decode()
+            else:
+                password = config.config['jupyter']['password']
+        if "worker_count" in request.form:
+            if request.form["worker_count"].encode('utf8').decode() != "":
+                worker_count = request.form["worker_count"].encode('utf8').decode()
+            else:
+                worker_count = int(config.config['emr']['worker-count'])
+        if "subnet_id" in request.form:
+            if request.form["subnet_id"].encode('utf8').decode() != "":
+                subnet_id = request.form["subnet_id"].encode('utf8').decode()
+        if "instance_type" in request.form:
+            if request.form["instance_type"].encode('utf8').decode() != "":
+                instance_type = request.form["instance_type"].encode('utf8').decode()
+            else:
+                instance_type = config.config['emr']['instance-type']
+        if "use_spot" in request.form:
+            if request.form["use_spot"].encode('utf8').decode() == "true":
+                use_spot = True
+            else:
+                use_spot = False
+        if "spot_price" in request.form:
+            if request.form["spot_price"].encode('utf8').decode() != "":
+                spot_price = request.form["spot_price"].encode('utf8').decode()
+            else:
+                spot_price = config.config['emr']['spot-price']
+        if "bootstrap_path" in request.form:
+            if request.form["bootstrap_path"].encode('utf8').decode() != "":
+                bootstrap_path = request.form["bootstrap_path"].encode('utf8').decode()
+        if "pyspark_python_version" in request.form:
+            if request.form["pyspark_python_version"].encode('utf8').decode() != "":
+                pyspark_python_version = request.form["pyspark_python_version"].encode('utf8')\
+                    .decode()
+
+        tags = [{"Key": "cluster", "Value": credentials.credentials[account]["email_address"]}]
+
+        try:
+            cluster_id = cloud_account.create_cluster(name,
+                                                      credentials.credentials[account]["key_name"],
+                                                      instance_type, worker_count, subnet_id,
+                                                      use_spot, spot_price, bootstrap_path,
+                                                      pyspark_python_version, tags,
+                                                      password)
+            flash("Cluster launched: %s" % name)
+            return redirect(url_for('cluster_details', account=account,
+                                    cluster_id=cluster_id))
+        except AWSException as e:
+            error = e.msg
+
+    # Populate the cluster list
     try:
-        data['clusters'] = spark.get_cluster_names()
-    except Exception as e:
-        return e.message
-    data['launching'] = False
-    status = spark.get_setup_status()
-    if status is not None:
-        data['launching'] = True
-        data['pname'] = spark.name
-        data['timer'] = "%d seconds" % spark.get_setup_duration()
-        data['ready'] = (status == SUCCEED)
-        data['dead'] = (status == FAILED)
-        data['launch-log'] = spark.get_setup_log()
-    return render_template('clusters.html', data=data)
+        cluster_list = cloud_account.list_clusters()
+    except AWSException as e:
+        error = e.msg
 
+    # Populate the subnets dropdownlist
+    try:
+        subnets = cloud_account.get_subnets()
+    except AWSException as e:
+        error = e.msg
 
-@app.route('/g/<account>/<cluster>', methods=["GET", "POST"])
-def open_cluster(account, cluster):
-    '''Open cluster info page'''
-    spark.init_account(account)
-    spark.init_cluster(cluster)
-
-    status = spark.check_notebook()
     data = {
         'account': account,
-        'credentials': config.credentials.credentials,
         'account_name': account,
-        'cluster_name': cluster,
-        'master_url': spark.master_url,
-        'notebook-ready': status is None,
-        'password': config['launch']['password']
+        'cluster_name': config.config['emr']['name'],
+        'worker_count': str(config.config['emr']['worker-count']),
+        'spot_price': "%.2f" % config.config['emr']['spot-price'],
+        'instance_type': config.config['emr']['instance-type'],
+        'password': config.config['jupyter']['password'],
+        'subnets': sorted(subnets["Subnets"], key=lambda k: k["AvailabilityZone"]),
     }
-    data['aws_access'] = ("ssh -i %s %s@%s" %
-                          (spark.KEY_IDENT_FILE, config['providers']['ec2']['user'],
-                           spark.master_url))
 
-    if request.method == "POST":
-        if request.form['type'] == 's3':
-            usage, name = request.form["usage"], request.form["name"]
-            spark.setup_s3(data["credentials"][usage][name])
-            process_nb = spark.check_notebook(force=True)
-            data["notebook-ready"] = False
-            data["setup-s3"] = True
-        # Invalid parameter
-        else:
-            pass
-
-    return render_template("cluster-settings.html", data=data)
+    return render_template('emr-list-create.html',
+                           cluster_list=cluster_list,
+                           data=data,
+                           error=error)
 
 
-@app.route('/reset/<account>', methods=['POST'])
-def reset_account(account):
-    spark.name = ''
-    spark.reset_spark_setup()
-    return redirect(url_for('open_account', account=account))
+@app.route('/g/<account>/<cluster_id>', methods=["GET", "POST"])
+def cluster_details(account, cluster_id):
+    error = None
+    cluster_info = dict()
+    bootstrap_actions = None
+    state = None
+    state_message = None
+    password = None
+    ssh_key = None
+    logs_bucket_name = None
+
+    cloud_account = AWS(credentials.credentials[account]["access_key_id"],
+                        credentials.credentials[account]["secret_access_key"],
+                        config.config["emr"]["region"])
+
+    try:
+        cluster_info = cloud_account.describe_cluster(cluster_id)["Cluster"]
+        if "Status" in cluster_info:
+            if "State" in cluster_info['Status']:
+                state = cluster_info['Status']['State']
+            if "StateChangeReason" in cluster_info['Status']:
+                if "Message" in cluster_info['Status']['StateChangeReason']:
+                    state_message = cluster_info['Status']['StateChangeReason']['Message']
+    except AWSException as e:
+        error = e.msg
+
+    # Check if the EMR logs bucket exists and is accessible to the user
+    try:
+        logs_bucket_name = "aws-logs-%s-%s" % (cloud_account.get_account_id(),
+                                               cloud_account.region_name)
+        cloud_account.head_s3_bucket(logs_bucket_name)
+    except AWSException as e:
+        error = e.msg
+
+    # Only get the bootstrap information from running or waiting clusters
+    if state == "RUNNING" or state == "WAITING":
+        try:
+            bootstrap_actions = cloud_account.list_bootstrap_actions(cluster_id)["BootstrapActions"]
+        except AWSException as e:
+            error = e.msg
+
+        if error is None:
+            for action in bootstrap_actions:
+                if action["Name"] == "jupyter-provision":
+                    password = action["Args"][0]
+
+    master_public_dns_name = None
+
+    if "MasterPublicDnsName" in cluster_info:
+        master_public_dns_name = cluster_info["MasterPublicDnsName"]
+
+    if "Ec2InstanceAttributes" in cluster_info:
+        if "EmrManagedMasterSecurityGroup" in cluster_info["Ec2InstanceAttributes"]:
+            master_security_group = cluster_info["Ec2InstanceAttributes"][
+                "EmrManagedMasterSecurityGroup"]
+            # Check and open SSH port
+            if not cloud_account.get_security_group_port_open(master_security_group, 22):
+                cloud_account.authorize_security_group_ingress(master_security_group, 22, "SSH")
+            # If emr:open-firewall in config.yml is True then open the extra ports in the firewall
+            if bool(distutils.util.strtobool(str(config.config['emr']['open-firewall']))):
+                # Check and open YARN ResourceManager port
+                if not cloud_account.get_security_group_port_open(master_security_group, 8088):
+                    cloud_account.authorize_security_group_ingress(master_security_group, 8088,
+                                                                   "YARN ResourceManager")
+                # Check and open Jupyter Notebook port
+                if not cloud_account.get_security_group_port_open(master_security_group, 8888):
+                    cloud_account.authorize_security_group_ingress(master_security_group, 8888,
+                                                                   "Jupyter Notebook")
+                # Check and open Spark HistoryServer port
+                if not cloud_account.get_security_group_port_open(master_security_group, 18080):
+                    cloud_account.authorize_security_group_ingress(master_security_group, 18080,
+                                                                   "Spark HistoryServer")
+
+    if "ssh_key" in credentials.credentials[account]:
+        # Check if the file exists
+        if os.path.isfile(credentials.credentials[account]["ssh_key"]):
+            ssh_key = credentials.credentials[account]["ssh_key"]
+
+    data = {
+        'account': account,
+        'cluster_name': cluster_info['Name'],
+        'cluster_id': cluster_id,
+        'master_url': master_public_dns_name,
+        'state': state,
+        'state_message': state_message,
+        'password': password,
+        'ssh_key': ssh_key,
+        'master_public_dns_name': master_public_dns_name,
+        'logs_bucket_name': logs_bucket_name
+    }
+
+    return render_template("emr-details.html", data=data, error=error)
 
 
-@app.route('/destroy/<account>/<cluster>', methods=["POST"])
-def destroy_cluster(account, cluster):
-    spark.init_account(account)
-    spark.init_cluster(cluster)
-    spark.destroy()
-    return redirect(url_for('open_account', account=account))
+@app.route('/destroy/<account>/<cluster_id>', methods=["POST"])
+def destroy_cluster(account, cluster_id):
+    cloud_account = AWS(credentials.credentials[account]["access_key_id"],
+                        credentials.credentials[account]["secret_access_key"],
+                        config.config["emr"]["region"])
+
+    try:
+        cloud_account.terminate_cluster(cluster_id)
+
+        return redirect(url_for('cluster_list_create', account=account))
+    except AWSException as e:
+        data = {}
+        return render_template("emr-details.html", data=data, error=e.msg)
 
 
-@app.route("/addcred/<account>/<cluster>", methods=["POST"])
-def add_s3_cred(account, cluster):
-    data = {key: str(request.form[key]) for key in config.credentials.s3_keys}
-    data['name'] = str(request.form['name'])
-    config.credentials.add(data, 's3')
-    return redirect(url_for('open_cluster', account=account, cluster=cluster))
+@app.errorhandler(IOError)
+def handle_ioerror(e):
+    return str(e)
+
+
+@app.errorhandler(botocore.exceptions.PartialCredentialsError)
+@app.errorhandler(botocore.exceptions.EndpointConnectionError)
+def handle_aws_client_connect(e):
+    return str(e)

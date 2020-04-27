@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block body %}
+
+    {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
+
+    <div class="masthead">
+        <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
+    </div>
+
+<hr>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h1>account: {{data["account_name"]}}</h1>
+        <hr>
+        <h2>Running Clusters</h2>
+        <input type="checkbox" id="show_terminated"/> Show Terminated Clusters<br/>
+
+        {% if cluster_list %}
+        <ul>
+          {% for cluster in cluster_list["Clusters"] %}
+          <li class="{{cluster["Status"]["State"]}}">
+            <a href="/g/{{data['account']}}/{{cluster["Id"]}}">
+              {{cluster["Name"]}}
+            </a> - {{cluster["Status"]["State"]}}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No clusters are running.</p>
+        {% endif %}
+
+        <hr>
+
+        <form class="form-signin" action="" method="POST">
+            <h2 class="form-signin-heading">Create a new cluster</h2>
+            <label>Cluster name</label>
+            <input id="name" name="name" class="form-control"
+                   placeholder="{{"Default: " + data["cluster_name"]}}" autofocus>
+            <label>Jupyter Password</label>
+            <input id="password" class="form-control" name="password"
+                   placeholder="{{"Default: " + data["password"]}}">
+            <label>Number of worker nodes (1 master node will also be created)</label>
+            <input id="worker_count" class="form-control" name="worker_count"
+                   placeholder="{{"Default: " + data["worker_count"]}}">
+            <label>Subnet - Availability Zone
+                [<a data-toggle="tooltip" title="The availability zone (AZ) determines which rate you pay when you select spot instances.
+                Each AZ has its own fluctuating rate. It does not matter which AZ you select if you will only be using on-demand instances.">?</a>]
+            </label>
+            <select id="subnet_id" class="form-control" name="subnet_id">
+                {% for subnet in data["subnets"] %}
+                    <option value="{{ subnet["SubnetId"] }}">{{ subnet["SubnetId"] }} - {{ subnet["AvailabilityZone"] }}</option>
+                {% endfor %}
+            </select>
+            <label>Instance type
+                [<a data-toggle="tooltip" title="See <a target='_blank' href='https://aws.amazon.com/ec2/pricing/on-demand/'>AWS's EC2 pricing</a>
+                page for more information about instance type, include the CPU, memory and on-demand pricing. There is also an <a target='_blank'
+                href='https://aws.amazon.com/emr/pricing/'>additional cost</a> per instance for using Elastic Map Reduce (EMR). If you are unsure
+                which instance type to select, then choose r4.2xlarge (8 CPUs, 61 GB Ram, $0.532 per hr on-demand + $0.133 per hr EMR) then select
+                the appropriate number of workers.">?</a>]
+            </label>
+            <select id="instance_type" class="form-control" name="instance_type">
+                <optgroup label="General Purpose">
+                    <option value="m3.xlarge" {% if data["instance_type"] == "m3.xlarge" %}selected{% endif %}>m3.xlarge</option>
+                    <option value="m3.2xlarge" {% if data["instance_type"] == "m3.2xlarge" %}selected{% endif %}>m3.2xlarge</option>
+                    <option value="m4.large" {% if data["instance_type"] == "m4.large" %}selected{% endif %}>m4.large</option>
+                    <option value="m4.xlarge" {% if data["instance_type"] == "m4.xlarge" %}selected{% endif %}>m4.xlarge</option>
+                    <option value="m4.2xlarge" {% if data["instance_type"] == "m4.2xlarge" %}selected{% endif %}>m4.2xlarge</option>
+                    <option value="m4.4xlarge" {% if data["instance_type"] == "m4.4xlarge" %}selected{% endif %}>m4.4xlarge</option>
+                    <option value="m4.10xlarge" {% if data["instance_type"] == "m4.8xlarge" %}selected{% endif %}>m4.10xlarge</option>
+                    <option value="m4.16xlarge" {% if data["instance_type"] == "m4.16xlarge" %}selected{% endif %}>m4.16xlarge</option>
+                </optgroup>
+                <optgroup label="Memory Optimized">
+                    <option value="r3.xlarge" {% if data["instance_type"] == "r3.xlarge" %}selected{% endif %}>r3.xlarge</option>
+                    <option value="r3.2xlarge" {% if data["instance_type"] == "r3.2xlarge" %}selected{% endif %}>r3.2xlarge</option>
+                    <option value="r3.4xlarge" {% if data["instance_type"] == "r3.4xlarge" %}selected{% endif %}>r3.4xlarge</option>
+                    <option value="r3.8xlarge" {% if data["instance_type"] == "r3.8xlarge" %}selected{% endif %}>r3.8xlarge</option>
+                    <option value="r4.xlarge" {% if data["instance_type"] == "r4.xlarge" %}selected{% endif %}>r4.xlarge</option>
+                    <option value="r4.2xlarge" {% if data["instance_type"] == "r4.2xlarge" %}selected{% endif %}>r4.2xlarge</option>
+                    <option value="r4.4xlarge" {% if data["instance_type"] == "r4.4xlarge" %}selected{% endif %}>r4.4xlarge</option>
+                    <option value="r4.8xlarge" {% if data["instance_type"] == "r4.8xlarge" %}selected{% endif %}>r4.8xlarge</option>
+                    <option value="r4.16xlarge" {% if data["instance_type"] == "r4.16xlarge" %}selected{% endif %}>r4.16xlarge</option>
+                </optgroup>
+                <optgroup label="Compute Optimized">
+                    <option value="c3.xlarge" {% if data["instance_type"] == "c3.xlarge" %}selected{% endif %}>c3.xlarge</option>
+                    <option value="c3.2xlarge" {% if data["instance_type"] == "c3.2xlarge" %}selected{% endif %}>c3.2xlarge</option>
+                    <option value="c3.4xlarge" {% if data["instance_type"] == "c3.4xlarge" %}selected{% endif %}>c3.4xlarge</option>
+                    <option value="c3.8xlarge" {% if data["instance_type"] == "c3.8xlarge" %}selected{% endif %}>c3.8xlarge</option>
+                    <option value="c4.large" {% if data["instance_type"] == "c4.large" %}selected{% endif %}>c4.large</option>
+                    <option value="c4.xlarge" {% if data["instance_type"] == "c4.xlarge" %}selected{% endif %}>c4.xlarge</option>
+                    <option value="c4.2xlarge" {% if data["instance_type"] == "c4.2xlarge" %}selected{% endif %}>c4.2xlarge</option>
+                    <option value="c4.4xlarge" {% if data["instance_type"] == "c4.4xlarge" %}selected{% endif %}>c4.4xlarge</option>
+                    <option value="c4.8xlarge" {% if data["instance_type"] == "c4.8xlarge" %}selected{% endif %}>c4.8xlarge</option>
+                </optgroup>
+                <optgroup label="Storage Optimized">
+                    <option value="d2.xlarge" {% if data["instance_type"] == "d2.xlarge" %}selected{% endif %}>d2.xlarge</option>
+                    <option value="d2.2xlarge" {% if data["instance_type"] == "d2.2xlarge" %}selected{% endif %}>d2.2xlarge</option>
+                    <option value="d2.4xlarge" {% if data["instance_type"] == "d2.4xlarge" %}selected{% endif %}>d2.4xlarge</option>
+                    <option value="d2.8xlarge" {% if data["instance_type"] == "d2.8xlarge" %}selected{% endif %}>d2.8xlarge</option>
+                    <option value="hs1.8xlarge" {% if data["instance_type"] == "hs1.8xlarge" %}selected{% endif %}>hs1.8xlarge</option>
+                    <option value="i3.xlarge" {% if data["instance_type"] == "i3.xlarge" %}selected{% endif %}>i3.xlarge</option>
+                    <option value="i3.2xlarge" {% if data["instance_type"] == "i3.2xlarge" %}selected{% endif %}>i3.2xlarge</option>
+                    <option value="i3.4xlarge" {% if data["instance_type"] == "i3.4xlarge" %}selected{% endif %}>i3.4xlarge</option>
+                    <option value="i3.8xlarge" {% if data["instance_type"] == "i3.8xlarge" %}selected{% endif %}>i3.8xlarge</option>
+                    <option value="i3.16xlarge" {% if data["instance_type"] == "i3.16xlarge" %}selected{% endif %}>i3.16xlarge</option>
+                </optgroup>
+                <optgroup label="GPU Instances">
+                    <option value="p2.xlarge" {% if data["instance_type"] == "p2.xlarge" %}selected{% endif %}>p2.xlarge</option>
+                    <option value="p2.8xlarge" {% if data["instance_type"] == "p2.8xlarge" %}selected{% endif %}>p2.8xlarge</option>
+                    <option value="p2.16xlarge" {% if data["instance_type"] == "p2.16xlarge" %}selected{% endif %}>p2.16xlarge</option>
+                    <option value="p3.2xlarge" {% if data["instance_type"] == "p3.2xlarge" %}selected{% endif %}>p3.2xlarge</option>
+                    <option value="p3.8xlarge" {% if data["instance_type"] == "p3.8xlarge" %}selected{% endif %}>p3.8xlarge</option>
+                    <option value="p3.16xlarge" {% if data["instance_type"] == "p3.16xlarge" %}selected{% endif %}>p3.16xlarge</option>
+                </optgroup>
+                <optgroup label="GPU Instances (Previous Generation)">
+                    <option value="cg1.4xlarge" {% if data["instance_type"] == "cg1.4xlarge" %}selected{% endif %}>cg1.4xlarge</option>
+                    <option value="g2.2xlarge" {% if data["instance_type"] == "g2.2xlarge" %}selected{% endif %}>g2.2xlarge</option>
+                </optgroup>
+            </select>
+
+            <input type="checkbox" name="use_spot" id="use_spot" value="true" checked/>
+            <label style="margin-top: 10px;">
+                Use spot instances (uncheck for on-demand instances)
+                [<a data-toggle="tooltip" title="Spot instances allow you to bid on spare EC2 computing capacity. Since spot instances are
+                often available at a discount compared to on-demand pricing (typically 15%-20% of the on-demand price), you can significantly
+                reduce the cost of running your clusters. See <a target='_blank' href='https://aws.amazon.com/ec2/spot/'>AWS's documentation</a>
+                for more information.">?</a>]
+            </label>
+            <div id="spot-price">
+                <label>Maximum price per hour
+                    [<a data-toggle="tooltip" title="Spot instances are charged the current rate, not the maximum price per hour. However, if the
+                    current rate exceeds the maximum price per hour then your cluster could be terminated with out warning. See the
+                    <a target='_blank' href='https://aws.amazon.com/ec2/spot/bid-advisor/'>Spot Bid Advisor</a> if you want to customize the price.
+                    Otherwise if you don't know what to enter then use the <a target='_blank' href='https://aws.amazon.com/ec2/pricing/on-demand/'>
+                    on-demand price</a> or 1.00.">?</a>]
+                </label>
+                <input class="form-control" name="spot_price"
+                       placeholder="{{"Default: $" + data["spot_price"]}}">
+            </div>
+            <input type="checkbox" id="show_advanced"/>
+            <label style="margin-top: 10px;">
+                Advanced Options
+            </label>
+            <div id="advanced-options" style="display: none">
+                <br/>
+                <label>Additional Bootstrap Script Path
+                    [<a data-toggle="tooltip" title="S3 path to bootstrap script to install additional software when the EMR cluster is created.
+                    The S3 bucket and script should be public or accessible to the AWS account's EMR roles. See <a target='_blank'
+                    href='https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-bootstrap.html'>AWS's documentation</a>
+                    for more information.">?</a>]
+                </label>
+                <input id="bootstrap_path" class="form-control" name="bootstrap_path"
+                       placeholder="s3://bucket_name/script.sh">
+                <label>
+                    PySpark Python Version
+                </label>
+                <select id="pyspark_python_version" class="form-control" name="pyspark_python_version">
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                </select>
+            </div><br/>
+            <button class="btn btn-primary btn-block" type="submit">Create</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('#use_spot').change(function() {
+        $('#spot-price').toggle();
+    });
+    $(".TERMINATED").hide();
+    $(".TERMINATED_WITH_ERRORS").hide();
+});
+$('a[data-toggle="tooltip"]').tooltip({
+    animated: 'fade',
+    placement: 'bottom',
+    trigger: 'click',
+    html: true,
+});
+$("#show_terminated").change(function () {
+    if($(this).is(":checked")) {
+        $(".TERMINATED").show();
+        $(".TERMINATED_WITH_ERRORS").show();
+    }
+    else {
+        $(".TERMINATED").hide();
+        $(".TERMINATED_WITH_ERRORS").hide();
+    }
+})
+$("#show_advanced").change(function () {
+    if($(this).is(":checked")) {
+        $("#advanced-options").css("display", "inline");
+    }
+    else {
+        $("#advanced-options").css("display", "none");
+    }
+})
+</script>
+{% endblock %}

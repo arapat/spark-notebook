@@ -3,7 +3,7 @@ This document covers some tricks to do common tasks on AWS.
 ### What is the workspace path of the Jupyter notebook?
 (Or where should I put files to access them in the Jupyter notebook)
 
-`~/workspace`
+`/mnt/workspace`
 
 ### How do I download/upload files from S3/HDFS/home dir *on the cluster* to S3/HDFS/home dir *on the cluster*?
 
@@ -16,29 +16,28 @@ contain many files.
 
 The usage of the `scp` command is very similar to `ssh`. So we start by copying the SSH command provided
 on the cluster info page. As an example, the SSH command may look like this
-`ssh -i ~/vault/mypem.pem ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com`.
+`ssh -i ~/vault/mypem.pem hadoop@ec2-54-88-78-22.compute-1.amazonaws.com`.
 
 #### `scp` from the server to the laptop
 
-`scp -r -i ~/vault/mypem.pem ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com:</remote/file/path> </local/file/path>`
+`scp -r -i ~/vault/mypem.pem hadoop@ec2-54-88-78-22.compute-1.amazonaws.com:</remote/file/path> </local/file/path>`
 
 Replace `</remote/file/path>` and `</local/file/path>` to the actual file paths.
 
 #### `scp` from the laptop to the server
 
-`scp -r -i ~/vault/mypem.pem </local/file/path> ec2-user@ec2-54-88-78-22.compute-1.amazonaws.com:</remote/file/path>`
+`scp -r -i ~/vault/mypem.pem </local/file/path> hadoop@ec2-54-88-78-22.compute-1.amazonaws.com:</remote/file/path>`
 
 Replace `</remote/file/path>` and `</local/file/path>` to the actual file paths.
 
 The `-r` option above is only required for transferring directories.
-
 
 ### How do I use Git?
 
 At this moment you have to login to the cluster master node to use git.
 
 Copy and paste the SSH login command from the Cluster info page. Once you login, you may like to
-navigate to `~/workspace` because only files/directories under this folder can be accessed in
+navigate to `/mnt/workspace` because only files/directories under this folder can be accessed in
 the Jupyter notebook.
 
 #### pull remote repository

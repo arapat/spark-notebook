@@ -1,30 +1,15 @@
 # Spark Notebook (Launcher)
 
-Spark Notebook (Launcher) is a web-based interface to install and start
-Apache Spark and Jupyter Notebook on Amazon Web Services.
+[![Build Status](https://travis-ci.org/mas-dse/spark-notebook.svg?branch=master)](https://travis-ci.org/mas-dse/spark-notebook)
 
-Requires Python 3.4 or newer.
+Spark Notebook (Launcher) is a web-based interface to install and start
+Apache Spark and Jupyter Notebook on Amazon Web Services' Elastic Map Reduce (EMR).
+
+Requires Python 2.7 or 3.6.
 
 
 ## Installation
 
-It is a good idea to create a virtual environment for `spark-notebook`, especially
-if the default `python` on your system is an older version. But it is not a
-requirement. [This article](https://hackercodex.com/guide/python-development-environment-on-mac-osx/)
-is a good reference if you are new to Python development environment.
-
-* Make sure you have python 3.4 or newer version installed. If not, install it first.
-
-* Create a virtual environment which uses `python3`.
-
-```
-virtualenv -p python3 <env_name>
-```
-* Activate the virtualenv created in step 2.
-
-```
-source <env_name>/bin/activate
-```
 * Install required packages.
 
 ```
@@ -39,16 +24,17 @@ If the required packages are installed in a virtualenv, activate the virtualenv 
 ```
 source <env_name>/bin/activate
 ```
-1. Run `python run.py`.
+1. Run `./run.py`.
 2. A browser window will automatically open the URL: `http://localhost:5000`.
 
 Please refer to [docs](docs) for more details.
 
+
 ## Environment
 
-1. Apache Spark will be installed using [Flintrock](https://github.com/nchammas/flintrock).
-2. `PYSPARK_PYTHON` is set to `python2.7` on the cluster.
-3. `numpy` and `matplotlib` are installed by default on the cluster.
+1. Apache Spark 2.1.1 will be installed with [Elastic Map Reduce](https://aws.amazon.com/emr/) 5.6.0.
+2. Continuum Anaconda Python 4.4.0 will be installed with Python 2 and Python 3 iPython Kernels.
+
 
 ## Important Notes
 

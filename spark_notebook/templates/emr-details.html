@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block body %}
+
+    {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
+
+    <div class="masthead">
+        <a href='/'><h3 class="muted">Set up Spark Cluster on AWS</h3></a>
+    </div>
+
+<hr>
+
+<div class="row-fluid marketing">
+    <div class="span12">
+        <h3>
+            Account: <a href="/g/{{data['account']}}">{{data["account"]}}</a>
+        </h3>
+        <h3>
+            Cluster: {{data["cluster_name"]}}
+        </h3>
+        <h3>
+            State: {{data["state"]}}
+        </h3>
+        <p>
+            <b>State Message:</b> {{data["state_message"]}}
+        </p>
+        <p>
+            <b>EMR Logs S3 Bucket:</b> s3://{{data["logs_bucket_name"]}}/elasticmapreduce/{{data["cluster_id"]}}/node
+        </p>
+        <hr>
+
+        {% if data["state"] == "RUNNING" or data["state"] == "WAITING" %}
+
+            <p><b>Jupyter notebook:</b>
+                <a target="_blank" href="http://{{data['master_url']}}:8888">http://{{data['master_url']}}:8888</a>
+                (If cannot open, try refresh this page.)</p>
+            {% if data["password"] == "None" %}
+                <p><b>Notebook Password:</b> Unable to determine the password. Please contact the person who created
+                    the cluster.</p>
+            {% else %}
+                <p><b>Notebook Password:</b> {{data['password']}}</p>
+                <p style="text-indent: 50px;">If the password is incorrect then contact whoever created the cluster
+                    for the correct password.</p>
+            {% endif %}
+                <p><b>YARN ResourceManager:</b>
+                <a target="_blank" href="http://{{data['master_url']}}:8088">http://{{data['master_url']}}:8088</a></p>
+            <p><b>Spark HistoryServer:</b>
+                <a target="_blank" href="http://{{data['master_url']}}:18080">http://{{data['master_url']}}:18080</a></p>
+            {% if data["ssh_key"] == "None" %}
+                <p><b>SSH access:</b>
+                <pre>ssh -i <i>INSERT_PATH_TO_SSH_KEY</i> hadoop@{{data["master_public_dns_name"]}}</pre></p>
+            {% else %}
+                <p><b>SSH access:</b>
+                <pre>ssh -i {{data["ssh_key"]}} hadoop@{{data["master_public_dns_name"]}}</pre></p>
+                <p style="text-indent: 50px;">If you receive a <i>"Permission denied (publickey)"</i> error then contact
+                    whoever created the cluster for the correct SSH public key.</p>
+            {% endif %}
+            <hr>
+
+            <!-- Button trigger destroy modal -->
+            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#destroyModal">
+                Destroy this cluster
+            </button>
+
+        {% elif data["state"] == "STARTING" or data["state"] == "BOOTSTRAPPING" %}
+            <p>Launching. Please refresh again later.
+            <button class="btn btn-default" onclick="window.location.href=window.location.href;">
+                refresh
+            </button></p>
+
+            <hr>
+
+            <!-- Button trigger destroy modal -->
+            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#destroyModal">
+                Destroy this cluster
+            </button>
+
+        {% endif %}
+
+        <!-- Destroy modal -->
+        <div class="modal fade" id="destroyModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p><b>ALL DATA ON ALL NODES WILL BE LOST!!</b></p>
+                        <p>Are you sure you want to destroy the cluster {{data["cluster_name"]}}?</p>
+                    </div>
+
+                    <form class="form-destroy" action="/destroy/{{data['account']}}/{{data['cluster_id']}}" method="POST">
+                        <button type="submit" class="btn btn-danger">Destroy it</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
